@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="nl.ask.paige.app"
+    android:versionCode="20120312"
+    android:versionName="beta (Mar 12, 2012)" >
+
+    <permission
+        android:name="nl.ask.paige.app.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.microphone"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.touchscreen"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.bluetooth"
+        android:required="true" />
+    <!-- implied by permission PROCESS OUTGOING_CALLS, but not required -->
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <!-- implied by permission CAMERA, but not required -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <!-- implied by permission NFC, but not required -->
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="nl.ask.paige.app.permission.C2D_MESSAGE" />
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="10" />
+
+    <application
+        android:icon="@drawable/ic_launcher_paige"
+        android:label="@string/app_name" >
+
+        <!-- REQUIRED FOR PHONEGAP -->
+        <activity android:name="com.phonegap.DroidGap" />
+
+        <!-- PAIGE EXECUTION ENVIRONMENT COMPONENTS -->
+        <activity
+            android:name="nl.ask.paige.app.Paige"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:multiprocess="false"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="nl.ask.paige.app.Paige" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="nl.ask.paige.app.NOTIFICATION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name="nl.ask.paige.app.receiver.C2DMReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+-->
+            <!-- Receive the actual message -->
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="nl.ask.paige.app" />
+            </intent-filter>
+            <!-- Receive the registration id -->
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="nl.ask.paige.app" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="nl.ask.paige.app.receiver.IntentRx" >
+            <intent-filter>
+                <action android:name="nl.ask.paige.app.IntentRx" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="nl.ask.paige.app.boot.BootRx" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="nl.ask.paige.app.messages.NewMsgCheckRx" />
+
+        <service android:name="nl.ask.paige.app.messages.NewMsgChecker" />
+
+        <!-- SENSE PLATFORM COMPONENTS -->
+        <service
+            android:name="nl.sense_os.service.SenseService"
+            android:exported="false"
+            android:process="nl.ask.paige.app.sense_service" >
+            <intent-filter>
+                <action android:name="nl.ask.paige.app.SenseService" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="nl.sense_os.service.MsgHandler"
+            android:exported="false" >
+
+            <!-- do not use separate process for this service to enable PhoneGap to get/put data -->
+            <!-- android:process="nl.ask.paige.app.sense_msgs" -->
+            <intent-filter>
+                <action android:name="nl.ask.paige.app.MsgHandler.NEW_DATA" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="nl.ask.paige.app.MsgHandler.SEND_DATA" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+        <service android:name="nl.sense_os.service.states.EpiStateMonitor" >
+        </service>
+
+        <receiver
+            android:name="nl.sense_os.service.BootRx"
+            android:process="nl.ask.paige.app.sense_monitoring" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <category android:name="android.intent.category.HOME" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="nl.sense_os.service.AliveChecker"
+            android:exported="false"
+            android:process="nl.ask.paige.app.sense_monitoring" >
+            <intent-filter>
+                <action android:name="nl.ask.paige.app.AliveCheck" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="nl.sense_os.service.DataTransmitter"
+            android:exported="false"
+            android:process="nl.ask.paige.app.sense_monitoring" >
+            <intent-filter>
+                <action android:name="nl.ask.paige.app.DataTransmit" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <!-- NetworkMonitor needs to be in the same process as the main SenseService service -->
+        <receiver
+            android:name="nl.sense_os.service.NetworkMonitor"
+            android:process="nl.ask.paige.app.sense_service" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

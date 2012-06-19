@@ -1,0 +1,84 @@
+<html>
+	<head>
+		<script src="file:///android_asset/www/js/cordova-1.5.0.js"></script>
+		<script src="file:///android_asset/www/js/UPnP_Plugin.js"></script>
+		<script src="file:///android_asset/www/js/soapclient.js"></script>
+		<script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+		<script src="file:///home/ludo/workspace/ASK_Sense_combi_app/assets/www/js/soapclient.js"></script>
+		<script>
+			var myID = "Unknown";
+			document.addEventListener('deviceready', function() {
+				console.log("phoneGapAvailable to True!");
+				phoneGapAvailable = true;
+				myID = 'UniqueID(Paige1,'+device.uuid+')';
+				window.plugins.UPNP_Plugin.initUPNP(myID,'Paige Device '+device.uuid);
+				window.plugins.UPNP_Plugin.registerStateVar('IMEI',[]);
+				window.plugins.UPNP_Plugin.registerAction('getIMEI',false,['IMEI'],[]);
+			});
+			
+			getIMEI = function(arguments){
+				console.log("Get IMEI called!"+arguments);
+				return [["IMEI",device.uuid]];
+			}
+						
+			UPNPCall = function(direction,arguments){
+				console.log("UPNPCall invoked:"+direction+ ":" + arguments);
+				arguments = JSON.parse(arguments);
+
+				functionName = arguments[0];
+				givenArguments = arguments[1];
+				
+				return window[functionName](givenArguments);
+			}
+			
+			callback = function(res){
+				console.log(res);
+			}
+			
+			testSoap = function(){
+				var p1 = new SOAPClientParameters();
+				p1.add("error", 101);
+				p1.add("service","createNode");
+				SOAPClient.invoke("http://ask70.ask-cs.nl/~ludo/ludoDev/webservices/","getError",p1,true,callback);
+			}
+			
+			runDiscovery = function(){
+				window.plugins.UPNP_Plugin.runDiscovery(["urn:schemas-upnp-org:device:CHAP:1"]);
+				
+				window.plugins.UPNP_Plugin.listDevices(function(res){
+					var target;
+					for (var i=0; i< res.length; i++){
+						target = res[i];
+						if (res[i].root.device.UDN != 'uuid:'+myID){
+							console.log("Other device found, I like that one more than my own....:)");
+							break;
+						}
+					}
+					console.log(target.root.device.UDN);
+					baseURL = target.baseURL.replace("/ddd.xml","");
+					controlURL = baseURL+target.root.device.serviceList.service.controlURL;
+					SCPDURL = baseURL+target.root.device.serviceList.service.SCPDURL 
+					window.plugins.UPNP_Plugin.runAction(controlURL,"urn:upnp-org:serviceId:chap","getIMEI",function(r){
+						console.log(JSON.stringify(r));
+						console.log("imei result: "+r.IMEI);
+					});
+					
+					window.plugins.UPNP_Plugin.getDescription(SCPDURL,function(r){
+						console.log(JSON.stringify(r));
+						console.log(r.scpd.actionList.action.name);
+					});
+				});
+				
+			}
+		</script>
+	</head>
+	<body>
+		Test page!<br>
+		Running initUpnp.... With plugin test, not starting on boot<br>
+		<button onClick="window.plugins.UPNP_Plugin.stop()">Stop Server</button><br>
+		<button onClick="window.plugins.UPNP_Plugin.start()">Start Server</button><br>
+		<button onClick="testSoap()">testSoap</button><br>
+		<button onClick="runDiscovery()">runDiscovery</button><br>
+		
+	</body>
+</html>
