@@ -14,13 +14,20 @@
 				window.plugins.UPNP_Plugin.initUPNP(myID,'Paige Device '+device.uuid);
 				window.plugins.UPNP_Plugin.registerStateVar('IMEI',[]);
 				window.plugins.UPNP_Plugin.registerAction('getIMEI',false,['IMEI'],[]);
+				window.plugins.UPNP_Plugin.registerStateVar('NM_saddr',[]);
+				window.plugins.UPNP_Plugin.registerAction('registerNM',true,['NM_saddr'],[]);
 			});
 			
 			getIMEI = function(arguments){
-				console.log("Get IMEI called!"+arguments);
+				console.log("GetIMEI called: "+arguments);
 				return [["IMEI",device.uuid]];
 			}
-						
+			
+			registerNM = function(arguments){
+				console.log("RegisterNM called: "+arguments[0]['NM_saddr']);
+				return [[]];
+			}
+			
 			UPNPCall = function(direction,arguments){
 				console.log("UPNPCall invoked:"+direction+ ":" + arguments);
 				arguments = JSON.parse(arguments);
