@@ -2,7 +2,9 @@
 	<head>
 		<script src="file:///android_asset/www/js/cordova-1.5.0.js"></script>
 		<script src="file:///android_asset/www/js/UPnP_Plugin.js"></script>
+		<script src="file:///android_asset/www/js/pee_plugin.js"></script>
 		<script src="file:///android_asset/www/js/soapclient.js"></script>
+		<script src="file:///android_asset/www/js/encoder.js"></script>
 		<script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
 		<script src="file:///home/ludo/workspace/ASK_Sense_combi_app/assets/www/js/soapclient.js"></script>
 		<script>
@@ -10,17 +12,31 @@
 			document.addEventListener('deviceready', function() {
 				console.log("phoneGapAvailable to True!");
 				phoneGapAvailable = true;
-				myID = 'UniqueID(Paige1,'+device.uuid+')';
-				window.plugins.UPNP_Plugin.initUPNP(myID,'Paige Device '+device.uuid);
-				window.plugins.UPNP_Plugin.registerStateVar('IMEI',[]);
-				window.plugins.UPNP_Plugin.registerAction('getIMEI',false,['IMEI'],[]);
-				window.plugins.UPNP_Plugin.registerStateVar('NM_saddr',[]);
-				window.plugins.UPNP_Plugin.registerAction('registerNM',true,['NM_saddr'],[]);
+				window.plugins.pee.getImei(function(res){
+					myID = res;
+					window.plugins.UPNP_Plugin.initUPNP(myID,'Paige Device: '+myID);
+					window.plugins.UPNP_Plugin.registerStateVar('IMEI',[]);
+					window.plugins.UPNP_Plugin.registerAction('getIMEI',false,['IMEI'],[]);
+					window.plugins.UPNP_Plugin.registerStateVar('NM_saddr',[]);
+					window.plugins.UPNP_Plugin.registerAction('registerNM',true,['NM_saddr'],[]);
+					window.plugins.UPNP_Plugin.registerStateVar('JSON_IN',[]);
+					window.plugins.UPNP_Plugin.registerStateVar('JSON_OUT',[]);
+					window.plugins.UPNP_Plugin.registerAction('callJSONRPC',true,['JSON_IN'],['JSON_OUT']);					
+				});
 			});
+			
+			callJSONRPC = function(arguments){
+				console.log("CallJSONRPC called: "+ arguments);
+				var decoded = Encoder.htmlDecode(arguments[0]["JSON_IN"]);
+				decoded = JSON.parse(decoded);
+				console.log(JSON.stringify(decoded));
+				return [["JSON_OUT","{\"id\":"+decoded["id"]+",\"result\":\"Hello world\",\"error\":null}"]];
+			}
 			
 			getIMEI = function(arguments){
 				console.log("GetIMEI called: "+arguments);
-				return [["IMEI",device.uuid]];
+				console.log(myID);
+				return [["IMEI",myID]];
 			}
 			
 			registerNM = function(arguments){
