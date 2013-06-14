@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Bridge App</string>
+    <string name="title_activity_base">Bridge App</string>
+    <string name="title_activity_map">Map</string>
+    <string name="title_activity_task">Task</string>
+    <string name="title_activity_history">History</string>
+    <string name="callTeamLeader">Call Team Leader</string>
+    <string name="history">History!</string>
+    <string name="Acknowledge">Acknowledge</string>
+    <string name="eve_service">EveAgents</string>
+    <string name="task_title">Task Request</string>
+    <string name="task_text">(Default placeholder) Put up road block alongside Risavika Terminal Building</string>
+    <string name="task_title_assigner">Assigner</string>
+    <string name="task_assigner">(Default placeholder) Incident Command Post 2</string>
+    <string name="task_title_assignment_date">Assignment Date/Time</string>
+    <string name="task_assignment_date">(Default placeholder) 2013&#8211;01&#8211;01 14:00:00</string>
+    <string name="task_title_status">Status</string>
+    <string name="task_status">Not acknowledged</string>
+
+</resources>
