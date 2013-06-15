@@ -11,12 +11,12 @@
     <string name="Acknowledge">Acknowledge</string>
     <string name="eve_service">EveAgents</string>
     <string name="task_title">Task Request</string>
-    <string name="task_text">(Default placeholder) Put up road block alongside Risavika Terminal Building</string>
+    <string name="task_text">!No task available!</string>
     <string name="task_title_assigner">Assigner</string>
-    <string name="task_assigner">(Default placeholder) Incident Command Post 2</string>
+    <string name="task_assigner">---</string>
     <string name="task_title_assignment_date">Assignment Date/Time</string>
-    <string name="task_assignment_date">(Default placeholder) 2013&#8211;01&#8211;01 14:00:00</string>
+    <string name="task_assignment_date">---</string>
     <string name="task_title_status">Status</string>
-    <string name="task_status">Not acknowledged</string>
+    <string name="task_status">---</string>
 
 </resources>

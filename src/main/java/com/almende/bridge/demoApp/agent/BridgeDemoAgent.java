@@ -29,9 +29,10 @@ public class BridgeDemoAgent extends Agent {
 	}
 	
 	public void initTask() throws JSONRPCException, IOException {
-		Task task = new Task("Hi there, this is your new task: Enjoy!", "Ludo",
-				"2013-06-14 11:51:05", "Not acknowledged","58.92","5.58");
-		getState().put(TASK, JOM.getInstance().writeValueAsString(task));
+//		Task task = new Task("Hi there, this is your new task: Enjoy!", "Ludo",
+//				"2013-06-14 11:51:05", "Not acknowledged","58.92","5.58");
+//		getState().put(TASK, JOM.getInstance().writeValueAsString(task));
+		getState().remove(TASK);
 		
 		getScheduler().createTask(new JSONRequest("updateTask",JOM.createObjectNode()), 60000);
 	}
@@ -43,9 +44,14 @@ public class BridgeDemoAgent extends Agent {
 	}
 	public Task getTask() throws JsonProcessingException, IOException{
 		ObjectReader taskReader = JOM.getInstance().reader(Task.class);
-		String task = getState().get(TASK, String.class);
-		System.err.println("Found task:"+task);
-		return taskReader.readValue(task);
+		
+		if (getState().containsKey(TASK)){
+			String task = getState().get(TASK, String.class);
+			System.err.println("Found task:"+task);
+			return taskReader.readValue(task);
+		} else {
+			return null;
+		}
 	}
 	
 }

@@ -43,18 +43,31 @@ public class TaskFragment extends Fragment {
 					.getAgent(EveService.DEMO_AGENT);
 			Task task = agent.getTask();
 			
-			TextView tv = (TextView) view.findViewById(R.id.task_text);
-			tv.setText(task.getText());
-			
-			tv = (TextView) view.findViewById(R.id.task_assigner);
-			tv.setText(task.getAssigner());
-			
-			tv = (TextView) view.findViewById(R.id.task_assignment_date);
-			tv.setText(task.getAssignmentDate());
-			
-			tv = (TextView) view.findViewById(R.id.task_status);
-			tv.setText(task.getStatus());
-			
+			if (task != null) {
+				TextView tv = (TextView) view.findViewById(R.id.task_text);
+				tv.setText(task.getText());
+				
+				tv = (TextView) view.findViewById(R.id.task_assigner);
+				tv.setText(task.getAssigner());
+				
+				tv = (TextView) view.findViewById(R.id.task_assignment_date);
+				tv.setText(task.getAssignmentDate());
+				
+				tv = (TextView) view.findViewById(R.id.task_status);
+				tv.setText(task.getStatus());
+			} else {
+				TextView tv = (TextView) view.findViewById(R.id.task_text);
+				tv.setText(R.string.task_text);
+				
+				tv = (TextView) view.findViewById(R.id.task_assigner);
+				tv.setText(R.string.task_assigner);
+				
+				tv = (TextView) view.findViewById(R.id.task_assignment_date);
+				tv.setText(R.string.task_assignment_date);
+				
+				tv = (TextView) view.findViewById(R.id.task_status);
+				tv.setText(R.string.task_status);				
+			}
 		} catch (Exception e) {
 			System.err.println("Couldn't update task activity.");
 			e.printStackTrace();
@@ -63,8 +76,10 @@ public class TaskFragment extends Fragment {
 	
 	@Subscribe
 	public void onEvent(StateEvent event) {
-		System.err.println("TaskFragment received StateEvent! "+event.getAgentId()+":"+event.getValue());
-		if (event.getValue().equals("taskUpdated") && event.getAgentId().equals(EveService.DEMO_AGENT)) {
+		System.err.println("TaskFragment received StateEvent! "
+				+ event.getAgentId() + ":" + event.getValue());
+		if (event.getValue().equals("taskUpdated")
+				&& event.getAgentId().equals(EveService.DEMO_AGENT)) {
 			renderTask();
 		}
 	}
