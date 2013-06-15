@@ -61,7 +61,6 @@ public class MyMapFragment extends MapFragment {
 			BridgeDemoAgent agent = (BridgeDemoAgent) host
 					.getAgent(EveService.DEMO_AGENT);
 			Task task = agent.getTask();
-
 			LatLng myLoc=null;
 			LatLng taskLoc = null;
 

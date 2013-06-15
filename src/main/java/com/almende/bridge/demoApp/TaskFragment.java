@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.almende.bridge.demoApp.agent.BridgeDemoAgent;
@@ -43,7 +44,25 @@ public class TaskFragment extends Fragment {
 					.getAgent(EveService.DEMO_AGENT);
 			Task task = agent.getTask();
 			
-			if (task != null) {
+			if (task == null || task.getStatus().equals(Task.COMPLETE)) {
+				TextView tv = (TextView) view.findViewById(R.id.task_text);
+				tv.setText(R.string.task_text);
+				
+				tv = (TextView) view.findViewById(R.id.task_assigner);
+				tv.setText(R.string.task_assigner);
+				
+				tv = (TextView) view.findViewById(R.id.task_assignment_date);
+				tv.setText(R.string.task_assignment_date);
+				
+				tv = (TextView) view.findViewById(R.id.task_status);
+				tv.setText(R.string.task_status);
+				
+				Button btn = (Button) view.findViewById(R.id.ackButton);
+				btn.setVisibility(Button.GONE);
+				btn = (Button) view.findViewById(R.id.completeButton);
+				btn.setVisibility(Button.GONE);
+			} else {
+				
 				TextView tv = (TextView) view.findViewById(R.id.task_text);
 				tv.setText(task.getText());
 				
@@ -55,18 +74,56 @@ public class TaskFragment extends Fragment {
 				
 				tv = (TextView) view.findViewById(R.id.task_status);
 				tv.setText(task.getStatus());
-			} else {
-				TextView tv = (TextView) view.findViewById(R.id.task_text);
-				tv.setText(R.string.task_text);
 				
-				tv = (TextView) view.findViewById(R.id.task_assigner);
-				tv.setText(R.string.task_assigner);
-				
-				tv = (TextView) view.findViewById(R.id.task_assignment_date);
-				tv.setText(R.string.task_assignment_date);
-				
-				tv = (TextView) view.findViewById(R.id.task_status);
-				tv.setText(R.string.task_status);				
+				if (task.getStatus().equals(Task.NOTACK)) {
+					Button btn = (Button) view.findViewById(R.id.ackButton);
+					btn.setVisibility(Button.VISIBLE);
+					
+					btn.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View v) {
+							BridgeDemoAgent agent;
+							try {
+								agent = (BridgeDemoAgent) AgentHost
+										.getInstance().getAgent(
+												EveService.DEMO_AGENT);
+								Task task = agent.getTask();
+								task.setStatus(Task.ACTIVE);
+								BusProvider.getBus().post(
+										new StateEvent(agent.getId(),
+												"taskUpdated"));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
+					
+					btn = (Button) view.findViewById(R.id.completeButton);
+					btn.setVisibility(Button.GONE);
+				} else {
+					Button btn = (Button) view.findViewById(R.id.ackButton);
+					btn.setVisibility(Button.GONE);
+					
+					btn = (Button) view.findViewById(R.id.completeButton);
+					btn.setVisibility(Button.VISIBLE);
+					
+					btn.setOnClickListener(new View.OnClickListener() {
+						public void onClick(View v) {
+							BridgeDemoAgent agent;
+							try {
+								agent = (BridgeDemoAgent) AgentHost
+										.getInstance().getAgent(
+												EveService.DEMO_AGENT);
+								Task task = agent.getTask();
+								task.setStatus(Task.COMPLETE);
+								BusProvider.getBus().post(
+										new StateEvent(agent.getId(),
+												"taskUpdated"));
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
+				}
 			}
 		} catch (Exception e) {
 			System.err.println("Couldn't update task activity.");

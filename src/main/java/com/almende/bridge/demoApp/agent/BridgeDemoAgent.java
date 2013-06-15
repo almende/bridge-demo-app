@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 
 @Access(AccessType.PUBLIC)
 public class BridgeDemoAgent extends Agent {
-	private static final String	VERSION	= "3";
+	private static final String	VERSION	= "4";
 	private static final String	TASK	= "CurrentTask";
 	
 	public static String getBaseVersion() {
@@ -30,7 +30,7 @@ public class BridgeDemoAgent extends Agent {
 	
 	public void initTask() throws JSONRPCException, IOException {
 //		Task task = new Task("Hi there, this is your new task: Enjoy!", "Ludo",
-//				"2013-06-14 11:51:05", "Not acknowledged","58.92","5.58");
+//				"2013-06-14 11:51:05", Task.NOTACK,"58.92","5.58");
 //		getState().put(TASK, JOM.getInstance().writeValueAsString(task));
 		getState().remove(TASK);
 		
@@ -38,7 +38,7 @@ public class BridgeDemoAgent extends Agent {
 	}
 	public void updateTask() throws JsonProcessingException {
 		Task task = new Task("And this is another task!!", "Ludo",
-				"2013-06-14 13:35:05", "Not acknowledged","58.9173","5.5851");
+				"2013-06-14 13:35:05", Task.NOTACK,"58.9173","5.5851");
 		getState().put(TASK, JOM.getInstance().writeValueAsString(task));
 		BusProvider.getBus().post(new StateEvent(getId(),"taskUpdated"));
 	}

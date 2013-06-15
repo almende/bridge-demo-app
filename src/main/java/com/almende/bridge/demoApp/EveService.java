@@ -9,6 +9,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
@@ -20,7 +21,7 @@ import com.almende.eve.agent.Agent;
 import com.almende.eve.agent.AgentHost;
 import com.almende.eve.rpc.jsonrpc.JSONRPCException;
 import com.almende.eve.scheduler.ClockSchedulerFactory;
-import com.almende.eve.state.AndroidStateFactory;
+import com.almende.eve.state.FileStateFactory;
 import com.squareup.otto.Subscribe;
 
 public class EveService extends Service {
@@ -32,18 +33,13 @@ public class EveService extends Service {
 		return null;
 	}
 	
-	/**
-	 * Starts the service.
-	 * 
-	 * @see super#onStartCommand(android.content.Intent, int, int)
-	 */
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
+	public static void initHost(Context ctx){
 		host = AgentHost.getInstance();
 		try {
 			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("AppContext", this);
-			host.setStateFactory(new AndroidStateFactory(params));
+			params.put("AppContext", ctx);
+			params.put("path",ctx.getFilesDir().getAbsolutePath()+"/.eveagents");
+			host.setStateFactory(new FileStateFactory(params));
 		} catch (Exception e) {
 			System.err.println("Couldn't start AndroidStateFactory!");
 			e.printStackTrace();
@@ -53,7 +49,7 @@ public class EveService extends Service {
 		System.err.println("AgentFactory started!");
 		
 		try {
-			if (host.hasAgent(DEMO_AGENT)) {
+			if (host.hasAgent(DEMO_AGENT) && host.getAgent(DEMO_AGENT) != null) {
 				Agent test = host.getAgent(DEMO_AGENT);
 				if (!"BridgeDemoAgent".equals(test.getType())
 						|| !test.getVersion().equals(
@@ -63,14 +59,27 @@ public class EveService extends Service {
 							+ BridgeDemoAgent.getBaseVersion());
 					host.deleteAgent(DEMO_AGENT);
 				}
-			}
-			if (!host.hasAgent(DEMO_AGENT)) {
+			} else {
+				if (host.hasAgent(DEMO_AGENT)) {
+					host.deleteAgent(DEMO_AGENT);
+				}
 				host.createAgent(BridgeDemoAgent.class, DEMO_AGENT);
 			}
 		} catch (Exception e) {
 			System.err.println("Failed to find/create agent:" + DEMO_AGENT);
 			e.printStackTrace();
 		}
+		System.err.println("Agent created!");
+	}
+	
+	/**
+	 * Starts the service.
+	 * 
+	 * @see super#onStartCommand(android.content.Intent, int, int)
+	 */
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		initHost(this.getApplication());
 		
 		BusProvider.getBus().register(this);
 		

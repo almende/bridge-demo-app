@@ -9,6 +9,7 @@
     <string name="callTeamLeader">Call Team Leader</string>
     <string name="history">History!</string>
     <string name="Acknowledge">Acknowledge</string>
+    <string name="Complete">Complete</string>
     <string name="eve_service">EveAgents</string>
     <string name="task_title">Task Request</string>
     <string name="task_text">!No task available!</string>

@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 public class Task implements Serializable {
 	private static final long	serialVersionUID	= 6783092535568614883L;
+	public static final String NOTACK = "Not acknowledged";
+	public static final String ACTIVE = "Active";
+	public static final String	COMPLETE	= "Complete";
+	
 	private String text;
 	private String assigner;
 	private String assignmentDate;
