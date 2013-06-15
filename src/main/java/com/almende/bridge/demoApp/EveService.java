@@ -26,6 +26,7 @@ import com.squareup.otto.Subscribe;
 
 public class EveService extends Service {
 	public static final String	DEMO_AGENT	= "bridgeDemoApp";
+	public static final int		NEWTASKID	= 0;
 	private static AgentHost	host;
 	
 	@Override
@@ -33,12 +34,13 @@ public class EveService extends Service {
 		return null;
 	}
 	
-	public static void initHost(Context ctx){
+	public static void initHost(Context ctx) {
 		host = AgentHost.getInstance();
 		try {
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("AppContext", ctx);
-			params.put("path",ctx.getFilesDir().getAbsolutePath()+"/.eveagents");
+			params.put("path", ctx.getFilesDir().getAbsolutePath()
+					+ "/.eveagents");
 			host.setStateFactory(new FileStateFactory(params));
 		} catch (Exception e) {
 			System.err.println("Couldn't start AndroidStateFactory!");
@@ -86,7 +88,7 @@ public class EveService extends Service {
 		try {
 			BridgeDemoAgent agent = (BridgeDemoAgent) host.getAgent(DEMO_AGENT);
 			agent.initTask();
-			BusProvider.getBus().post(new StateEvent(null,"agentsUp"));
+			BusProvider.getBus().post(new StateEvent(null, "agentsUp"));
 		} catch (Exception e) {
 			System.err.println("Failed to initiate agent.");
 			e.printStackTrace();
@@ -97,9 +99,7 @@ public class EveService extends Service {
 	
 	@Subscribe
 	public void onStateEvent(StateEvent event) {
-		System.err.println("Service received StateEvent! " + event.getAgentId()
-				+ ":" + event.getValue());
-		if (event.getValue().equals("taskUpdated")
+		if (event.getValue().equals("newTask")
 				&& event.getAgentId().equals(EveService.DEMO_AGENT)) {
 			try {
 				NewTaskNotification(event.getAgentId());
@@ -107,6 +107,10 @@ public class EveService extends Service {
 				System.err.println("Failed to produce notification!");
 				e.printStackTrace();
 			}
+		}
+		if (event.getValue().equals("taskUpdated")
+				&& event.getAgentId().equals(EveService.DEMO_AGENT)) {
+			rmNotification();
 		}
 	}
 	
@@ -133,6 +137,11 @@ public class EveService extends Service {
 		// Hide the notification after its selected
 		noti.flags |= Notification.FLAG_AUTO_CANCEL;
 		
-		notificationManager.notify(0, noti);
+		notificationManager.notify(NEWTASKID, noti);
+	}
+	
+	public void rmNotification() {
+		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		notificationManager.cancel(NEWTASKID);
 	}
 }

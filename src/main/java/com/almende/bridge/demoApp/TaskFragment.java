@@ -88,6 +88,7 @@ public class TaskFragment extends Fragment {
 												EveService.DEMO_AGENT);
 								Task task = agent.getTask();
 								task.setStatus(Task.ACTIVE);
+								agent.setTask(task);
 								BusProvider.getBus().post(
 										new StateEvent(agent.getId(),
 												"taskUpdated"));
@@ -115,6 +116,7 @@ public class TaskFragment extends Fragment {
 												EveService.DEMO_AGENT);
 								Task task = agent.getTask();
 								task.setStatus(Task.COMPLETE);
+								agent.setTask(task);
 								BusProvider.getBus().post(
 										new StateEvent(agent.getId(),
 												"taskUpdated"));
@@ -135,7 +137,7 @@ public class TaskFragment extends Fragment {
 	public void onEvent(StateEvent event) {
 		System.err.println("TaskFragment received StateEvent! "
 				+ event.getAgentId() + ":" + event.getValue());
-		if (event.getValue().equals("taskUpdated")
+		if ((event.getValue().equals("taskUpdated") || event.getValue().equals("newTask"))
 				&& event.getAgentId().equals(EveService.DEMO_AGENT)) {
 			renderTask();
 		}

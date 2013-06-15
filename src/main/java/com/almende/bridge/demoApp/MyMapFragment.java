@@ -41,7 +41,6 @@ public class MyMapFragment extends MapFragment {
 		settings.setAllGesturesEnabled(true);
 		settings.setMyLocationButtonEnabled(true);
 		
-		setMapOverlays();
 		BusProvider.getBus().register(this);
 		System.err.println("Map registered for event bus.");
 		return root;
@@ -49,9 +48,8 @@ public class MyMapFragment extends MapFragment {
 	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		System.err.println("on View created!");
-		
 		super.onViewCreated(view, savedInstanceState);
+		setMapOverlays();
 	}
 	
 	public void setMapOverlays() {
@@ -73,7 +71,7 @@ public class MyMapFragment extends MapFragment {
 				mTask.remove();
 			}
 
-			if (task != null) {
+			if (task != null && !task.getStatus().equals(Task.COMPLETE)) {
 				Double lat = Double.valueOf(task.getLat());
 				Double lon = Double.valueOf(task.getLon());
 				taskLoc = new LatLng(lat,lon);

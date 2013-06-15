@@ -39,8 +39,8 @@ public class BridgeDemoAgent extends Agent {
 	public void updateTask() throws JsonProcessingException {
 		Task task = new Task("And this is another task!!", "Ludo",
 				"2013-06-14 13:35:05", Task.NOTACK,"58.9173","5.5851");
-		getState().put(TASK, JOM.getInstance().writeValueAsString(task));
-		BusProvider.getBus().post(new StateEvent(getId(),"taskUpdated"));
+		setTask(task);
+		BusProvider.getBus().post(new StateEvent(getId(),"newTask"));
 	}
 	public Task getTask() throws JsonProcessingException, IOException{
 		ObjectReader taskReader = JOM.getInstance().reader(Task.class);
@@ -53,5 +53,10 @@ public class BridgeDemoAgent extends Agent {
 			return null;
 		}
 	}
-	
+	public void setTask(Task task) throws JsonProcessingException{
+		getState().put(TASK,JOM.getInstance().writeValueAsString(task));
+	}
+	public void delTask(){
+		getState().remove(TASK);
+	}
 }
