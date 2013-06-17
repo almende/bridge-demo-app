@@ -121,23 +121,26 @@ public class EveService extends Service {
 		
 		BridgeDemoAgent agent = (BridgeDemoAgent) host.getAgent(DEMO_AGENT);
 		Task task = agent.getTask();
-		String task_text = task.getText();
-		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		Intent intent = new Intent(this, BaseActivity.class);
-		PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-		
-		// Build notification
-		// Actions are just fake
-		Notification noti = new Notification.Builder(this)
-				.setContentTitle("New task received!")
-				.setContentText(task_text).setSmallIcon(R.drawable.icon)
-				.setDefaults(Notification.DEFAULT_ALL)
-				.setContentIntent(pIntent).build();
-		
-		// Hide the notification after its selected
-		noti.flags |= Notification.FLAG_AUTO_CANCEL;
-		
-		notificationManager.notify(NEWTASKID, noti);
+		if (task != null) {
+			String task_text = task.getText();
+			NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+			Intent intent = new Intent(this, BaseActivity.class);
+			PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent,
+					0);
+			
+			// Build notification
+			// Actions are just fake
+			Notification noti = new Notification.Builder(this)
+					.setContentTitle("New task received!")
+					.setContentText(task_text).setSmallIcon(R.drawable.icon)
+					.setDefaults(Notification.DEFAULT_ALL)
+					.setContentIntent(pIntent).build();
+			
+			// Hide the notification after its selected
+			noti.flags |= Notification.FLAG_AUTO_CANCEL;
+			
+			notificationManager.notify(NEWTASKID, noti);
+		}
 	}
 	
 	public void rmNotification() {

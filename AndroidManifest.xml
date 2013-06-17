@@ -41,6 +41,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.almende.bridge.demoApp.SettingsActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_settings"
+            android:parentActivityName="com.almende.bridge.demoApp.BaseActivity" >
+        </activity>
 
         <service
             android:name="com.almende.bridge.demoApp.EveService"

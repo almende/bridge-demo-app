@@ -35,21 +35,27 @@ public class MyMapFragment extends MapFragment {
 			Bundle savedInstanceState) {
 		View root = super.onCreateView(inflater, container, savedInstanceState);
 		System.err.println("Initializing the map!");
-		UiSettings settings = getMap().getUiSettings();
-		
-		getMap().setMyLocationEnabled(true);
-		settings.setAllGesturesEnabled(true);
-		settings.setMyLocationButtonEnabled(true);
-		
-		BusProvider.getBus().register(this);
-		System.err.println("Map registered for event bus.");
+		if (getMap() != null) {
+			UiSettings settings = getMap().getUiSettings();
+			
+			getMap().setMyLocationEnabled(true);
+			settings.setAllGesturesEnabled(true);
+			settings.setMyLocationButtonEnabled(true);
+			
+			BusProvider.getBus().register(this);
+			System.err.println("Map registered for event bus.");
+		} else {
+			System.err.println("Couldn't initialize map!");
+		}
 		return root;
 	}
 	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		setMapOverlays();
+		if (getMap() != null) {
+			setMapOverlays();
+		}
 	}
 	
 	public void setMapOverlays() {
@@ -59,22 +65,24 @@ public class MyMapFragment extends MapFragment {
 			BridgeDemoAgent agent = (BridgeDemoAgent) host
 					.getAgent(EveService.DEMO_AGENT);
 			Task task = agent.getTask();
-			LatLng myLoc=null;
+			LatLng myLoc = null;
 			LatLng taskLoc = null;
-
-			//TODO: this is production, for demonstration/development, get simulated location from agent!
+			
+			// TODO: this is production, for demonstration/development, get
+			// simulated location from agent!
 			Location location = getMap().getMyLocation();
 			if (location != null) {
-				myLoc = new LatLng(location.getLatitude(),location.getLongitude());
+				myLoc = new LatLng(location.getLatitude(),
+						location.getLongitude());
 			}
 			if (mTask != null) {
 				mTask.remove();
 			}
-
+			
 			if (task != null && !task.getStatus().equals(Task.COMPLETE)) {
 				Double lat = Double.valueOf(task.getLat());
 				Double lon = Double.valueOf(task.getLon());
-				taskLoc = new LatLng(lat,lon);
+				taskLoc = new LatLng(lat, lon);
 				mTask = getMap().addMarker(
 						new MarkerOptions().position(taskLoc));
 				
@@ -91,8 +99,8 @@ public class MyMapFragment extends MapFragment {
 						return false;
 					}
 				});
-			} 
-			zoomToInclude(myLoc,taskLoc);
+			}
+			zoomToInclude(myLoc, taskLoc);
 		} catch (Exception e) {
 			
 			System.err.println("Failed to add Task Marker");
@@ -107,8 +115,11 @@ public class MyMapFragment extends MapFragment {
 			loc2 = null;
 		}
 		if (loc1 == null) {
-			//TODO: Default location from Stavanger demo! Put in agent or config?
-			getMap().animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(58.9173,5.5851), 15));
+			// TODO: Default location from Stavanger demo! Put in agent or
+			// config?
+			getMap().animateCamera(
+					CameraUpdateFactory.newLatLngZoom(new LatLng(58.9173,
+							5.5851), 15));
 		}
 		if (loc2 == null) {
 			getMap().animateCamera(CameraUpdateFactory.newLatLngZoom(loc1, 15));
@@ -124,6 +135,7 @@ public class MyMapFragment extends MapFragment {
 	public void onEvent(StateEvent event) {
 		System.err.println("MapFragment received StateEvent! "
 				+ event.getAgentId() + ":" + event.getValue());
+		
 		if (event.getValue().equals("taskUpdated")
 				&& event.getAgentId().equals(EveService.DEMO_AGENT)) {
 			setMapOverlays();

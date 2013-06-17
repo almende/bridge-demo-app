@@ -6,6 +6,7 @@
     <string name="title_activity_map">Map</string>
     <string name="title_activity_task">Task</string>
     <string name="title_activity_history">History</string>
+    <string name="title_settings">Settings</string>
     <string name="callTeamLeader">Call Team Leader</string>
     <string name="history">History!</string>
     <string name="Acknowledge">Acknowledge</string>
@@ -19,5 +20,18 @@
     <string name="task_assignment_date">---</string>
     <string name="task_title_status">Status</string>
     <string name="task_status">---</string>
+    <string name="pref_xmpp_title">CAPE settings</string>
+    <string name="xmppUsername_key">xmppUsername</string>
+    <string name="xmppPassword_key">xmppPassword</string>
+    <string name="xmppUsername">Username</string>
+    <string name="xmppPassword">Password</string>
+    <string name="fakeLocation_key">fakeLocation</string>
+    <string name="fakeLocation">Fake location latitude &amp; longitude</string>
+    <string name="pref_demo_title">Demonstration</string>
+    <string name="fake">Fake</string>
+    <string name="real">Real</string>
+    <string name="locationFaked_key">locationFaked</string>
+    <string name="locationFaked">Fake own location or real GPS location?</string>
+    <string name="preference_title">Settings</string>
 
 </resources>

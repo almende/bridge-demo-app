@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:key="pref_xmpp_settings"
+        android:title="@string/pref_xmpp_title" >
+        <EditTextPreference
+            android:defaultValue="example@openid.almende.org"
+            android:key="@string/xmppUsername_key"
+            android:persistent="true"
+            android:title="@string/xmppUsername" />
+        <EditTextPreference
+            android:defaultValue="changeme"
+            android:inputType="textPassword"
+            android:key="@string/xmppPassword_key"
+            android:persistent="true"
+            android:title="@string/xmppPassword" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_demo_settings"
+        android:title="@string/pref_demo_title" >
+        <CheckBoxPreference
+            android:key="@string/locationFaked_key"
+            android:persistent="true"
+            android:summaryOff="@string/real"
+            android:summaryOn="@string/fake"
+            android:title="@string/locationFaked" />
+
+        <EditTextPreference
+            android:defaultValue="51.90884, 4.47972"
+            android:key="@string/fakeLocation_key"
+            android:persistent="true"
+            android:title="@string/fakeLocation" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
