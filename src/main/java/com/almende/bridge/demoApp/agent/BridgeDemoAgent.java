@@ -2,6 +2,10 @@ package com.almende.bridge.demoApp.agent;
 
 import java.io.IOException;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import com.almende.bridge.demoApp.event.StateEvent;
 import com.almende.bridge.demoApp.types.Task;
 import com.almende.bridge.demoApp.util.BusProvider;
@@ -11,6 +15,7 @@ import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.jsonrpc.JSONRPCException;
 import com.almende.eve.rpc.jsonrpc.JSONRequest;
 import com.almende.eve.rpc.jsonrpc.jackson.JOM;
+import com.almende.eve.transport.xmpp.XmppService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectReader;
 
@@ -18,7 +23,12 @@ import com.fasterxml.jackson.databind.ObjectReader;
 public class BridgeDemoAgent extends Agent {
 	private static final String	VERSION	= "4";
 	private static final String	TASK	= "CurrentTask";
+	private static Context context = null;
 	
+	public static void setContext(Context context) {
+		BridgeDemoAgent.context = context;
+	}
+
 	public static String getBaseVersion() {
 		return VERSION;
 	}
@@ -58,5 +68,17 @@ public class BridgeDemoAgent extends Agent {
 	}
 	public void delTask(){
 		getState().remove(TASK);
+	}
+	
+	public void reconnect(){
+	try{
+		XmppService xmppService = (XmppService) getAgentFactory().getTransportService("xmpp");
+		xmppService.disconnect(getId());
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		xmppService.connect(getId(), prefs.getString("@string/xmppUsername_key", "unset"), prefs.getString("@string/xmppPassword_key", "unset"));
+	}catch (Exception e){
+		System.err.println("Failed to (re-)connection XMPP connection");
+		e.printStackTrace();
+	}
 	}
 }

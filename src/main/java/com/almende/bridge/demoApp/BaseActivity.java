@@ -24,8 +24,6 @@ public class BaseActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		EveService.initHost(this.getApplication());
-		
 		BusProvider.getBus().register(this);
 		
 		setContentView(R.layout.activity_base);

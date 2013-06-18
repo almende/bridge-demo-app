@@ -2,6 +2,7 @@ package com.almende.bridge.demoApp.util;
 
 import android.os.Handler;
 import android.os.Looper;
+
 import com.squareup.otto.Bus;
 
 /**

@@ -22,9 +22,11 @@ import com.almende.eve.agent.AgentHost;
 import com.almende.eve.rpc.jsonrpc.JSONRPCException;
 import com.almende.eve.scheduler.ClockSchedulerFactory;
 import com.almende.eve.state.FileStateFactory;
+import com.almende.eve.transport.xmpp.XmppService;
 import com.squareup.otto.Subscribe;
 
 public class EveService extends Service {
+	
 	public static final String	DEMO_AGENT	= "bridgeDemoApp";
 	public static final int		NEWTASKID	= 0;
 	private static AgentHost	host;
@@ -34,44 +36,87 @@ public class EveService extends Service {
 		return null;
 	}
 	
-	public static void initHost(Context ctx) {
-		host = AgentHost.getInstance();
-		try {
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("AppContext", ctx);
-			params.put("path", ctx.getFilesDir().getAbsolutePath()
-					+ "/.eveagents");
-			host.setStateFactory(new FileStateFactory(params));
-		} catch (Exception e) {
-			System.err.println("Couldn't start AndroidStateFactory!");
-			e.printStackTrace();
-		}
-		host.setSchedulerFactory(new ClockSchedulerFactory(host,
-				new HashMap<String, Object>()));
-		System.err.println("AgentFactory started!");
-		
-		try {
-			if (host.hasAgent(DEMO_AGENT) && host.getAgent(DEMO_AGENT) != null) {
-				Agent test = host.getAgent(DEMO_AGENT);
-				if (!"BridgeDemoAgent".equals(test.getType())
-						|| !test.getVersion().equals(
-								BridgeDemoAgent.getBaseVersion())) {
-					System.err.println("Warning: replacing agent " + DEMO_AGENT
-							+ " with new code version "
-							+ BridgeDemoAgent.getBaseVersion());
-					host.deleteAgent(DEMO_AGENT);
+	public static void initHost(final Context ctx) {
+		System.err.println("Init HOST called!!!!!!!!!!!!!!!!!!!!!!!!11");
+		new Thread(new Runnable() {
+			public void run() {
+				
+				BridgeDemoAgent.setContext(ctx);
+				host = AgentHost.getInstance();
+				try {
+					Map<String, Object> params = new HashMap<String, Object>();
+					params.put("AppContext", ctx);
+					params.put("path", ctx.getFilesDir().getAbsolutePath()
+							+ "/.eveagents");
+					host.setStateFactory(new FileStateFactory(params));
+					
+				} catch (Exception e) {
+					System.err
+							.println("Couldn't start AndroidIntentStateFactory!");
+					e.printStackTrace();
 				}
-			} else {
-				if (host.hasAgent(DEMO_AGENT)) {
-					host.deleteAgent(DEMO_AGENT);
+				String hostUrl = "openid.almende.org";
+				int port = 5222;
+				String serviceName = hostUrl;
+				XmppService xmppService = new XmppService(host, hostUrl, port,
+						serviceName);
+				host.addTransportService(xmppService);
+				
+				host.setSchedulerFactory(new ClockSchedulerFactory(host,
+						new HashMap<String, Object>()));
+				
+				System.err.println("AgentHost started!");
+				
+				BridgeDemoAgent agent = null;
+				try {
+					if (host.hasAgent(DEMO_AGENT)
+							&& host.getAgent(DEMO_AGENT) != null) {
+						Agent test = host.getAgent(DEMO_AGENT);
+						if (!"BridgeDemoAgent".equals(test.getType())
+								|| !test.getVersion().equals(
+										BridgeDemoAgent.getBaseVersion())) {
+							System.err.println("Warning: replacing agent "
+									+ DEMO_AGENT + " with new code version "
+									+ BridgeDemoAgent.getBaseVersion());
+							host.deleteAgent(DEMO_AGENT);
+						}
+						agent = (BridgeDemoAgent) test;
+					} else {
+						if (host.hasAgent(DEMO_AGENT)) {
+							host.deleteAgent(DEMO_AGENT);
+						}
+						agent = host.createAgent(BridgeDemoAgent.class,
+								DEMO_AGENT);
+					}
+				} catch (Exception e) {
+					System.err.println("Failed to find/create agent:"
+							+ DEMO_AGENT);
+					e.printStackTrace();
 				}
-				host.createAgent(BridgeDemoAgent.class, DEMO_AGENT);
+				System.err.println("Agent created!");
+				
+				if (agent != null) {
+					agent.reconnect();
+				} else {
+					System.err
+							.println("Agent is still null, not reconnecting.");
+				}
+				
+				if (agent != null) {
+					try {
+						agent.initTask();
+						BusProvider.getBus().post(
+								new StateEvent(null, "agentsUp"));
+					} catch (Exception e) {
+						System.err.println("Failed to init agent.");
+						e.printStackTrace();
+					}
+				} else {
+					System.err
+							.println("Agent is still null, not setting up task");
+				}
 			}
-		} catch (Exception e) {
-			System.err.println("Failed to find/create agent:" + DEMO_AGENT);
-			e.printStackTrace();
-		}
-		System.err.println("Agent created!");
+		}).start();
 	}
 	
 	/**
@@ -84,16 +129,6 @@ public class EveService extends Service {
 		initHost(this.getApplication());
 		
 		BusProvider.getBus().register(this);
-		
-		try {
-			BridgeDemoAgent agent = (BridgeDemoAgent) host.getAgent(DEMO_AGENT);
-			agent.initTask();
-			BusProvider.getBus().post(new StateEvent(null, "agentsUp"));
-		} catch (Exception e) {
-			System.err.println("Failed to initiate agent.");
-			e.printStackTrace();
-		}
-		
 		return START_STICKY;
 	}
 	
@@ -111,6 +146,15 @@ public class EveService extends Service {
 		if (event.getValue().equals("taskUpdated")
 				&& event.getAgentId().equals(EveService.DEMO_AGENT)) {
 			rmNotification();
+		}
+		if (event.getValue().equals("settingsUpdated")) {
+			try {
+				((BridgeDemoAgent) host.getAgent(DEMO_AGENT)).reconnect();
+			} catch (Exception e) {
+				System.err
+						.println("Failed to get Agent to handler settingsUpdated event");
+				e.printStackTrace();
+			}
 		}
 	}
 	

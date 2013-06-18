@@ -44,6 +44,7 @@ public class TaskFragment extends Fragment {
 					.getAgent(EveService.DEMO_AGENT);
 			Task task = agent.getTask();
 			
+			
 			if (task == null || task.getStatus().equals(Task.COMPLETE)) {
 				TextView tv = (TextView) view.findViewById(R.id.task_text);
 				tv.setText(R.string.task_text);

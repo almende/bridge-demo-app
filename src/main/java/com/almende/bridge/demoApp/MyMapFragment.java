@@ -34,19 +34,8 @@ public class MyMapFragment extends MapFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View root = super.onCreateView(inflater, container, savedInstanceState);
-		System.err.println("Initializing the map!");
-		if (getMap() != null) {
-			UiSettings settings = getMap().getUiSettings();
-			
-			getMap().setMyLocationEnabled(true);
-			settings.setAllGesturesEnabled(true);
-			settings.setMyLocationButtonEnabled(true);
-			
-			BusProvider.getBus().register(this);
-			System.err.println("Map registered for event bus.");
-		} else {
-			System.err.println("Couldn't initialize map!");
-		}
+		BusProvider.getBus().register(this);
+		
 		return root;
 	}
 	
@@ -54,6 +43,11 @@ public class MyMapFragment extends MapFragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		if (getMap() != null) {
+			UiSettings settings = getMap().getUiSettings();
+			
+			getMap().setMyLocationEnabled(true);
+			settings.setAllGesturesEnabled(true);
+			settings.setMyLocationButtonEnabled(true);
 			setMapOverlays();
 		}
 	}
@@ -136,7 +130,7 @@ public class MyMapFragment extends MapFragment {
 		System.err.println("MapFragment received StateEvent! "
 				+ event.getAgentId() + ":" + event.getValue());
 		
-		if (event.getValue().equals("taskUpdated")
+		if ((event.getValue().equals("taskUpdated")||event.getValue().equals("newTask"))
 				&& event.getAgentId().equals(EveService.DEMO_AGENT)) {
 			setMapOverlays();
 		}
