@@ -18,7 +18,7 @@ public class SettingsActivity extends Activity {
 	
 	@Override
 	protected void onPause() {
-		BusProvider.getBus().post(new StateEvent(EveService.DEMO_AGENT,"settingsUpdated"));
+		BusProvider.getBus().postBackground(new StateEvent(EveService.DEMO_AGENT,"settingsUpdated"));
 		super.onPause();
 	}
 }

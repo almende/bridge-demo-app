@@ -11,6 +11,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
 
 import com.almende.bridge.demoApp.agent.BridgeDemoAgent;
@@ -26,6 +28,7 @@ import com.almende.eve.transport.xmpp.XmppService;
 import com.squareup.otto.Subscribe;
 
 public class EveService extends Service {
+	public static final HandlerThread myThread = new HandlerThread(EveService.class.getCanonicalName());
 	
 	public static final String	DEMO_AGENT	= "bridgeDemoApp";
 	public static final int		NEWTASKID	= 0;
@@ -37,10 +40,10 @@ public class EveService extends Service {
 	}
 	
 	public static void initHost(final Context ctx) {
-		System.err.println("Init HOST called!!!!!!!!!!!!!!!!!!!!!!!!11");
-		new Thread(new Runnable() {
+		Handler myHandler = new Handler(myThread.getLooper());
+		myHandler.post(new Runnable() {
 			public void run() {
-				
+				System.err.println("Eve Service ThreadId:"+Thread.currentThread().getId());
 				BridgeDemoAgent.setContext(ctx);
 				host = AgentHost.getInstance();
 				try {
@@ -116,7 +119,7 @@ public class EveService extends Service {
 							.println("Agent is still null, not setting up task");
 				}
 			}
-		}).start();
+		});
 	}
 	
 	/**
@@ -126,14 +129,17 @@ public class EveService extends Service {
 	 */
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		initHost(this.getApplication());
-		
+		myThread.start();
+		BusProvider.getBus().setServiceThread(myThread);
 		BusProvider.getBus().register(this);
+		initHost(this.getApplication());
 		return START_STICKY;
 	}
 	
 	@Subscribe
 	public void onStateEvent(StateEvent event) {
+		System.err.println("Service received StateEvent:"+event.getValue()+ " threadId:"+Thread.currentThread().getId());
+		
 		if (event.getValue().equals("newTask")
 				&& event.getAgentId().equals(EveService.DEMO_AGENT)) {
 			try {

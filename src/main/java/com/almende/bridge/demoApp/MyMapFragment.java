@@ -132,10 +132,14 @@ public class MyMapFragment extends MapFragment {
 		
 		if ((event.getValue().equals("taskUpdated")||event.getValue().equals("newTask"))
 				&& event.getAgentId().equals(EveService.DEMO_AGENT)) {
-			setMapOverlays();
+			if (getMap() != null){
+				setMapOverlays();
+			}
 		}
 		if (event.getValue().equals("agentsUp")) {
-			setMapOverlays();
+			if (getMap() != null){
+				setMapOverlays();
+			}
 		}
 	}
 }
