@@ -48,7 +48,6 @@ public class EveService extends Service {
 				host = AgentHost.getInstance();
 				try {
 					Map<String, Object> params = new HashMap<String, Object>();
-					params.put("AppContext", ctx);
 					params.put("path", ctx.getFilesDir().getAbsolutePath()
 							+ "/.eveagents");
 					host.setStateFactory(new FileStateFactory(params));

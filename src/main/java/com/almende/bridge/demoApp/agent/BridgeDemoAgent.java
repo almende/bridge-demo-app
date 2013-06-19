@@ -1,6 +1,7 @@
 package com.almende.bridge.demoApp.agent;
 
 import java.io.IOException;
+import java.net.URI;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,16 +14,18 @@ import com.almende.bridge.demoApp.util.BusProvider;
 import com.almende.eve.agent.Agent;
 import com.almende.eve.rpc.annotation.Access;
 import com.almende.eve.rpc.annotation.AccessType;
+import com.almende.eve.rpc.annotation.Name;
 import com.almende.eve.rpc.jsonrpc.JSONRPCException;
-import com.almende.eve.rpc.jsonrpc.JSONRequest;
 import com.almende.eve.rpc.jsonrpc.jackson.JOM;
+import com.almende.eve.transport.AsyncCallback;
 import com.almende.eve.transport.xmpp.XmppService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Access(AccessType.PUBLIC)
 public class BridgeDemoAgent extends Agent {
-	private static final String	VERSION	= "4";
+	private static final String	VERSION	= "5";
 	private static final String	TASK	= "CurrentTask";
 	private static Context		context	= null;
 	
@@ -40,21 +43,7 @@ public class BridgeDemoAgent extends Agent {
 	}
 	
 	public void initTask() throws JSONRPCException, IOException {
-		// Task task = new Task("Hi there, this is your new task: Enjoy!",
-		// "Ludo",
-		// "2013-06-14 11:51:05", Task.NOTACK,"58.92","5.58");
-		// getState().put(TASK, JOM.getInstance().writeValueAsString(task));
 		getState().remove(TASK);
-		
-		getScheduler().createTask(
-				new JSONRequest("updateTask", JOM.createObjectNode()), 60000);
-	}
-	
-	public void updateTask() throws JsonProcessingException {
-		Task task = new Task("And this is another task!!", "Ludo",
-				"2013-06-14 13:35:05", Task.NOTACK, "58.9173", "5.5851");
-		setTask(task);
-		BusProvider.getBus().post(new StateEvent(getId(), "newTask"));
 	}
 	
 	public Task getTask() throws JsonProcessingException, IOException {
@@ -69,8 +58,11 @@ public class BridgeDemoAgent extends Agent {
 		}
 	}
 	
-	public void setTask(Task task) throws JsonProcessingException {
+	public void setTask(@Name("task") Task task,@Name("newTask") boolean newTask) throws JsonProcessingException {
 		getState().put(TASK, JOM.getInstance().writeValueAsString(task));
+		if (newTask){
+			BusProvider.getBus().post(new StateEvent(getId(), "newTask"));
+		}
 	}
 	
 	public void delTask() {
@@ -92,6 +84,23 @@ public class BridgeDemoAgent extends Agent {
 			xmppService.connect(getId(), username, password);
 		} catch (Exception e) {
 			System.err.println("Failed to (re-)connection XMPP connection");
+			e.printStackTrace();
+		}
+	}
+	
+	public void callRedirect(){
+		ObjectNode params = JOM.createObjectNode();
+		params.put("address","+31624495602");
+		params.put("url", "http://ask70.ask-cs.nl/~ask/askfastdemo/redirect?phone=0107421239");
+		params.put("adapterID", "fe8aeeb0-3fb3-11e2-be8a-00007f000001");
+		params.put("publicKey", "askfast1@ask-cs.com");
+		params.put("privateKey", "47cdebf0-7131-11e2-8945-060dc6d9dd94");
+		try {
+			sendAsync(URI.create("http://ask-charlotte.appspot.com/rpc"),"outboundCall",params,new AsyncCallback<Void>(){
+				public void onSuccess(Void result) {}
+				public void onFailure(Exception exception) {}},Void.class);
+		} catch (Exception e) {
+			System.err.println("Failed to call outboundCall.");
 			e.printStackTrace();
 		}
 	}

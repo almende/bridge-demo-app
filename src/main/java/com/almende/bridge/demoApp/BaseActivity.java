@@ -13,8 +13,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.almende.bridge.demoApp.agent.BridgeDemoAgent;
 import com.almende.bridge.demoApp.event.StateEvent;
 import com.almende.bridge.demoApp.util.BusProvider;
+import com.almende.eve.agent.AgentHost;
 import com.squareup.otto.Subscribe;
 
 public class BaseActivity extends Activity {
@@ -33,6 +35,13 @@ public class BaseActivity extends Activity {
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				System.err.println("CallButton clicked!");
+				AgentHost host = AgentHost.getInstance();
+				try {
+					BridgeDemoAgent agent = (BridgeDemoAgent) host.getAgent(EveService.DEMO_AGENT);
+					agent.callRedirect();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}
