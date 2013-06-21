@@ -1,0 +1,112 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/striped_background" >
+
+    <!-- Task fragment layout -->
+
+    <LinearLayout
+        android:id="@+id/container"
+        style="@style/Alarm.InfoBox"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:background="@color/alarm_ecru_white"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/task_title"
+            style="@style/Alarm.TextView.AlarmInfoBox.Header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:text="@string/task_title" />
+
+        <TextView
+            android:id="@+id/task_text"
+            style="@style/Alarm.TextView.AlarmInfoBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:text="@string/task_text" />
+
+        <TextView
+            android:id="@+id/task_title_assigner"
+            style="@style/Alarm.TextView.AlarmInfoBox.Header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:text="@string/task_title_assigner" />
+
+        <TextView
+            android:id="@+id/task_assigner"
+            style="@style/Alarm.TextView.AlarmInfoBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:text="@string/task_assigner" />
+
+        <TextView
+            android:id="@+id/task_title_assignment_date"
+            style="@style/Alarm.TextView.AlarmInfoBox.Header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:text="@string/task_title_assignment_date" />
+
+        <TextView
+            android:id="@+id/task_assignment_date"
+            style="@style/Alarm.TextView.AlarmInfoBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:text="@string/task_assignment_date" />
+
+        <TextView
+            android:id="@+id/task_title_status"
+            style="@style/Alarm.TextView.AlarmInfoBox.Header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:text="@string/task_title_status" />
+
+        <TextView
+            android:id="@+id/task_status"
+            style="@style/Alarm.TextView.AlarmInfoBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:text="@string/task_status" />
+
+        <FrameLayout
+            android:id="@+id/task_spacer"
+            style="@style/Alarm.TextView.Spacer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/ackButton"
+                style="@style/Alarm.Button.Green"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Acknowledge" />
+
+            <Button
+                android:id="@+id/completeButton"
+                style="@style/Alarm.Button.Blue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Complete" />
+        </LinearLayout>
+    </LinearLayout>
+
+</FrameLayout>

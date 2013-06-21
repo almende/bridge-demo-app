@@ -1,0 +1,19 @@
+# Eve settings
+
+# context settings (for persistency)
+state:
+  class: FileStateFactory
+  path: .eveagents
+
+# scheduler settings (for tasks)
+scheduler:
+  class: ClockSchedulerFactory
+
+bootstrap:
+  agents:
+    edxl: com.almende.bridge.agent.EDXLAdapterAgent
+    demo: com.almende.bridge.agent.DemoGenerator
+    list: com.almende.bridge.agent.GenList
+    agent_list: com.almende.bridge.agent.GenList
+    rate: com.almende.bridge.agent.RateMeasurement
+    

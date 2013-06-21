@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style type="text/css">
+html {
+	height: 100%
+}
+
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0
+}
+
+.map {
+	height: 200px;
+	width: 200px;
+}
+
+.agent {
+	padding: 10px;
+	float: left;
+}
+
+.labels {
+	color: red;
+	background-color: white;
+	font-family: "Lucida Grande", "Arial", sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	text-align: center;
+	width: 80px;
+	border: 2px solid black;
+	white-space: nowrap;
+}
+</style>
+<title>BRIDGE simulator</title>
+<script type="text/javascript"
+	src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBAI8vyV2UkwGag1r7lJHn6hlzDTDAOads&sensor=false">
+	
+</script>
+<script src="components/jquery/jquery.min.js"></script>
+<script src="components/json2/json2.js"></script>
+<script src="js/markerwithlabel.js"></script>
+<script src="js/locationSimulator.js"></script>
+<script>
+if (!Date.prototype.toISOString) {
+    Date.prototype.toISOString = function() {
+        function pad(n) { return n < 10 ? '0' + n : n }
+        return this.getUTCFullYear() + '-'
+            + pad(this.getUTCMonth() + 1) + '-'
+            + pad(this.getUTCDate()) + 'T'
+            + pad(this.getUTCHours()) + ':'
+            + pad(this.getUTCMinutes()) + ':'
+            + pad(this.getUTCSeconds()) + 'Z';
+    };
+}
+
+	var timeWarp = 1;
+	var offset = 0;
+	var agentArray=[];
+	var agentList;
+	var agents={};
+	var wrap = function(func,parmVal){
+		return function(){
+			offset = 0;
+			if (!func(parmVal)){
+				setTimeout(1000,wrap(func,parmVal));
+			}
+		}
+	}
+	var close = function (a,b){
+		return Math.abs(a.lat - b.lat)<0.0001 && Math.abs(a.lon - b.lon)<0.0001;
+	}
+
+	var last = new Date().getTime();
+	var now = new Date().getTime();
+	$(document).ready(function() {
+		setInterval(function(){
+				$.ajax({
+					url: "agents/demo/",
+					type: "POST",
+					processdata: false,
+					data: '{"id": 1,"method": "getAllResources","params": {}}'
+				}).done(function (data){
+					agentList = data.result;
+					agentList.map(function(label){
+						$.ajax({
+							url: label.url,
+							type: "POST",
+							processdata: false,
+							data: '{"id": 1,"method": "requestStatus","params": {}}'
+						}).done(function (agent_data){
+							agent_data = agent_data.result;
+							if ($.inArray(agent_data.id, agentArray) < 0 && agent_data.deploymentStatus=="Assigned"){
+								agentArray.push(agent_data.id);
+								$(".container").append('<div class="agent '+agent_data.name+'" id="'+agent_data.id+'"><h2>'+agent_data.name+'</h2><span class="plan">'+agent_data.task+'</span><br></div>');
+								
+								agents[agent_data.id+"_plan"] = {simulator:null,toLocation:"",startAddress:"",endAddress:""};
+								var plan = agents[agent_data.id+"_plan"];
+								
+								var agent = {
+									lat:agent_data.current.lat,
+									lon:agent_data.current.lon,
+									toLocation:"",
+									url:label.url
+								}
+								if (typeof agent_data.goal != "undefined"){
+									agent.toLocation = agent_data.goal.lat +" "+agent_data.goal.lon;
+								}
+								agents[agent_data.id] = agent;
+								
+								if (plan.toLocation == "" || !close({lat:plan.toLocation.split(" ")[0],lon:plan.toLocation.split(" ")[1]},{lat:agent.toLocation.split(" ")[0],lon:agent.toLocation.split(" ")[1]})){
+									if (agent.toLocation == "") agent.toLocation = agent.lat+" "+agent.lon;
+									plan.toLocation = agent.toLocation;
+								}
+								if (plan.toLocation != plan.endAddress){
+									console.log("Setting up directions:"+agent_data.name+" / "+agent_data.id);
+									
+									plan.startAddress = agent.lat+" "+agent.lon;
+									plan.endAddress = plan.toLocation;
+									plan.simulator = $("#"+agent_data.id).locationSimulator({
+										startTime: (new Date().getTime()+5000),
+										startAddress: plan.startAddress,
+										endAddress: plan.endAddress
+									});
+									setTimeout(wrap(plan.simulator.methods.showDirections,null),5000);
+								}
+							}
+						});
+						
+					});
+				});
+		},10000);
+		setInterval(function(){
+			now = new Date().getTime();
+			if (timeWarp != 1) offset += (now-last)*timeWarp;
+			last = now;
+		},500);
+		setInterval(function(){
+			agentArray.map(function(label){
+				var plan = agents[label+"_plan"];
+				var now = new Date().getTime();
+				if (plan.simulator != null){
+					plan.simulator.methods.showCurrentPos(now+offset);
+				}
+			});
+		},500);
+		setInterval(function(){
+			agentArray.map(function(label){
+				var plan = agents[label+"_plan"];
+				var agent = agents[label];
+				if (plan.simulator != null) {
+					var pos = plan.simulator.methods.getCurrentPos(now+offset);
+					if (pos != null && !close({lat:agent.lat,lon:agent.lon},{lat:pos.lat(),lon:pos.lng()})){
+						agent.lat = pos.lat().toString();
+						agent.lon = pos.lng().toString();
+						var now = new Date();
+						var newLocation = {
+							time: now.toISOString(),
+							lat: agent.lat,
+							lon: agent.lon
+						}
+						var data = '{"id": 1,"method": "setLocation","params": {"location":'+JSON.stringify(newLocation)+'}}';
+						$.ajax({
+							url:agent.url,
+							type: "POST",
+							processdata: false,
+							data: data
+						})
+					} 
+				}
+			});
+		},3000);
+		setInterval(function(){
+			var data = '{"id": 1,"method": "getList","params": {}}';
+			$.ajax({
+				url:"agents/list",
+				type: "POST",
+				processdata: false,
+				data: data
+			}).done(function(data){
+				$(".taskCount").html(data.result.length);
+				if (data.result.length == 0 && agentArray.length > 0){
+					location.reload();
+				}
+			});
+		},500);
+		setInterval(function(){
+			var data = '{"id": 1,"method": "getInvalid","params": {}}';
+			$.ajax({
+				url:"agents/demo",
+				type: "POST",
+				processdata: false,
+				data: data
+			}).done(function(data){
+				$(".invalidCount").html(data.result);
+			});
+		},500);
+
+	});
+</script>
+</head>
+<body>
+	<h2>BRIDGE simulator</h2>
+	<br>
+		There are <span class="taskCount">0</span> tasks known to the Resourcemanager.<br>
+		There have been <span class="invalidCount">0</span> invalid tasks offered.<br>
+		Timewarp:<input value="1" class="timeWarp" onChange="timeWarp = $(this).val()"><br>
+	<hr><br>
+	<div class="container"></div>
+	
+</body>
+</html>

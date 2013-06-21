@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style type="text/css">
+html {
+	height: 100%
+}
+
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0
+}
+
+.lamp {
+	display:inline;
+	background-color:red;
+	border:1px solid black;
+	height:1em
+}
+.src {
+	display:inline;
+	height:1em
+}
+.active {
+	background-color:green;
+}
+.map {
+	height: 80%;
+	width: 80%;
+}
+
+.labels {
+	color: red;
+	background-color: white;
+	font-family: "Lucida Grande", "Arial", sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	text-align: center;
+	width: 80px;
+	border: 2px solid black;
+	white-space: nowrap;
+}
+</style>
+<title>BRIDGE overview of all resources in S2D2S.</title>
+<script type="text/javascript"
+	src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBAI8vyV2UkwGag1r7lJHn6hlzDTDAOads&sensor=false">
+	
+</script>
+<script src="components/jquery/jquery.min.js"></script>
+<script src="components/json2/json2.js"></script>
+<script src="js/markerwithlabel.js"></script>
+<script src="js/locationSimulator.js"></script>
+
+<script>
+var to = null;
+var map = null;
+var shown_markers = {};
+
+var parse = function (json){
+	if (typeof json != "undefined"){
+		json.map(function(elem){
+			//Grep name and location
+			if (typeof elem.data != "undefined"){
+				elem=elem.data;
+			}
+			var name = elem.match(/<Name>([^<]*)<\/Name>/)[1];
+			var position = elem.match(/Current<\/ScheduleType><Location><rm\:TargetArea><gml\:Point><gml:pos>([^<]*)<\/gml:pos>/)[1].split(" ");
+			var pos = new google.maps.LatLng(position[0],position[1]);
+			if (typeof shown_markers[name] != "undefined"){
+				var marker = shown_markers[name];
+				marker.setPosition(pos);
+// 				if (name == "Fire Vehicle 1"){
+// 					console.log(name,marker,position,pos,elem);
+// 				}
+			} else {
+				var mOptions = {
+						position : pos,
+						map : map,
+						labelContent: name,
+					    labelAnchor: new google.maps.Point(22, 0),
+					    labelClass: "labels", // the CSS class for the label
+					    labelStyle: {opacity: 0.75}
+				}
+				var marker = new MarkerWithLabel(mOptions);
+				shown_markers[name]=marker;
+// 				if (name == "Fire Vehicle 1"){
+// 					console.log(name,marker,position,pos,elem);
+// 				}
+			}
+		});
+	}
+}
+
+var update_rm = function(){
+	$.ajax({
+		url:"/cloudAgents/agents/edxl",
+		processdata:false,
+		data:'{"method":"getResources","id":1,"jsonrpc":"2.0","params":{}}',
+		type:"POST"
+	}).done(function (data){
+		if (typeof data == "string" && data != ""){
+			data=JSON.parse(data);
+		}
+		$(".lamp").toggleClass("active",true);
+		$(".src").html("(RM)");
+		parse(data.result);
+		to = setTimeout(update_rm,1000);	
+	})
+}
+var update = function(){
+	$.ajax({
+		url:"http://bridge.d-cis.nl:8008/Name/S2D2S/jsonrpc?invoke=query",
+		processdata:false,
+		data:'{"method":"query","id":1,"jsonrpc":"2.0","params":{"topic":"App.Global.ResourceStatus"}}',
+		type:"POST"
+	}).done(function (data){
+		if (typeof data == "string" && data != ""){
+			data=JSON.parse(data);
+		}
+		$(".lamp").toggleClass("active",true);
+		$(".src").html("(S2D2S)");
+		parse(data.result);
+		to = setTimeout(update,1000);	
+	})
+}
+var stop = function(){
+	if (to != null){
+		$(".lamp").toggleClass("active",false);
+		clearTimeout(to);
+		to=null;
+	}
+}
+
+var draw_map = function(){
+	var mapOptions = {
+			center: new google.maps.LatLng(58.9192135368697,5.57863315838111),
+			zoom: 15,
+			mapTypeId: google.maps.MapTypeId.SATELLITE
+		};
+	map = new google.maps.Map($(".map").get(0),
+				mapOptions);
+}
+
+$(document).ready(function() {
+	update();
+	draw_map();
+});
+</script>
+</head>
+<body>
+&nbsp;&nbsp;<div class="lamp">&nbsp;&nbsp;&nbsp;</div>
+<div class="src"></div>&nbsp;
+<input type="button" onClick="stop();update()" value="start from S2D2S">
+<input type="button" onClick="stop();update_rm()" value="start from RM">
+<input type="button" onClick="stop()" value="stop">
+<br>
+<div class="map"></div>
+</body>
+</html>

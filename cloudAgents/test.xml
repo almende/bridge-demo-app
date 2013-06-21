@@ -1,0 +1,956 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReportResourceDeploymentStatus
+	xmlns="urn:oasis:names:tc:emergency:EDXL:RM:1.0:msg" xmlns:rm="urn:oasis:names:tc:emergency:EDXL:RM:1.0"
+	xmlns:geo-oasis="urn:oasis:names:tc:emergency:EDXL:HAVE:1.0:geo-oasis"
+	xmlns:xal="urn:oasis:names:tc:ciq:xal:3" xmlns:xnl="urn:oasis:names:tc:ciq:xnl:3"
+	xmlns:xpil="urn:oasis:names:tc:ciq:xpil:3" xmlns:gml="http://www.opengis.net/gml"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:oasis:names:tc:emergency:EDXL:RM:1.0:msg EDXL-RMReportResourceDeploymentStatus.xsd">
+	<MessageContentType xmlns="">ReportResourceDeploymentStatus
+	</MessageContentType>
+	<MessageID xmlns="">ca4fb5d1-2d53-498e-8586-58060cffd4d2
+	</MessageID>
+	<SendDateTime xmlns="">2013-04-03T01:39:20+0200
+	</SendDateTime>
+	<OriginatingMessageID xmlns="">001
+	</OriginatingMessageID>
+	<ContactInformation xmlns="">
+		<ContactRole>Sender</ContactRole>
+	</ContactInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>1</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Fire Vehicle 1</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:30.880+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>2</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Fire Vehicle 2</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.252+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>3</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Fire Vehicle 3</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.263+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>4</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Fire Personnel 1</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.275+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>5</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Fire Personnel 2</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.302+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>6</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Fire Personnel 3</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.326+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>7</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Fire Personnel 4</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.340+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>8</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Fire Personnel 5</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.352+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>9</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Fire Personnel 6</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.363+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>10</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Fire Personnel 7</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.374+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>11</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Fire Personnel 8</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.385+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>12</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Fire Personnel 9</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.466+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>13</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Fire Personnel 10</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.503+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>14</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Medic Vehicle 1</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.533+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>15</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Medic Vehicle 2</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.570+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>16</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Medic Vehicle 3</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.619+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>17</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Medic Personnel 1</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.658+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>18</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Medic Personnel 2</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.690+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>19</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Medic Personnel 3</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.725+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>20</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Medic Personnel 4</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.773+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>21</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Medic Personnel 5</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.814+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>22</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Medic Personnel 6</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.844+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>23</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Medic Personnel 7</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.922+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>24</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Medic Personnel 8</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.957+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>25</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Medic Personnel 9</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:31.988+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>26</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Medic Personnel 10</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:32.025+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>27</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Police Vehicle 1</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:32.062+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>28</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Police Vehicle 2</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:32.100+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>29</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Police Vehicle 3</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:32.138+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>30</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Police Personnel 1</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:32.171+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>31</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Police Personnel 2</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:32.212+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>32</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Police Personnel 3</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:32.244+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>33</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Police Personnel 4</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:32.282+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>34</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Police Personnel 5</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:32.358+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>35</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Police Personnel 6</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:32.400+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>36</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Police Personnel 7</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:32.437+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>37</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Police Personnel 8</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:32.472+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>38</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Police Personnel 9</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:32.516+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+	<ResourceInformation xmlns="">
+		<ResourceInfoElementID>39</ResourceInfoElementID>
+		<Resource>
+			<ResourceID>Police Personnel 10</ResourceID>
+			<ResourceStatus>
+				<DeploymentStatus>
+					<rm:value>atBase-Available</rm:value>
+					<rm:ValueListURN>urn:x-hazard:vocab:deploymentStatusTypes
+					</rm:ValueListURN>
+				</DeploymentStatus>
+			</ResourceStatus>
+		</Resource>
+		<ScheduleInformation>
+			<ScheduleType>Current</ScheduleType>
+			<Location>
+				<rm:TargetArea>
+					<gml:Point>
+						<gml:pos>58.968859 5.752784</gml:pos>
+					</gml:Point>
+				</rm:TargetArea>
+			</Location>
+			<DateTime>2013-04-03T13:26:32.558+02:00</DateTime>
+		</ScheduleInformation>
+	</ResourceInformation>
+</ReportResourceDeploymentStatus>
