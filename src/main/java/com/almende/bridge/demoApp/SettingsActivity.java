@@ -4,7 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import com.almende.bridge.demoApp.event.StateEvent;
-import com.almende.bridge.demoApp.util.BusProvider;
+
+import de.greenrobot.event.EventBus;
 
 public class SettingsActivity extends Activity {
 	@Override
@@ -18,7 +19,7 @@ public class SettingsActivity extends Activity {
 	
 	@Override
 	protected void onPause() {
-		BusProvider.getBus().postBackground(new StateEvent(EveService.DEMO_AGENT,"settingsUpdated"));
+		EventBus.getDefault().post(new StateEvent(EveService.DEMO_AGENT,"settingsUpdated"));
 		super.onPause();
 	}
 }

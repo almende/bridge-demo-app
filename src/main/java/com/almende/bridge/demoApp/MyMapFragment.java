@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import com.almende.bridge.demoApp.agent.BridgeDemoAgent;
 import com.almende.bridge.demoApp.event.StateEvent;
 import com.almende.bridge.demoApp.types.Task;
-import com.almende.bridge.demoApp.util.BusProvider;
 import com.almende.eve.agent.AgentHost;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
@@ -19,7 +18,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.squareup.otto.Subscribe;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * The map view of the Bridge app.
@@ -34,7 +34,7 @@ public class MyMapFragment extends MapFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View root = super.onCreateView(inflater, container, savedInstanceState);
-		BusProvider.getBus().register(this);
+		EventBus.getDefault().register(this);
 		
 		return root;
 	}
@@ -125,8 +125,7 @@ public class MyMapFragment extends MapFragment {
 		}
 	}
 	
-	@Subscribe
-	public void onEvent(StateEvent event) {
+	public void onEventMainThread(StateEvent event) {
 		System.err.println("MapFragment received StateEvent! "
 				+ event.getAgentId() + ":" + event.getValue());
 		

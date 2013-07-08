@@ -10,7 +10,6 @@ import android.preference.PreferenceManager;
 import com.almende.bridge.demoApp.R;
 import com.almende.bridge.demoApp.event.StateEvent;
 import com.almende.bridge.demoApp.types.Task;
-import com.almende.bridge.demoApp.util.BusProvider;
 import com.almende.eve.agent.Agent;
 import com.almende.eve.rpc.annotation.Access;
 import com.almende.eve.rpc.annotation.AccessType;
@@ -22,6 +21,8 @@ import com.almende.eve.transport.xmpp.XmppService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import de.greenrobot.event.EventBus;
 
 @Access(AccessType.PUBLIC)
 public class BridgeDemoAgent extends Agent {
@@ -61,7 +62,7 @@ public class BridgeDemoAgent extends Agent {
 	public void setTask(@Name("task") Task task,@Name("newTask") boolean newTask) throws JsonProcessingException {
 		getState().put(TASK, JOM.getInstance().writeValueAsString(task));
 		if (newTask){
-			BusProvider.getBus().post(new StateEvent(getId(), "newTask"));
+			EventBus.getDefault().post(new StateEvent(getId(), "newTask"));
 		}
 	}
 	
@@ -71,7 +72,7 @@ public class BridgeDemoAgent extends Agent {
 	
 	public void reconnect() {
 		try {
-			XmppService xmppService = (XmppService) getAgentFactory()
+			XmppService xmppService = (XmppService) getAgentHost()
 					.getTransportService("xmpp");
 			xmppService.disconnect(getId());
 			SharedPreferences prefs = PreferenceManager
