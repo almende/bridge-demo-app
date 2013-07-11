@@ -52,21 +52,21 @@ public class DemoGenerator extends Agent {
 		// Recreates resources
 		DB.emptyDB();
 		myState.remove("invalidCount");
-		AgentHost factory = getAgentFactory();
+		AgentHost host = getAgentHost();
 		
 		try {
-			GenList teamList = (GenList) factory.getAgent("list");
+			GenList teamList = (GenList) host.getAgent("list");
 			ArrayNode list = teamList.getList();
 			
 			for (JsonNode item : list) {
-				SimpleTaskAgent task = (SimpleTaskAgent) factory.getAgent(item
+				SimpleTaskAgent task = (SimpleTaskAgent) host.getAgent(item
 						.textValue());
 				if (task != null) {
 					ArrayNode teams = task.getTeams();
 					for (JsonNode team : teams) {
-						factory.deleteAgent(team.asText());
+						host.deleteAgent(team.asText());
 					}
-					factory.deleteAgent(task.getId());
+					host.deleteAgent(task.getId());
 				}
 			}
 			teamList.empty();
@@ -75,7 +75,7 @@ public class DemoGenerator extends Agent {
 		}
 		ArrayNode agent_list = null;
 		try {
-			GenList resList = (GenList) factory.getAgent("agent_list");
+			GenList resList = (GenList) host.getAgent("agent_list");
 			agent_list = resList.getList();
 			resList.empty();
 		} catch (Exception e1) {
@@ -84,12 +84,12 @@ public class DemoGenerator extends Agent {
 		Node parent = null;
 		for (String agentId : agentIds) {
 			try {
-				factory.deleteAgent(agentId);
+				host.deleteAgent(agentId);
 			} catch (Exception e) {
 				System.err.println("Couldn't delete agent:" + agentId);
 			}
 			try {
-				Resource agent = (Resource) factory.createAgent(Resource.class,
+				Resource agent = (Resource) host.createAgent(Resource.class,
 						agentId);
 				if (agent_list != null) {
 					String url = agent.getUrls().get(0);

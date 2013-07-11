@@ -15,9 +15,9 @@ import android.widget.Button;
 
 import com.almende.bridge.demoApp.agent.BridgeDemoAgent;
 import com.almende.bridge.demoApp.event.StateEvent;
-import com.almende.bridge.demoApp.util.BusProvider;
 import com.almende.eve.agent.AgentHost;
-import com.squareup.otto.Subscribe;
+
+import de.greenrobot.event.EventBus;
 
 public class BaseActivity extends Activity {
 	private static final String				STATE_SELECTED_NAVIGATION_ITEM	= "selected_navigation_item";
@@ -26,7 +26,8 @@ public class BaseActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		BusProvider.getBus().register(this);
+		EventBus.getDefault().unregister(this);
+		EventBus.getDefault().register(this);
 		
 		setContentView(R.layout.activity_base);
 		setupActionBar();
@@ -46,8 +47,7 @@ public class BaseActivity extends Activity {
 		});
 	}
 	
-	@Subscribe
-	public void onStateEvent(StateEvent event) {
+	public void onEvent(StateEvent event) {
 		System.err.println("Activity received StateEvent! "
 				+ event.getAgentId() + ":" + event.getValue());
 	}
@@ -73,8 +73,8 @@ public class BaseActivity extends Activity {
 				.newTab()
 				.setText(R.string.title_activity_history)
 				.setTabListener(
-						new TabListener<HistoryFragment>(this, "history",
-								HistoryFragment.class)));
+						new TabListener<TeamFragment>(this, "team",
+								TeamFragment.class)));
 		
 	}
 	

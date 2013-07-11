@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import com.almende.bridge.demoApp.agent.BridgeDemoAgent;
 import com.almende.bridge.demoApp.event.StateEvent;
-import com.almende.bridge.demoApp.types.Task;
-import com.almende.bridge.demoApp.util.BusProvider;
 import com.almende.bridge.demoApp.util.SystemUiHider;
+import com.almende.bridge.types.Task;
 import com.almende.eve.agent.AgentHost;
-import com.squareup.otto.Subscribe;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -32,7 +32,8 @@ public class TaskFragment extends Fragment {
 		super.onCreateView(inflater, container, savedInstanceState);
 		view = inflater.inflate(R.layout.fragment_task, container, false);
 		
-		BusProvider.getBus().register(this);
+		EventBus.getDefault().unregister(this);
+		EventBus.getDefault().register(this);
 		
 		renderTask();
 		return view;
@@ -42,8 +43,10 @@ public class TaskFragment extends Fragment {
 		try {
 			BridgeDemoAgent agent = (BridgeDemoAgent) AgentHost.getInstance()
 					.getAgent(EveService.DEMO_AGENT);
-			Task task = agent.getTask();
-			
+			Task task = null;
+			if (agent != null){
+				task = agent.getTask();
+			}
 			
 			if (task == null || task.getStatus().equals(Task.COMPLETE)) {
 				TextView tv = (TextView) view.findViewById(R.id.task_text);
@@ -76,7 +79,7 @@ public class TaskFragment extends Fragment {
 				tv = (TextView) view.findViewById(R.id.task_status);
 				tv.setText(task.getStatus());
 				
-				if (task.getStatus().equals(Task.NOTACK)) {
+				if (task.getStatus().equals(Task.NOTCONFIRMED)) {
 					Button btn = (Button) view.findViewById(R.id.ackButton);
 					btn.setVisibility(Button.VISIBLE);
 					
@@ -88,9 +91,9 @@ public class TaskFragment extends Fragment {
 										.getInstance().getAgent(
 												EveService.DEMO_AGENT);
 								Task task = agent.getTask();
-								task.setStatus(Task.ACTIVE);
+								task.setStatus(Task.CONFIRMED);
 								agent.setTask(task,false);
-								BusProvider.getBus().post(
+								EventBus.getDefault().post(
 										new StateEvent(agent.getId(),
 												"taskUpdated"));
 							} catch (Exception e) {
@@ -118,7 +121,7 @@ public class TaskFragment extends Fragment {
 								Task task = agent.getTask();
 								task.setStatus(Task.COMPLETE);
 								agent.setTask(task,false);
-								BusProvider.getBus().post(
+								EventBus.getDefault().post(
 										new StateEvent(agent.getId(),
 												"taskUpdated"));
 							} catch (Exception e) {
@@ -134,8 +137,7 @@ public class TaskFragment extends Fragment {
 		}
 	}
 	
-	@Subscribe
-	public void onEvent(StateEvent event) {
+	public void onEventMainThread(StateEvent event) {
 		System.err.println("TaskFragment received StateEvent! "
 				+ event.getAgentId() + ":" + event.getValue());
 		if ((event.getValue().equals("taskUpdated") || event.getValue().equals("newTask"))

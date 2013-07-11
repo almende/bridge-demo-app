@@ -22,6 +22,8 @@
 
 	<modules>
 		<module>../cloudAgents</module>
+		<module>../common</module>
+		<module>../demoApp</module>
 	</modules>
 
 	<dependencies>

@@ -9,6 +9,13 @@ state:
 scheduler:
   class: ClockSchedulerFactory
 
+transport_services:
+- class: XmppService
+  host: openid.almende.org
+  port: 5222
+  service: openid.almende.org
+
+
 bootstrap:
   agents:
     edxl: com.almende.bridge.agent.EDXLAdapterAgent
@@ -16,4 +23,6 @@ bootstrap:
     list: com.almende.bridge.agent.GenList
     agent_list: com.almende.bridge.agent.GenList
     rate: com.almende.bridge.agent.RateMeasurement
+    teamLeader1: com.almende.bridge.agent.TeamLeaderAgent
+
     

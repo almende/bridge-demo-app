@@ -11,21 +11,23 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 
 import com.almende.bridge.demoApp.agent.BridgeDemoAgent;
 import com.almende.bridge.demoApp.event.StateEvent;
-import com.almende.bridge.demoApp.types.Task;
-import com.almende.bridge.demoApp.util.BusProvider;
+import com.almende.bridge.types.Task;
 import com.almende.eve.agent.Agent;
 import com.almende.eve.agent.AgentHost;
 import com.almende.eve.rpc.jsonrpc.JSONRPCException;
 import com.almende.eve.scheduler.ClockSchedulerFactory;
 import com.almende.eve.state.FileStateFactory;
 import com.almende.eve.transport.xmpp.XmppService;
-import com.squareup.otto.Subscribe;
+
+import de.greenrobot.event.EventBus;
 
 public class EveService extends Service {
 	public static final HandlerThread myThread = new HandlerThread(EveService.class.getCanonicalName());
@@ -57,8 +59,14 @@ public class EveService extends Service {
 							.println("Couldn't start AndroidIntentStateFactory!");
 					e.printStackTrace();
 				}
-				String hostUrl = "openid.almende.org";
-				int port = 5222;
+				
+				SharedPreferences prefs = PreferenceManager
+						.getDefaultSharedPreferences(ctx);
+				
+				String hostUrl = prefs.getString(ctx.getString(R.string.xmppHost_key),
+						"openid.almende.org");
+				int port = Integer.parseInt(prefs.getString(ctx.getString(R.string.xmppPort_key),
+						"5222"));
 				String serviceName = hostUrl;
 				XmppService xmppService = new XmppService(host, hostUrl, port,
 						serviceName);
@@ -107,7 +115,8 @@ public class EveService extends Service {
 				if (agent != null) {
 					try {
 						agent.initTask();
-						BusProvider.getBus().post(
+						agent.subscribeMonitor();
+						EventBus.getDefault().post(
 								new StateEvent(null, "agentsUp"));
 					} catch (Exception e) {
 						System.err.println("Failed to init agent.");
@@ -128,15 +137,16 @@ public class EveService extends Service {
 	 */
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		if (!myThread.isAlive()){
 		myThread.start();
-		BusProvider.getBus().setServiceThread(myThread);
-		BusProvider.getBus().register(this);
+		}
+		EventBus.getDefault().unregister(this);
+		EventBus.getDefault().register(this);
 		initHost(this.getApplication());
 		return START_STICKY;
 	}
 	
-	@Subscribe
-	public void onStateEvent(StateEvent event) {
+	public void onEventAsync(StateEvent event) {
 		System.err.println("Service received StateEvent:"+event.getValue()+ " threadId:"+Thread.currentThread().getId());
 		
 		if (event.getValue().equals("newTask")

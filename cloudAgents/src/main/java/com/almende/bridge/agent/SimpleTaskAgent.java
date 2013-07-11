@@ -126,7 +126,7 @@ public class SimpleTaskAgent extends Agent {
 										+ resType + "' known:" + TYPES);
 					}
 					if (resource.get("amountString").asInt() > 0) {
-						MonitoredTeamAgent agent = (MonitoredTeamAgent) getAgentFactory()
+						MonitoredTeamAgent agent = (MonitoredTeamAgent) getAgentHost()
 								.createAgent(MonitoredTeamAgent.class,
 										"team_" + resType + "_" + getId());
 						agent.setAmount(resource.get("amountString").asInt());

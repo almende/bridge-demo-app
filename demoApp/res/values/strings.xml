@@ -21,10 +21,17 @@
     <string name="task_title_status">Status</string>
     <string name="task_status">---</string>
     <string name="pref_xmpp_title">CAPE settings</string>
+    <string name="pref_cloud_title">Cloud settings</string>
     <string name="xmppUsername_key">xmppUsername</string>
     <string name="xmppPassword_key">xmppPassword</string>
+    <string name="xmppHost_key">xmppHost</string>
+    <string name="xmppPort_key">xmppPort</string>
+    <string name="xmppResource_key">xmppResource</string>
     <string name="xmppUsername">Username</string>
     <string name="xmppPassword">Password</string>
+    <string name="xmppHost">Host</string>
+    <string name="xmppPort">Port</string>
+    <string name="xmppResource">Resource</string>
     <string name="fakeLocation_key">fakeLocation</string>
     <string name="fakeLocation">Fake location latitude &amp; longitude</string>
     <string name="pref_demo_title">Demonstration</string>
