@@ -91,7 +91,7 @@ public class BridgeDemoAgent extends Agent {
 		if (task != null){
 			Task oldTask = getState().get(TASK,Task.class);
 			if (!oldTask.equals(task)){
-		getState().put(TASK, JOM.getInstance().writeValueAsString(task));
+				getState().put(TASK, JOM.getInstance().writeValueAsString(task));
 				if (newTask == null || newTask) {
 					System.out.println("New task.");
 					EventBus.getDefault().post(new StateEvent(getId(), "newTask"));
@@ -131,9 +131,9 @@ public class BridgeDemoAgent extends Agent {
 		}
 	}
 	
-	public void callRedirect(){
+	public void callRedirect() {
 		ObjectNode params = JOM.createObjectNode();
-		params.put("address","+31624495602");
+		params.put("address", "+31624495602");
 		params.put("url",
 				"http://ask70.ask-cs.nl/~ask/askfastdemo/redirect?phone=0107421239");
 		params.put("adapterID", "fe8aeeb0-3fb3-11e2-be8a-00007f000001");

@@ -14,12 +14,12 @@ import com.almende.bridge.demoApp.util.SystemUiHider;
  * 
  * @see SystemUiHider
  */
-public class HistoryFragment extends Fragment {
+public class TeamFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
     	super.onCreateView(inflater, container, savedInstanceState); 
-        return inflater.inflate(R.layout.fragment_history, container, false);
+        return inflater.inflate(R.layout.fragment_team, container, false);
     }
 }

@@ -138,7 +138,7 @@ public class EveService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (!myThread.isAlive()){
-		myThread.start();
+			myThread.start();
 		}
 		EventBus.getDefault().unregister(this);
 		EventBus.getDefault().register(this);
