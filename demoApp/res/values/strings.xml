@@ -5,11 +5,11 @@
     <string name="title_activity_base">Bridge App</string>
     <string name="title_activity_map">Map</string>
     <string name="title_activity_task">Task</string>
-    <string name="title_activity_history">History</string>
+    <string name="title_activity_team">Team</string>
     <string name="title_settings">Settings</string>
     <string name="callTeamLeader">Call Team Leader</string>
     <string name="history">History!</string>
-    <string name="Acknowledge">Acknowledge</string>
+    <string name="Confirm">Confirm</string>
     <string name="Complete">Complete</string>
     <string name="eve_service">EveAgents</string>
     <string name="task_title">Task Request</string>

@@ -4,9 +4,10 @@ import java.io.Serializable;
 
 public class Task implements Serializable {
 	private static final long	serialVersionUID	= 6783092535568614883L;
-	public static final String	NOTCONFIRMED		= "Not confirmed";
-	public static final String	CONFIRMED			= "Confirmed";
-	public static final String	COMPLETE			= "Completed";
+	public static final String	NOTCONFIRMED		= "not confirmed";
+	public static final String	CONFIRMED			= "confirmed";
+	public static final String	COMPLETE			= "completed";
+	public static final String	POSTPONED			= "postponed";
 	
 	private String				text;
 	private String				assigner;
@@ -76,4 +77,19 @@ public class Task implements Serializable {
 		this.lon = lon;
 	}
 	
+	public boolean compareField(String left, String right) {
+		boolean result = false;
+		if (left == null && right == null) result = true;
+		if (left != null && left.equals(right)) result = true;
+		return result;
+	}
+	
+	public boolean eq(Task other) {
+		return 
+				(compareField(text,other.text) &&
+				 compareField(assigner,other.assigner) &&
+				 compareField(assignmentDate,other.assignmentDate) &&
+				 compareField(lat,other.lat) &&
+				 compareField(lon,other.lon));
+	}
 }

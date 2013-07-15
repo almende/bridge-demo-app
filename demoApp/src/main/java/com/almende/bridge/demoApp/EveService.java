@@ -26,6 +26,7 @@ import com.almende.eve.rpc.jsonrpc.JSONRPCException;
 import com.almende.eve.scheduler.ClockSchedulerFactory;
 import com.almende.eve.state.FileStateFactory;
 import com.almende.eve.transport.xmpp.XmppService;
+import com.google.android.gms.location.LocationClient;
 
 import de.greenrobot.event.EventBus;
 
@@ -35,6 +36,8 @@ public class EveService extends Service {
 	public static final String	DEMO_AGENT	= "bridgeDemoApp";
 	public static final int		NEWTASKID	= 0;
 	private static AgentHost	host;
+	public static LocationClient mLocationClient = null;
+	
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -42,6 +45,7 @@ public class EveService extends Service {
 	}
 	
 	public static void initHost(final Context ctx) {
+		System.err.println("Init Host called!");
 		Handler myHandler = new Handler(myThread.getLooper());
 		myHandler.post(new Runnable() {
 			public void run() {
@@ -60,6 +64,8 @@ public class EveService extends Service {
 					e.printStackTrace();
 				}
 				
+				System.err.println("Point 1!");
+				
 				SharedPreferences prefs = PreferenceManager
 						.getDefaultSharedPreferences(ctx);
 				
@@ -71,6 +77,8 @@ public class EveService extends Service {
 				XmppService xmppService = new XmppService(host, hostUrl, port,
 						serviceName);
 				host.addTransportService(xmppService);
+				
+				System.err.println("Point 2!");
 				
 				host.setSchedulerFactory(new ClockSchedulerFactory(host,
 						new HashMap<String, Object>()));

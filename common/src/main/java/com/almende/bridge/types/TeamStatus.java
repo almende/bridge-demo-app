@@ -5,6 +5,12 @@ import java.io.Serializable;
 public class TeamStatus implements Serializable {
 	private static final long	serialVersionUID	= 6531452193120113009L;
 	
+	public static final String	UNASSIGNED			= "Unassigned";
+	public static final String	ASSIGNED			= "Assigned";
+	public static final String	ACTIVE				= "Active";
+	public static final String	WITHDRAWN			= "Withdrawn";
+	public static final String	POST				= "Post";
+	
 	private String				teamId;
 	private String				teamLeaderName;
 	private String				teamStatus;

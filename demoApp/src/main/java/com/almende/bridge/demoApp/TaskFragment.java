@@ -92,10 +92,7 @@ public class TaskFragment extends Fragment {
 												EveService.DEMO_AGENT);
 								Task task = agent.getTask();
 								task.setStatus(Task.CONFIRMED);
-								agent.setTask(task,false);
-								EventBus.getDefault().post(
-										new StateEvent(agent.getId(),
-												"taskUpdated"));
+								agent.updateTaskStatus(task);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -120,10 +117,7 @@ public class TaskFragment extends Fragment {
 												EveService.DEMO_AGENT);
 								Task task = agent.getTask();
 								task.setStatus(Task.COMPLETE);
-								agent.setTask(task,false);
-								EventBus.getDefault().post(
-										new StateEvent(agent.getId(),
-												"taskUpdated"));
+								agent.updateTaskStatus(task);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
