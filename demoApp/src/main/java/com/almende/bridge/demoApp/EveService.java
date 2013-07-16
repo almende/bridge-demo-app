@@ -12,10 +12,12 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.almende.bridge.demoApp.agent.BridgeDemoAgent;
 import com.almende.bridge.demoApp.event.StateEvent;
@@ -26,18 +28,24 @@ import com.almende.eve.rpc.jsonrpc.JSONRPCException;
 import com.almende.eve.scheduler.ClockSchedulerFactory;
 import com.almende.eve.state.FileStateFactory;
 import com.almende.eve.transport.xmpp.XmppService;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
 
 import de.greenrobot.event.EventBus;
 
-public class EveService extends Service {
-	public static final HandlerThread myThread = new HandlerThread(EveService.class.getCanonicalName());
+public class EveService extends Service implements
+		GooglePlayServicesClient.ConnectionCallbacks,
+		GooglePlayServicesClient.OnConnectionFailedListener {
+	public static final HandlerThread	myThread		= new HandlerThread(
+																EveService.class
+																		.getCanonicalName());
 	
-	public static final String	DEMO_AGENT	= "bridgeDemoApp";
-	public static final int		NEWTASKID	= 0;
-	private static AgentHost	host;
-	public static LocationClient mLocationClient = null;
-	
+	public static final String			DEMO_AGENT		= "bridgeDemoApp";
+	public static final int				NEWTASKID		= 0;
+	private static AgentHost			host;
+	public static LocationClient		mLocationClient	= null;
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -49,7 +57,8 @@ public class EveService extends Service {
 		Handler myHandler = new Handler(myThread.getLooper());
 		myHandler.post(new Runnable() {
 			public void run() {
-				System.err.println("Eve Service ThreadId:"+Thread.currentThread().getId());
+				System.err.println("Eve Service ThreadId:"
+						+ Thread.currentThread().getId());
 				BridgeDemoAgent.setContext(ctx);
 				host = AgentHost.getInstance();
 				try {
@@ -69,10 +78,11 @@ public class EveService extends Service {
 				SharedPreferences prefs = PreferenceManager
 						.getDefaultSharedPreferences(ctx);
 				
-				String hostUrl = prefs.getString(ctx.getString(R.string.xmppHost_key),
+				String hostUrl = prefs.getString(
+						ctx.getString(R.string.xmppHost_key),
 						"openid.almende.org");
-				int port = Integer.parseInt(prefs.getString(ctx.getString(R.string.xmppPort_key),
-						"5222"));
+				int port = Integer.parseInt(prefs.getString(
+						ctx.getString(R.string.xmppPort_key), "5222"));
 				String serviceName = hostUrl;
 				XmppService xmppService = new XmppService(host, hostUrl, port,
 						serviceName);
@@ -145,17 +155,34 @@ public class EveService extends Service {
 	 */
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (!myThread.isAlive()){
+		if (!myThread.isAlive()) {
 			myThread.start();
 		}
 		EventBus.getDefault().unregister(this);
 		EventBus.getDefault().register(this);
 		initHost(this.getApplication());
+		
+		if (servicesConnected()) {
+			EveService.mLocationClient = new LocationClient(
+					this.getApplicationContext(), this, this);
+			if (EveService.mLocationClient != null) EveService.mLocationClient
+					.connect();
+		}
+		
 		return START_STICKY;
 	}
 	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// Disconnecting the client invalidates it.
+		if (EveService.mLocationClient != null) EveService.mLocationClient
+				.disconnect();
+	}
+	
 	public void onEventAsync(StateEvent event) {
-		System.err.println("Service received StateEvent:"+event.getValue()+ " threadId:"+Thread.currentThread().getId());
+		System.err.println("Service received StateEvent:" + event.getValue()
+				+ " threadId:" + Thread.currentThread().getId());
 		
 		if (event.getValue().equals("newTask")
 				&& event.getAgentId().equals(EveService.DEMO_AGENT)) {
@@ -214,4 +241,40 @@ public class EveService extends Service {
 		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		notificationManager.cancel(NEWTASKID);
 	}
+	
+	private boolean servicesConnected() {
+		// Check that Google Play services is available
+		int resultCode = GooglePlayServicesUtil
+				.isGooglePlayServicesAvailable(this);
+		// If Google Play services is available
+		if (ConnectionResult.SUCCESS == resultCode) {
+			// In debug mode, log the status
+			Log.d("Location Updates", "Google Play services is available.");
+			// Continue
+			return true;
+			// Google Play services was not available for some reason
+		} else {
+			Log.d("Location Updates", "Google Play Services are not available?");
+		}
+		return false;
+	}
+	
+	@Override
+	public void onConnectionFailed(ConnectionResult connectionResult) {
+		Log.d("Google Play Services",
+				"Google Play Services can't be connected?");
+	}
+	
+	@Override
+	public void onConnected(Bundle connectionHint) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void onDisconnected() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

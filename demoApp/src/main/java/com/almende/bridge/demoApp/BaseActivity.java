@@ -8,9 +8,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,18 +18,11 @@ import android.widget.Button;
 import com.almende.bridge.demoApp.agent.BridgeDemoAgent;
 import com.almende.bridge.demoApp.event.StateEvent;
 import com.almende.eve.agent.AgentHost;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.LocationClient;
 
 import de.greenrobot.event.EventBus;
 
-public class BaseActivity extends Activity implements
-		GooglePlayServicesClient.ConnectionCallbacks,
-		GooglePlayServicesClient.OnConnectionFailedListener {
+public class BaseActivity extends Activity  {
 	private static final String	STATE_SELECTED_NAVIGATION_ITEM			= "selected_navigation_item";
-	private final static int	CONNECTION_FAILURE_RESOLUTION_REQUEST	= 9000;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +31,7 @@ public class BaseActivity extends Activity implements
 		EventBus.getDefault().unregister(this);
 		EventBus.getDefault().register(this);
 		
-		if (servicesConnected()){
-			EveService.mLocationClient = new LocationClient(this.getApplicationContext(), this, this);
-		}
+
 		
 		setContentView(R.layout.activity_base);
 		setupActionBar();
@@ -66,14 +55,10 @@ public class BaseActivity extends Activity implements
 	@Override
     protected void onStart() {
         super.onStart();
-        // Connect the client.
-        if (EveService.mLocationClient != null) EveService.mLocationClient.connect();
     }
 	
     @Override
     protected void onStop() {
-        // Disconnecting the client invalidates it.
-    	if (EveService.mLocationClient != null) EveService.mLocationClient.disconnect();
         super.onStop();
     }
 	
@@ -169,79 +154,8 @@ public class BaseActivity extends Activity implements
 				.getSelectedNavigationIndex());
 	}
 	
-	private boolean servicesConnected() {
-		// Check that Google Play services is available
-		int resultCode = GooglePlayServicesUtil
-				.isGooglePlayServicesAvailable(this);
-		// If Google Play services is available
-		if (ConnectionResult.SUCCESS == resultCode) {
-			// In debug mode, log the status
-			Log.d("Location Updates", "Google Play services is available.");
-			// Continue
-			return true;
-			// Google Play services was not available for some reason
-		} else {
-			// Get the error dialog from Google Play services
-			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-					resultCode, this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
-			
-			// If Google Play services can provide an error dialog
-			if (errorDialog != null) {
-				// Create a new DialogFragment for the error dialog
-				ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-				// Set the dialog in the DialogFragment
-				errorFragment.setDialog(errorDialog);
-				// Show the error dialog in the DialogFragment
-				errorFragment.show(getFragmentManager(), "Location Updates");
-			}
-			return false;
-		}
-	}
+
 	
-	@Override
-	public void onConnectionFailed(ConnectionResult connectionResult) {
-		if (connectionResult.hasResolution()) {
-			try {
-				// Start an Activity that tries to resolve the error
-				connectionResult.startResolutionForResult(this,
-						CONNECTION_FAILURE_RESOLUTION_REQUEST);
-				/*
-				 * Thrown if Google Play services canceled the original
-				 * PendingIntent
-				 */
-			} catch (IntentSender.SendIntentException e) {
-				// Log the error
-				e.printStackTrace();
-			}
-		} else {
-			// Get the error dialog from Google Play services
-			Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-					connectionResult.getErrorCode(), this,
-					CONNECTION_FAILURE_RESOLUTION_REQUEST);
-			
-			// If Google Play services can provide an error dialog
-			if (errorDialog != null) {
-				// Create a new DialogFragment for the error dialog
-				ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-				// Set the dialog in the DialogFragment
-				errorFragment.setDialog(errorDialog);
-				// Show the error dialog in the DialogFragment
-				errorFragment.show(getFragmentManager(), "Location Updates");
-			}
-		}
-	}
-	
-	@Override
-	public void onConnected(Bundle connectionHint) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void onDisconnected() {
-		// TODO Auto-generated method stub
-		
-	}
 	
 }
 

@@ -13,7 +13,6 @@ public class TeamStatus implements Serializable {
 	
 	private String				teamId;
 	private String				teamLeaderName;
-	private String				teamStatus;
 	private String				deploymentStatus;
 	private String				lat;
 	private String				lon;
@@ -42,13 +41,6 @@ public class TeamStatus implements Serializable {
 		this.teamLeaderName = teamLeaderName;
 	}
 	
-	public String getTeamStatus() {
-		return teamStatus;
-	}
-	
-	public void setTeamStatus(String teamStatus) {
-		this.teamStatus = teamStatus;
-	}
 	
 	public String getDeploymentStatus() {
 		return deploymentStatus;

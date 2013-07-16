@@ -147,6 +147,7 @@ public class BridgeDemoAgent extends Agent {
 			if (oldTask == null || !oldTask.eq(task)) {
 				getState()
 						.put(TASK, JOM.getInstance().writeValueAsString(task));
+				getEventsFactory().trigger("newTask");
 				EventBus.getDefault().post(new StateEvent(getId(), "newTask"));
 			} else {
 				System.out.println("Repeated receival of task.");
@@ -167,6 +168,7 @@ public class BridgeDemoAgent extends Agent {
 			if (oldTask.eq(task)) {
 				getState()
 						.put(TASK, JOM.getInstance().writeValueAsString(task));
+				getEventsFactory().trigger("taskUpdated");
 				EventBus.getDefault().post(
 						new StateEvent(getId(), "taskUpdated"));
 			} else {

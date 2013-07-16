@@ -66,9 +66,9 @@ public class TeamLeaderAgent extends Agent {
 	public String callOtherAgent(@Name("url") String url, @Name("method") String method, 
 			@Name("params") ObjectNode params) 
 			throws IOException, JSONRPCException, Exception {
-		String resp = send(URI.create(url), method, params, JOM.getSimpleType(String.class));
+		Object resp = send(URI.create(url), method, params, JOM.getSimpleType(Object.class));
 		System.out.println("callOtherAgent url="+ url+" method=" + method  + ", params=" + params.toString() + ", resp=" +  resp);
-		return resp;
+		return resp.toString();
 	}
 	
 	public void xmppDisconnect() throws Exception {
