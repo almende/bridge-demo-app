@@ -35,21 +35,6 @@ public class BaseActivity extends Activity  {
 		
 		setContentView(R.layout.activity_base);
 		setupActionBar();
-		
-		Button button = (Button) findViewById(R.id.callButton);
-		button.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				System.err.println("CallButton clicked!");
-				AgentHost host = AgentHost.getInstance();
-				try {
-					BridgeDemoAgent agent = (BridgeDemoAgent) host
-							.getAgent(EveService.DEMO_AGENT);
-					agent.callRedirect();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 	
 	@Override

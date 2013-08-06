@@ -11,9 +11,11 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.preference.PreferenceManager;
 
+import com.almende.bridge.demoApp.DummyData;
 import com.almende.bridge.demoApp.EveService;
 import com.almende.bridge.demoApp.R;
 import com.almende.bridge.demoApp.event.StateEvent;
+import com.almende.bridge.types.SitRep;
 import com.almende.bridge.types.Task;
 import com.almende.bridge.types.TeamStatus;
 import com.almende.eve.agent.Agent;
@@ -38,6 +40,7 @@ import de.greenrobot.event.EventBus;
 public class BridgeDemoAgent extends Agent {
 	private static final String	VERSION	= "5";
 	private static final String	TASK	= "CurrentTask";
+	private static final String SITREP    = "Sitrep";
 	private static final String	STATUS	= "Status";
 	private static final String	CLOUD	= "Cloud";
 	private static Context		context	= null;
@@ -59,8 +62,13 @@ public class BridgeDemoAgent extends Agent {
 		System.err.println("Get Team Status called!");
 		TeamStatus status = getState().get(STATUS, TeamStatus.class);
 		if (status == null){
-			status = new TeamStatus(getId(),"John Doe");
+		    TeamStatus teamStatus = DummyData.getInstance().getTeamStatus();
+		    teamStatus.setTeamId(getId());
+		    DummyData.getInstance().setmTeamStatus(teamStatus);
+		    status = teamStatus;
+			//status = new TeamStatus(getId(),"John Doe");
 		}
+		
 		Task task = getTask();
 		if (task == null){
 			status.setDeploymentStatus(TeamStatus.UNASSIGNED);
@@ -137,6 +145,24 @@ public class BridgeDemoAgent extends Agent {
 		}
 	}
 	
+	   public SitRep getSitRep() throws JsonProcessingException, IOException {
+	        System.err.println("Calling getsitRep();");
+	        ObjectReader taskReader = JOM.getInstance().reader(SitRep.class);
+	        
+            //TODO: replace DUMMY
+            return  DummyData.getDefaultSitRep();
+            
+//	        if (getState().containsKey(SITREP)) {
+//	            String siteRep = getState().get(SITREP, String.class);
+//	            System.err.println("Found sitrep:" + siteRep);
+//
+//	          return taskReader.readValue(siteRep);
+//	        } else {
+//	            return null;
+//	        }
+	    }
+	
+	
 	public void wrapTask(@Name("result") String task) throws IOException {
 		setTask(TypeUtil.inject(Task.class, JOM.getInstance().readTree(task)));
 	}
@@ -156,6 +182,22 @@ public class BridgeDemoAgent extends Agent {
 			System.err.println("Received empty/null task");
 		}
 	}
+	
+	   public void setSitrep(@Name("sitRep") SitRep sitRep) throws IOException {
+	        if (sitRep != null) {
+	            SitRep oldSitRep = getSitRep();
+	            if (oldSitRep == null || !oldSitRep.eq(sitRep)) {
+	                getState()
+	                        .put(SITREP, JOM.getInstance().writeValueAsString(sitRep));
+	                getEventsFactory().trigger("newSitRep");
+	                EventBus.getDefault().post(new StateEvent(getId(), "newSitRep"));
+	            } else {
+	                System.out.println("Repeated receival of sitRep.");
+	            }
+	        } else {
+	            System.err.println("Received empty/null sitRep");
+	        }
+	    }
 	
 	public void updateTaskStatus(@Name("task") Task task) throws IOException {
 		if (task != null) {
