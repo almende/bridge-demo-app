@@ -12,31 +12,29 @@ import com.almende.bridge.demoApp.util.SystemUiHider;
 import com.almende.eve.agent.AgentHost;
 
 /**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
+ * An example full-screen activity that shows and hides the system UI (i.e. status bar and
+ * navigation/system bar) with user interaction.
  * 
  * @see SystemUiHider
  */
 public class TeamFragment extends Fragment {
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-    	super.onCreateView(inflater, container, savedInstanceState); 
+        super.onCreateView(inflater, container, savedInstanceState);
         return inflater.inflate(R.layout.fragment_team, container, false);
     }
-    
+
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState){
-        
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+
         Button button = (Button) view.findViewById(R.id.call_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 System.err.println("CallButton clicked!");
                 AgentHost host = AgentHost.getInstance();
                 try {
-                    BridgeDemoAgent agent = (BridgeDemoAgent) host
-                            .getAgent(EveService.DEMO_AGENT);
+                    BridgeDemoAgent agent = (BridgeDemoAgent) host.getAgent(EveService.DEMO_AGENT);
                     agent.callRedirect();
                 } catch (Exception e) {
                     e.printStackTrace();

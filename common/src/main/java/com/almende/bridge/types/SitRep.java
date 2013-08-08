@@ -13,6 +13,7 @@ public class SitRep implements Serializable {
 	private HashMap<String, PointOfInterest> teams = new HashMap<String,PointOfInterest>();
 
 	public ArrayList<PointOfInterest> getControlPosts() {
+	    
 		return controlPosts;
 	}
 
@@ -29,7 +30,7 @@ public class SitRep implements Serializable {
 	}
 
 	public ArrayList<PointOfInterest> getOthers() {
-		return others;
+	    return others;
 	}
 
 	public void setOthers(ArrayList<PointOfInterest> others) {
@@ -41,6 +42,7 @@ public class SitRep implements Serializable {
 	}
 
 	public void setTeams(HashMap<String, PointOfInterest> teams) {
+
 		this.teams = teams;
 	}
 
@@ -49,6 +51,7 @@ public class SitRep implements Serializable {
 		private String lat;
 		private String lon;
 		private String color;
+		private String icon;
 		public String getLat() {
 			return lat;
 		}
@@ -67,5 +70,19 @@ public class SitRep implements Serializable {
 		public void setColor(String color) {
 			this.color = color;
 		}
+		public void setIcon(String icon){
+		    this.icon = icon;
+		}
+		public String getIcon(){
+		    return icon;
+		}
 	}
+
+    public boolean eq(SitRep other) {
+        return(
+        this.controlPosts.equals(other.controlPosts) && 
+        this.incidents.equals(other.incidents) &&
+        this.others.equals(other.others) &&
+        this.teams.equals(other.teams));
+    }
 }
