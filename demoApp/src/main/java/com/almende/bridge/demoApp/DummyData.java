@@ -18,7 +18,6 @@ public class DummyData {
     private HashMap<String, PointOfInterest> mTeams;
     private TeamStatus mTeamStatus;
 
-    private static volatile DummyData mDummyData;
     private Task mTask;
 
     private DummyData() {
@@ -31,12 +30,13 @@ public class DummyData {
         mTask = getDefaultTask();
     }
 
+    private static DummyData instance = null;
+
     public static DummyData getInstance() {
-        if (mDummyData != null) {
-            return mDummyData;
+        if (null != instance) {
+            return instance;
         } else {
-            mDummyData = new DummyData();
-            return mDummyData;
+            return instance = new DummyData();
         }
     }
 
@@ -150,11 +150,11 @@ public class DummyData {
 
     }
 
-    public static TeamStatus getDefaultTeamStatus() {
+    public TeamStatus getDefaultTeamStatus() {
         TeamStatus teamStatus = new TeamStatus();
         teamStatus.setDeploymentStatus(TeamStatus.ASSIGNED);
         teamStatus.setTeamId("ALPHA");
-        teamStatus.setTeamLeaderName("Alexander Alpha");
+        teamStatus.setTeamLeaderName("Alex Alpha");
         teamStatus.setLat("51.914152");
         teamStatus.setLon("4.473026");
         return teamStatus;
@@ -204,16 +204,8 @@ public class DummyData {
         return mTeamStatus;
     }
 
-    public void setmTeamStatus(TeamStatus teamStatus) {
+    public void setTeamStatus(TeamStatus teamStatus) {
         this.mTeamStatus = teamStatus;
-    }
-
-    public DummyData getDummyData() {
-        return mDummyData;
-    }
-
-    public void setDummyData(DummyData dummyData) {
-        this.mDummyData = dummyData;
     }
 
     public Task getTask() {

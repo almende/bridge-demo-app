@@ -2,35 +2,97 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-<FrameLayout 
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/striped_background"
-    android:orientation="vertical" 
-    android:layout_alignParentTop="true"
-    android:layout_above="@+id/call_button">
-
+    
+    <ScrollView 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/call_button"
+        android:background="@drawable/striped_background">
+        
+    <FrameLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+    		
     <LinearLayout
         android:id="@+id/container"
         style="@style/Alarm.InfoBox"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:background="@color/alarm_ecru_white"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:orientation="vertical" >
 
-        <ListView
-            android:id="@+id/teamView"
+        <TextView
+            android:id="@+id/team_id_title"
+            style="@style/Alarm.TextView.AlarmInfoBox.Header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fastScrollEnabled="true"
-            android:smoothScrollbar="true" >
-        </ListView>
-    </LinearLayout>
-    
-</FrameLayout>
+            android:layout_gravity="top"
+            android:text="@string/team_id_title" />
+
+        <TextView
+            android:id="@+id/team_id"
+            style="@style/Alarm.TextView.AlarmInfoBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:text="@string/team_id_text" />
+
+        <TextView
+            android:id="@+id/team_leader_title"
+            style="@style/Alarm.TextView.AlarmInfoBox.Header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:text="@string/team_leader" />
+
+        <TextView
+            android:id="@+id/team_leader"
+            style="@style/Alarm.TextView.AlarmInfoBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:text="@string/team_unfilled_field" />
+
+        <TextView
+            android:id="@+id/team_status_title"
+            style="@style/Alarm.TextView.AlarmInfoBox.Header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:text="@string/team_status" />
+
+        <TextView
+            android:id="@+id/team_status"
+            style="@style/Alarm.TextView.AlarmInfoBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:text="@string/team_unfilled_field" />
+
+        <FrameLayout
+            android:id="@+id/team_spacer"
+            style="@style/Alarm.TextView.Spacer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </FrameLayout>
+
+
+        <ToggleButton
+            android:id="@+id/team_state_button"
+            style="@style/Alarm.Button.GreenBlue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textOn="@string/button_withdrawn"
+            android:textOff="@string/button_active" />
+      </LinearLayout>
+     </FrameLayout>
+    </ScrollView>
 
         <Button
             android:id="@+id/call_button"
@@ -41,6 +103,4 @@
             android:layout_alignParentBottom="true"
             android:layout_margin="8dp"
             android:text="@string/callTeamLeader" />
-
-
 </RelativeLayout>
