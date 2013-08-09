@@ -3,8 +3,8 @@ package com.almende.bridge.demoApp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.almende.bridge.types.PointOfInterest;
 import com.almende.bridge.types.SitRep;
-import com.almende.bridge.types.SitRep.PointOfInterest;
 import com.almende.bridge.types.Task;
 import com.almende.bridge.types.TeamStatus;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -53,12 +53,12 @@ public class DummyData {
         SitRep sitRep = new SitRep();
         ArrayList<PointOfInterest> controlPosts = new ArrayList<PointOfInterest>();
         // Ask-cs
-        PointOfInterest pointOfInterest = sitRep.new PointOfInterest();
+        PointOfInterest pointOfInterest = new PointOfInterest();
         pointOfInterest.setLat("51.908061");
         pointOfInterest.setLon("4.452381");
         pointOfInterest.setColor(String.valueOf(BitmapDescriptorFactory.HUE_AZURE));
         controlPosts.add(pointOfInterest);
-        pointOfInterest = sitRep.new PointOfInterest();
+        pointOfInterest = new PointOfInterest();
         pointOfInterest.setLat("51.908820");
         pointOfInterest.setLon("4.479564");
         pointOfInterest.setColor(String.valueOf(BitmapDescriptorFactory.HUE_BLUE));
@@ -71,7 +71,7 @@ public class DummyData {
         ArrayList<PointOfInterest> incidents = new ArrayList<PointOfInterest>();
         // Dummy data
         // Maas tunnel
-        PointOfInterest pointOfInterest = sitRep.new PointOfInterest();
+        PointOfInterest pointOfInterest = new PointOfInterest();
         pointOfInterest.setLat("51.89995");
         pointOfInterest.setLon("4.46825");
         pointOfInterest.setColor(String.valueOf(BitmapDescriptorFactory.HUE_ORANGE));
@@ -79,7 +79,7 @@ public class DummyData {
         incidents.add(pointOfInterest);
 
         // euromast
-        pointOfInterest = sitRep.new PointOfInterest();
+        pointOfInterest = new PointOfInterest();
         pointOfInterest.setLat("51.90551");
         pointOfInterest.setLon("4.46662");
         pointOfInterest.setIcon("marker_incident");
@@ -93,7 +93,7 @@ public class DummyData {
         SitRep sitRep = new SitRep();
         // Dummy data
         // Ziekenhuis
-        PointOfInterest pointOfInterest = sitRep.new PointOfInterest();
+        PointOfInterest pointOfInterest = new PointOfInterest();
         pointOfInterest.setLat("51.909801");
         pointOfInterest.setLon("4.466918");
         pointOfInterest.setColor(String.valueOf(BitmapDescriptorFactory.HUE_CYAN));
@@ -101,7 +101,7 @@ public class DummyData {
         teams.put("MEDIC", pointOfInterest);
 
         // Brandweer
-        pointOfInterest = sitRep.new PointOfInterest();
+        pointOfInterest = new PointOfInterest();
         pointOfInterest.setLat("51.929071");
         pointOfInterest.setLon("4.576623");
         pointOfInterest.setColor(String.valueOf(BitmapDescriptorFactory.HUE_RED));
@@ -116,14 +116,14 @@ public class DummyData {
         ArrayList<PointOfInterest> others = new ArrayList<PointOfInterest>();
         // Dummy data
         // Sense
-        PointOfInterest pointOfInterest = sitRep.new PointOfInterest();
+        PointOfInterest pointOfInterest = new PointOfInterest();
         pointOfInterest.setLat("51.905629");
         pointOfInterest.setLon("4.456931");
         pointOfInterest.setColor(String.valueOf(BitmapDescriptorFactory.HUE_VIOLET));
         others.add(pointOfInterest);
 
         // random
-        pointOfInterest = sitRep.new PointOfInterest();
+        pointOfInterest = new PointOfInterest();
         pointOfInterest.setLat("51.928826");
         pointOfInterest.setLon("4.429569");
         pointOfInterest.setColor(String.valueOf(BitmapDescriptorFactory.HUE_YELLOW));

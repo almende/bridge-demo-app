@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 
 import com.almende.bridge.demoApp.agent.BridgeDemoAgent;
 import com.almende.bridge.demoApp.event.StateEvent;
+import com.almende.bridge.types.PointOfInterest;
 import com.almende.bridge.types.SitRep;
-import com.almende.bridge.types.SitRep.PointOfInterest;
 import com.almende.bridge.types.Task;
 import com.almende.eve.agent.AgentHost;
 import com.google.android.gms.common.ConnectionResult;
@@ -105,30 +105,35 @@ public class MyMapFragment extends MapFragment implements LocationListener,
      *            existing Builder object containing positions to be bound
      * @return inputed bounds including new bounds from added points
      */
-    private LatLngBounds.Builder addPointsToMap(List<SitRep.PointOfInterest> pointsOfInterest,
+    private LatLngBounds.Builder addPointsToMap(List<PointOfInterest> pointsOfInterest,
             LatLngBounds.Builder bounds) {
         for (PointOfInterest pointOfInterest : pointsOfInterest) {
             LatLng position = new LatLng(Double.parseDouble(pointOfInterest.getLat()),
                     Double.parseDouble(pointOfInterest.getLon()));
-            bounds.include(position);
-            BitmapDescriptor marker = getMarkerStyle(pointOfInterest);
-            mMap.addMarker(new MarkerOptions().position(position).icon(marker));
+            if (position != null) {
+                bounds.include(position);
+                BitmapDescriptor marker = getMarkerStyle(pointOfInterest);
+                mMap.addMarker(new MarkerOptions().position(position).icon(marker));
+            }
         }
         return bounds;
     }
 
-    private LatLngBounds.Builder addPointsToMap(
-            HashMap<String, SitRep.PointOfInterest> pointsOfInterest, LatLngBounds.Builder bounds) {
-        for (Map.Entry<String, SitRep.PointOfInterest> entry : pointsOfInterest.entrySet()) {
+    private LatLngBounds.Builder addPointsToMap(HashMap<String, PointOfInterest> pointsOfInterest,
+            LatLngBounds.Builder bounds) {
+        for (Map.Entry<String, PointOfInterest> entry : pointsOfInterest.entrySet()) {
             String label = entry.getKey();
             PointOfInterest pointOfInterest = entry.getValue();
             LatLng position = new LatLng(Double.parseDouble(pointOfInterest.getLat()),
                     Double.parseDouble(pointOfInterest.getLon()));
-            bounds.include(position);
 
-            BitmapDescriptor marker = getMarkerStyle(pointOfInterest);
+            if (position != null) {
+                bounds.include(position);
 
-            mMap.addMarker(new MarkerOptions().position(position).icon(marker).title(label));
+                BitmapDescriptor marker = getMarkerStyle(pointOfInterest);
+
+                mMap.addMarker(new MarkerOptions().position(position).icon(marker).title(label));
+            }
         }
         return bounds;
     }
@@ -176,15 +181,6 @@ public class MyMapFragment extends MapFragment implements LocationListener,
             bounds = addPointsToMap(sitRep.getOthers(), bounds);
             bounds = addPointsToMap(sitRep.getTeams(), bounds);
 
-            // TODO: this is production, for demonstration/development, get
-            // simulated location from agent!
-
-            // getMyLocation is @deprecated and always returns null
-            // Location location = mMap.getMyLocation();
-            // if (location != null) {
-            // myLoc = new LatLng(location.getLatitude(),
-            // location.getLongitude());
-            // }
             if (mTask != null) {
                 mTask.remove();
             }
@@ -249,6 +245,12 @@ public class MyMapFragment extends MapFragment implements LocationListener,
                 setMapOverlays();
             }
         }
+        if (event.getValue().equals("newSitRep")) {
+            if (mMap != null) {
+                setMapOverlays();
+            }
+        }
+
     }
 
     @Override

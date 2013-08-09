@@ -8,17 +8,17 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.preference.PreferenceManager;
 
 import com.almende.bridge.demoApp.DummyData;
+import com.almende.bridge.demoApp.EveService;
 import com.almende.bridge.demoApp.R;
 import com.almende.bridge.demoApp.event.StateEvent;
 import com.almende.bridge.types.SitRep;
 import com.almende.bridge.types.Task;
 import com.almende.bridge.types.TeamStatus;
 import com.almende.eve.agent.Agent;
-import com.almende.eve.monitor.Poll;
-import com.almende.eve.monitor.Push;
 import com.almende.eve.monitor.ResultMonitor;
 import com.almende.eve.rpc.annotation.Access;
 import com.almende.eve.rpc.annotation.AccessType;
@@ -57,14 +57,11 @@ public class BridgeDemoAgent extends Agent {
     }
 
     public TeamStatus getTeamStatus() throws IOException {
-        // TODO: use real data
-        // System.err.println("Get Team Status called!");
-        // TeamStatus status = getState().get(STATUS, TeamStatus.class);
-        // if (status == null) {
-        return DummyData.getInstance().getTeamStatus();
-        // TeamStatus status = teamStatus;
-        // status = new TeamStatus(getId(),"John Doe");
-        // }
+        System.err.println("Get Team Status called!");
+        TeamStatus status = getState().get(STATUS, TeamStatus.class);
+        if (status == null) {
+            return null;
+        }
 
         // Task task = getTask();
         // if (task == null) {
@@ -74,18 +71,18 @@ public class BridgeDemoAgent extends Agent {
         // } else if (task.getStatus().equals(Task.CONFIRMED)) {
         // status.setDeploymentStatus(TeamStatus.ACTIVE);
         // } else if (task.getStatus().equals(Task.COMPLETE)) {
-        // // TODO: implement 20 minute buffer "POST" state.
+        // // // TODO: implement 20 minute buffer "POST" state.
         // status.setDeploymentStatus(TeamStatus.UNASSIGNED);
         // } else {
         // System.err.println("Couldn't determine teamstate, task state:" + task.getStatus());
         // }
-        // if (EveService.mLocationClient != null && EveService.mLocationClient.isConnected()) {
-        // Location mCurrentLocation = EveService.mLocationClient.getLastLocation();
-        // status.setLat(Double.valueOf(mCurrentLocation.getLatitude()).toString());
-        // status.setLon(Double.valueOf(mCurrentLocation.getLongitude()).toString());
-        // }
-        // System.err.println("Returning:" + status);
-        // return status;
+        if (EveService.mLocationClient != null && EveService.mLocationClient.isConnected()) {
+            Location mCurrentLocation = EveService.mLocationClient.getLastLocation();
+            status.setLat(Double.valueOf(mCurrentLocation.getLatitude()).toString());
+            status.setLon(Double.valueOf(mCurrentLocation.getLongitude()).toString());
+        }
+        System.err.println("Returning:" + status);
+        return status;
     }
 
     public void subscribeMonitor() throws MalformedURLException {
@@ -108,11 +105,12 @@ public class BridgeDemoAgent extends Agent {
 
             URI cloudUri = URI.create(myUrl.getScheme() + username + "@" + host + "/" + CLOUD);
 
-            String monitorId = getResultMonitorFactory().create(cloudUri, "getTask",
-                    JOM.createObjectNode(), "wrapTask", new Poll(600000),
-                    new Push().onEvent("taskUpdated"));
-            System.out.println("Monitor id:" + monitorId + " -> "
-                    + ResultMonitor.getMonitorById(getId(), monitorId).toString());
+            /*
+             * String monitorId = getResultMonitorFactory().create(cloudUri, "getTask",
+             * JOM.createObjectNode(), "wrapTask", new Poll(600000), new
+             * Push().onEvent("taskUpdated")); System.out.println("Monitor id:" + monitorId + " -> "
+             * + ResultMonitor.getMonitorById(getId(), monitorId).toString());
+             */
         } else {
             System.err.println("SubscribeMonitor: XMPP not yet initialized?");
         }
@@ -126,34 +124,33 @@ public class BridgeDemoAgent extends Agent {
 
     public Task getTask() throws JsonProcessingException, IOException {
         System.err.println("Calling getTask();");
-        // ObjectReader taskReader = JOM.getInstance().reader(Task.class);
-        //
-        // if (getState().containsKey(TASK)) {
-        // String task = getState().get(TASK, String.class);
-        // System.err.println("Found task:" + task);
-        // return taskReader.readValue(task);
-        // } else {
-        // return null;
-        // }
+        ObjectReader taskReader = JOM.getInstance().reader(Task.class);
+
+        if (getState().containsKey(TASK)) {
+            String task = getState().get(TASK, String.class);
+            System.err.println("Found task:" + task);
+            return taskReader.readValue(task);
+        } else {
+            return null;
+        }
         // TODO: Replace with real data
-        return DummyData.getInstance().getTask();
+        // return DummyData.getInstance().getTask();
     }
 
     public SitRep getSitRep() throws JsonProcessingException, IOException {
         System.err.println("Calling getsitRep();");
         ObjectReader taskReader = JOM.getInstance().reader(SitRep.class);
 
-        // TODO: replace DUMMY
-        return DummyData.getInstance().getDefaultSitRep();
+        // return DummyData.getInstance().getDefaultSitRep();
 
-        // if (getState().containsKey(SITREP)) {
-        // String siteRep = getState().get(SITREP, String.class);
-        // System.err.println("Found sitrep:" + siteRep);
-        //
-        // return taskReader.readValue(siteRep);
-        // } else {
-        // return null;
-        // }
+        if (getState().containsKey(SITREP)) {
+            String siteRep = getState().get(SITREP, String.class);
+            System.err.println("Found sitrep:" + siteRep);
+
+            return taskReader.readValue(siteRep);
+        } else {
+            return null;
+        }
     }
 
     public void wrapTask(@Name("result") String task) throws IOException {
@@ -187,6 +184,21 @@ public class BridgeDemoAgent extends Agent {
             }
         } else {
             System.err.println("Received empty/null sitRep");
+        }
+    }
+
+    public void setTeamStatus(@Name("teamStatus") TeamStatus teamStatus) throws IOException {
+        if (teamStatus != null) {
+            TeamStatus oldTeamStatus = getTeamStatus();
+            if (oldTeamStatus == null || !oldTeamStatus.eq(teamStatus)) {
+                getState().put(STATUS, JOM.getInstance().writeValueAsString(teamStatus));
+                getEventsFactory().trigger("newTeamStatus");
+                EventBus.getDefault().post(new StateEvent(getId(), "newTeamStatus"));
+            } else {
+                System.out.println("Repeated receival of teamStatus.");
+            }
+        } else {
+            System.err.println("Received empty/null teamStatus");
         }
     }
 
