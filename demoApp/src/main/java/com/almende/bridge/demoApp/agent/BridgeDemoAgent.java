@@ -11,7 +11,6 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.preference.PreferenceManager;
 
-import com.almende.bridge.demoApp.DummyData;
 import com.almende.bridge.demoApp.EveService;
 import com.almende.bridge.demoApp.R;
 import com.almende.bridge.demoApp.event.StateEvent;
@@ -58,31 +57,39 @@ public class BridgeDemoAgent extends Agent {
 
     public TeamStatus getTeamStatus() throws IOException {
         System.err.println("Get Team Status called!");
-        TeamStatus status = getState().get(STATUS, TeamStatus.class);
-        if (status == null) {
+        ObjectReader teamStatusReader = JOM.getInstance().reader(TeamStatus.class);
+
+        if (getState().containsKey(STATUS)) {
+            String teamStatusString = getState().get(STATUS, String.class);
+            System.err.println("Found team Status:" + teamStatusString);
+            TeamStatus teamStatus = teamStatusReader.readValue(teamStatusString);
+            Task task = getTask();
+            if (teamStatus.getDeploymentStatus().equals(TeamStatus.WITHDRAWN)) {
+                // don't change assignment
+            } else if (task == null) {
+                teamStatus.setDeploymentStatus(TeamStatus.UNASSIGNED);
+            } else if (task.getStatus().equals(Task.NOTCONFIRMED)) {
+                teamStatus.setDeploymentStatus(TeamStatus.ASSIGNED);
+            } else if (task.getStatus().equals(Task.CONFIRMED)) {
+                teamStatus.setDeploymentStatus(TeamStatus.ACTIVE);
+            } else if (task.getStatus().equals(Task.COMPLETE)) {
+                // // TODO: implement 20 minute buffer "POST" state.
+                teamStatus.setDeploymentStatus(TeamStatus.UNASSIGNED);
+            } else {
+                System.err.println("Couldn't determine teamstate, task state:" + task.getStatus());
+            }
+            if (EveService.mLocationClient != null && EveService.mLocationClient.isConnected()) {
+                Location mCurrentLocation = EveService.mLocationClient.getLastLocation();
+                if (mCurrentLocation != null) {
+                    teamStatus.setLat(Double.valueOf(mCurrentLocation.getLatitude()).toString());
+                    teamStatus.setLon(Double.valueOf(mCurrentLocation.getLongitude()).toString());
+                }
+            }
+
+            return teamStatus;
+        } else {
             return null;
         }
-
-        // Task task = getTask();
-        // if (task == null) {
-        // status.setDeploymentStatus(TeamStatus.UNASSIGNED);
-        // } else if (task.getStatus().equals(Task.NOTCONFIRMED)) {
-        // status.setDeploymentStatus(TeamStatus.ASSIGNED);
-        // } else if (task.getStatus().equals(Task.CONFIRMED)) {
-        // status.setDeploymentStatus(TeamStatus.ACTIVE);
-        // } else if (task.getStatus().equals(Task.COMPLETE)) {
-        // // // TODO: implement 20 minute buffer "POST" state.
-        // status.setDeploymentStatus(TeamStatus.UNASSIGNED);
-        // } else {
-        // System.err.println("Couldn't determine teamstate, task state:" + task.getStatus());
-        // }
-        if (EveService.mLocationClient != null && EveService.mLocationClient.isConnected()) {
-            Location mCurrentLocation = EveService.mLocationClient.getLastLocation();
-            status.setLat(Double.valueOf(mCurrentLocation.getLatitude()).toString());
-            status.setLon(Double.valueOf(mCurrentLocation.getLongitude()).toString());
-        }
-        System.err.println("Returning:" + status);
-        return status;
     }
 
     public void subscribeMonitor() throws MalformedURLException {
@@ -133,15 +140,11 @@ public class BridgeDemoAgent extends Agent {
         } else {
             return null;
         }
-        // TODO: Replace with real data
-        // return DummyData.getInstance().getTask();
     }
 
     public SitRep getSitRep() throws JsonProcessingException, IOException {
         System.err.println("Calling getsitRep();");
         ObjectReader taskReader = JOM.getInstance().reader(SitRep.class);
-
-        // return DummyData.getInstance().getDefaultSitRep();
 
         if (getState().containsKey(SITREP)) {
             String siteRep = getState().get(SITREP, String.class);
@@ -227,7 +230,7 @@ public class BridgeDemoAgent extends Agent {
         if (team != null) {
             getState().put(STATUS, JOM.getInstance().writeValueAsString(team));
             // TODO: use real data
-            DummyData.getInstance().setTeamStatus(team);
+            // DummyData.getInstance().setTeamStatus(team);
             getEventsFactory().trigger("teamStatusUpdated");
             EventBus.getDefault().post(new StateEvent(getId(), "teamStatusUpdated"));
 

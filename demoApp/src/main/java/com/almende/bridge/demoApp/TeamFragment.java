@@ -85,12 +85,10 @@ public class TeamFragment extends Fragment {
                 tv = (TextView) view.findViewById(R.id.team_status);
                 tv.setText(team.getDeploymentStatus());
 
-                if (team.getDeploymentStatus().equals(TeamStatus.ACTIVE)
-                        || team.getDeploymentStatus().equals(TeamStatus.ASSIGNED)
-                        || team.getDeploymentStatus().equals(TeamStatus.POST)) {
-                    stateButton.setChecked(true);
-                } else {
+                if (team.getDeploymentStatus().equals(TeamStatus.WITHDRAWN)) {
                     stateButton.setChecked(false);
+                } else {
+                    stateButton.setChecked(true);
                 }
                 stateButton.setVisibility(Button.VISIBLE);
                 stateButton.setEnabled(true);
@@ -105,7 +103,7 @@ public class TeamFragment extends Fragment {
                             if (((ToggleButton) v).isChecked()) {
                                 team.setDeploymentStatus(TeamStatus.ACTIVE);
                             } else {
-                                team.setDeploymentStatus(TeamStatus.UNASSIGNED);
+                                team.setDeploymentStatus(TeamStatus.WITHDRAWN);
                             }
                             agent.updateTeamStatus(team);
                         } catch (Exception e) {
@@ -124,9 +122,9 @@ public class TeamFragment extends Fragment {
     public void onEventMainThread(StateEvent event) {
         System.err.println(TAG + " received StateEvent! " + event.getAgentId() + ":"
                 + event.getValue());
-        if ((event.getValue().equals("teamStatusUpdated") || event.getValue().equals(
-                "newTeamStatus"))
-                && event.getAgentId().equals(EveService.DEMO_AGENT)) {
+        if (((event.getValue().equals("teamStatusUpdated") || event.getValue().equals(
+                "newTeamStatus")) || (event.getValue().equals("taskUpdated") || event.getValue()
+                .equals("newTask"))) && event.getAgentId().equals(EveService.DEMO_AGENT)) {
             renderTeam();
         }
     }

@@ -175,7 +175,7 @@ public class MyMapFragment extends MapFragment implements LocationListener,
             }
 
             LatLngBounds.Builder bounds = new LatLngBounds.Builder();
-
+            getMap().clear();
             bounds = addPointsToMap(sitRep.getControlPosts(), bounds);
             bounds = addPointsToMap(sitRep.getIncidents(), bounds);
             bounds = addPointsToMap(sitRep.getOthers(), bounds);
