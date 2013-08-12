@@ -32,7 +32,7 @@
 			<artifactId>eve-android</artifactId>
 			<version>${eve.version}</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.almende.cape</groupId>
 			<artifactId>cape-client</artifactId>
 			<version>${project.parent.version}</version>
@@ -42,7 +42,7 @@
 					<groupId>jivesoftware</groupId>
 				</exclusion>
 			</exclusions>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>com.almende.eve</groupId>
 			<artifactId>eve-core</artifactId>
@@ -66,12 +66,30 @@
 			<version>${android.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		
 		<dependency>
-			<groupId>com.google.android</groupId>
-			<artifactId>support-v4</artifactId>
-			<version>r7</version>
+  			<groupId>android.support</groupId>
+  			<artifactId>compatibility-v4</artifactId>
+  			<version>18</version>
+  			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>android.support</groupId>
+  			<artifactId>compatibility-v7-appcompat</artifactId>
+			<version>18</version>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+  <groupId>com.google.android.gms</groupId>
+  <artifactId>google-play-services</artifactId>
+  <version>9</version>
+  <scope>provided</scope>
+</dependency>
+
+		
+		
 		<dependency>
 			<groupId>de.measite.smack</groupId>
 			<artifactId>asmack-android</artifactId>

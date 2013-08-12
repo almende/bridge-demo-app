@@ -22,6 +22,10 @@
     <style name="Alarm.Button.Blue">
         <item name="android:background">@drawable/gradient_button_blue</item>
     </style>
+    
+        <style name="Alarm.Button.GreenBlue">
+        <item name="android:background">@drawable/toggle_button_green_blue</item>
+    </style>
 
     <style name="Alarm.Button.Taupe">
         <item name="android:background">@drawable/gradient_button_taupe</item>
