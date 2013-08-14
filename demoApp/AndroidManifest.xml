@@ -54,7 +54,9 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAkYINDUtT2bIwqrtBQlqoL-5BougCYiLE" />
+            android:value="AIzaSyBw4mMpFGy_9fKhw5hwwnw4vpFq4UXnNrg" />
+        <!--  almende key: AIzaSyAkYINDUtT2bIwqrtBQlqoL-5BougCYiLE -->
+        <!--  ask-cs key: AIzaSyBw4mMpFGy_9fKhw5hwwnw4vpFq4UXnNrg -->
     </application>
 
 </manifest>
