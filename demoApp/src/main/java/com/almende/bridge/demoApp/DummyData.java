@@ -50,7 +50,6 @@ public class DummyData {
     }
 
     public static ArrayList<PointOfInterest> getDefaultControlPosts() {
-        SitRep sitRep = new SitRep();
         ArrayList<PointOfInterest> controlPosts = new ArrayList<PointOfInterest>();
         // Ask-cs
         PointOfInterest pointOfInterest = new PointOfInterest();
@@ -67,7 +66,6 @@ public class DummyData {
     }
 
     public static ArrayList<PointOfInterest> getDefaultIncidents() {
-        SitRep sitRep = new SitRep();
         ArrayList<PointOfInterest> incidents = new ArrayList<PointOfInterest>();
         // Dummy data
         // Maas tunnel
@@ -90,7 +88,6 @@ public class DummyData {
 
     public static HashMap<String, PointOfInterest> getDefaultTeams() {
         HashMap<String, PointOfInterest> teams = new HashMap<String, PointOfInterest>();
-        SitRep sitRep = new SitRep();
         // Dummy data
         // Ziekenhuis
         PointOfInterest pointOfInterest = new PointOfInterest();
@@ -112,7 +109,6 @@ public class DummyData {
     }
 
     public static ArrayList<PointOfInterest> getDefaultOthers() {
-        SitRep sitRep = new SitRep();
         ArrayList<PointOfInterest> others = new ArrayList<PointOfInterest>();
         // Dummy data
         // Sense

@@ -6,6 +6,7 @@ public class PointOfInterest implements Serializable {
     private static final long serialVersionUID = -931849620637717905L;
     private String lat;
     private String lon;
+    private String label;
     private String color;
     private String icon;
 
@@ -28,7 +29,15 @@ public class PointOfInterest implements Serializable {
         this.lon = lon;
     }
 
-    public String getColor() {
+    public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public String getColor() {
         return color;
     }
 

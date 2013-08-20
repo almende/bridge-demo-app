@@ -4,15 +4,11 @@ import java.net.URI;
 import java.util.UUID;
 
 import org.joda.time.DateTime;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
-import org.neo4j.graphdb.Transaction;
 
-import com.almende.bridge.util.DB;
 import com.almende.eve.agent.Agent;
 import com.almende.eve.agent.AgentHost;
+import com.almende.eve.rpc.annotation.Access;
+import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;
 import com.almende.eve.rpc.annotation.Required;
 import com.almende.eve.rpc.jsonrpc.jackson.JOM;
@@ -21,6 +17,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+@Access(AccessType.PUBLIC)
 public class DemoGenerator extends Agent {
 	State	myState	= getState();
 	
@@ -28,9 +25,6 @@ public class DemoGenerator extends Agent {
 		myState = getState();
 	}
 	
-	private static enum RelTypes implements RelationshipType {
-		IS
-	}
 	
 	static final String[]	agentIds	= new String[] { "Fire Vehicle 1",
 			"Fire Vehicle 2", "Fire Vehicle 3", "Fire Personnel 1",
@@ -50,7 +44,6 @@ public class DemoGenerator extends Agent {
 	public void reset(@Required(false) @Name("lat") String lat,@Required(false) @Name("lon") String lon) {
 		// Removes all teams, tasks, resources
 		// Recreates resources
-		DB.emptyDB();
 		myState.remove("invalidCount");
 		AgentHost host = getAgentHost();
 		
@@ -81,7 +74,7 @@ public class DemoGenerator extends Agent {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		Node parent = null;
+		GenList parent = null;
 		for (String agentId : agentIds) {
 			try {
 				host.deleteAgent(agentId);
@@ -124,36 +117,29 @@ public class DemoGenerator extends Agent {
 				}
 
 				agent.setLocation(location);
-				GraphDatabaseService db = DB.get();
 				
-				Transaction tx = db.beginTx();
 				try {
-					String parentType = agentId.substring(0,
-							agentId.lastIndexOf(" "));
+					String parentId = agentId.substring(0,
+							agentId.lastIndexOf(" ")) + " Parent";
 					if (parent == null
-							|| !parent.getProperty("type").equals(parentType)) {
+							|| !parent.getId().equals(parentId)) {
 						System.err.println("Need to create new parent:"
-								+ parentType);
-						parent = db.createNode();
-						parent.setProperty("type", parentType);
-						Long id = parent.getId();
-						
-						myState.put(parentType, id);
+								+ parentId);
+						if (host.hasAgent(parentId)){
+							host.deleteAgent(parentId);
+						}
+						parent = host.createAgent(GenList.class,parentId);
+						parent.add(agentId);
+						System.err.println("Parent:"+parent.getFirstUrl());
+						myState.put(parentId, parent.getFirstUrl().toString());
 					}
-					Node node = db.createNode();
-					node.setProperty("agentId", agentId);
-					parent.createRelationshipTo(node, RelTypes.IS);
-					
-					tx.success();
 				} catch (Exception e) {
-					System.err.println("Couldn't store agent to neo4j:"
+					System.err.println("Couldn't store agent in parent:"
 							+ agentId + ":" + e.getMessage());
 					e.printStackTrace();
-					tx.failure();
 				}
-				tx.finish();
-				
-				agent.setResType((String) parent.getProperty("type"));
+				agent.setResType(agentId.substring(0,
+						agentId.lastIndexOf(" ")));
 				
 			} catch (Exception e) {
 				System.err.println("Couldn't generate agent:" + agentId + ":"
@@ -169,14 +155,11 @@ public class DemoGenerator extends Agent {
 			@Name("amount") Integer amount,
 			@Required(false) @Name("location") String location)
 			throws Exception {
-		GraphDatabaseService db = DB.get();
 		AgentHost factory = AgentHost.getInstance();
-		Long id = Long.valueOf(myState.get(resType).toString());
-		Node parent = db.getNodeById(id);
+		URI parentUrl = URI.create(myState.get(resType).toString());
+		GenList parent = factory.createAgentProxy(this, parentUrl, GenList.class);
 		int count = 0;
-		for (Relationship rel : parent.getRelationships(RelTypes.IS)) {
-			Node node = rel.getEndNode();
-			String agentId = (String) node.getProperty("agentId");
+		for (String agentId : parent.getAll()) {
 			try {
 				Resource agent = (Resource) factory.getAgent(agentId);
 				if (agent.getCurrentTask() == null

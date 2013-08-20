@@ -18,6 +18,8 @@ import com.almende.bridge.edxl.EDXLParser;
 import com.almende.bridge.edxl.EDXLParser.EDXLRet;
 import com.almende.eve.agent.Agent;
 import com.almende.eve.agent.AgentHost;
+import com.almende.eve.rpc.annotation.Access;
+import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;
 import com.almende.eve.rpc.annotation.Required;
 import com.almende.eve.rpc.jsonrpc.JSONRequest;
@@ -26,6 +28,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+@Access(AccessType.PUBLIC)
 public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 	static String		lastTaskId	= "";
 	static final int	RESPERMES	= 1;

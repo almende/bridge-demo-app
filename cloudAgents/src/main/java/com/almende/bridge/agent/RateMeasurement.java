@@ -4,10 +4,13 @@ import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
 import com.almende.eve.agent.Agent;
+import com.almende.eve.rpc.annotation.Access;
+import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;
 import com.almende.eve.rpc.annotation.Required;
 import com.fasterxml.jackson.databind.JsonNode;
 
+@Access(AccessType.PUBLIC)
 public class RateMeasurement extends Agent {
 	static int count=0;
 	static DateTime start=DateTime.now();

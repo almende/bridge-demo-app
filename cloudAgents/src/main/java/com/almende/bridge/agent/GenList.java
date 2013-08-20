@@ -1,8 +1,11 @@
 package com.almende.bridge.agent;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.almende.eve.agent.Agent;
+import com.almende.eve.rpc.annotation.Access;
+import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;
 import com.almende.eve.rpc.jsonrpc.jackson.JOM;
 import com.almende.eve.state.State;
@@ -10,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
+@Access(AccessType.PUBLIC)
 public class GenList extends Agent {
 	State	myState	= getState();
 	
@@ -72,6 +76,16 @@ public class GenList extends Agent {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	public String[] getAll(){
+		ArrayNode list = getList();
+		ArrayList<String> result = new ArrayList<String>(list.size());
+		Iterator<JsonNode> iter = list.iterator();
+		while (iter.hasNext()){
+			result.add(iter.next().textValue());
+		}
+		String[] ret = new String[result.size()];
+		return result.toArray(ret);
 	}
 	public ArrayNode getList(){
 		if (myState.containsKey("items")) {

@@ -7,6 +7,8 @@ import java.util.Set;
 
 import com.almende.eve.agent.Agent;
 import com.almende.eve.agent.AgentHost;
+import com.almende.eve.rpc.annotation.Access;
+import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;
 import com.almende.eve.rpc.jsonrpc.JSONRequest;
 import com.almende.eve.rpc.jsonrpc.jackson.JOM;
@@ -15,6 +17,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+@Access(AccessType.PUBLIC)
 public class SimpleTaskAgent extends Agent {
 	State						myState	= getState();
 	static final Set<String>	TYPES	= new HashSet<String>();

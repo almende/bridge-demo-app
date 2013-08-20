@@ -127,7 +127,11 @@ public class TeamLeaderAgent extends Agent {
 				JOM.getSimpleType(Object.class));
 		System.out.println("callOtherAgent url=" + url + " method=" + method
 				+ ", params=" + params.toString() + ", resp=" + resp);
-		return resp.toString();
+		if (resp != null){
+			return resp.toString();
+		} else {
+			return "";
+		}
 	}
 	
 	public void xmppDisconnect() throws Exception {

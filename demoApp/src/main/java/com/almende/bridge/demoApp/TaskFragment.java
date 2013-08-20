@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.almende.bridge.demoApp.agent.BridgeDemoAgent;
 import com.almende.bridge.demoApp.event.StateEvent;
 import com.almende.bridge.demoApp.util.SystemUiHider;
-import com.almende.bridge.types.SitRep;
 import com.almende.bridge.types.Task;
 import com.almende.eve.agent.AgentHost;
 
@@ -44,10 +43,8 @@ public class TaskFragment extends Fragment {
             BridgeDemoAgent agent = (BridgeDemoAgent) AgentHost.getInstance().getAgent(
                     EveService.DEMO_AGENT);
             Task task = null;
-            SitRep sitRep = null;
             if (agent != null) {
                 task = agent.getTask();
-                sitRep = agent.getSitRep();
             }
 
             if (task == null || task.getStatus().equals(Task.COMPLETE)) {

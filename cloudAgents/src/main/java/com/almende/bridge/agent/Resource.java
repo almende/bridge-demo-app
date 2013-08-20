@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.Iterator;
 
 import com.almende.eve.agent.Agent;
+import com.almende.eve.rpc.annotation.Access;
+import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;
 import com.almende.eve.rpc.jsonrpc.jackson.JOM;
 import com.almende.eve.state.State;
@@ -12,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+@Access(AccessType.PUBLIC)
 public class Resource extends Agent {
 	private State	myState	= getState();
 	
