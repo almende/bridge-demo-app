@@ -5,8 +5,8 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="11"
-        android:targetSdkVersion="17" />
+        android:minSdkVersion="12"
+        android:targetSdkVersion="18" />
 
     <permission
         android:name="com.almende.bridge.demoApp.permission.MAPS_RECEIVE"
@@ -22,6 +22,8 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:name="com.almende.bridge.demoApp.DemoApp"
@@ -54,9 +56,9 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBw4mMpFGy_9fKhw5hwwnw4vpFq4UXnNrg" />
-        <!--  almende key: AIzaSyAkYINDUtT2bIwqrtBQlqoL-5BougCYiLE -->
-        <!--  ask-cs key: AIzaSyBw4mMpFGy_9fKhw5hwwnw4vpFq4UXnNrg -->
+            android:value="AIzaSyAkYINDUtT2bIwqrtBQlqoL-5BougCYiLE" />
+        <!-- almende key: AIzaSyAkYINDUtT2bIwqrtBQlqoL-5BougCYiLE -->
+        <!-- ask-cs key: AIzaSyBw4mMpFGy_9fKhw5hwwnw4vpFq4UXnNrg -->
     </application>
 
 </manifest>

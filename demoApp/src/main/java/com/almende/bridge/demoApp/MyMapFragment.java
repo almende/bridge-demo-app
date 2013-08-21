@@ -176,11 +176,17 @@ public class MyMapFragment extends MapFragment implements LocationListener,
 
             LatLngBounds.Builder bounds = new LatLngBounds.Builder();
             getMap().clear();
-            bounds = addPointsToMap(sitRep.getControlPosts(), bounds);
-            bounds = addPointsToMap(sitRep.getIncidents(), bounds);
-            bounds = addPointsToMap(sitRep.getOthers(), bounds);
-            bounds = addPointsToMap(sitRep.getTeams(), bounds);
-
+            
+            if (mLocation != null) {
+                bounds.include(new LatLng(mLocation.getLatitude(), mLocation.getLongitude()));
+            }
+            
+            if (sitRep != null){
+            	bounds = addPointsToMap(sitRep.getControlPosts(), bounds);
+            	bounds = addPointsToMap(sitRep.getIncidents(), bounds);
+            	bounds = addPointsToMap(sitRep.getOthers(), bounds);
+            	bounds = addPointsToMap(sitRep.getTeams(), bounds);
+            }
             if (mTask != null) {
                 mTask.remove();
             }
@@ -205,22 +211,12 @@ public class MyMapFragment extends MapFragment implements LocationListener,
                     }
                 });
 
-                if (mLocation != null) {
-                    bounds.include(new LatLng(mLocation.getLatitude(), mLocation.getLongitude()));
-                }
-
                 bounds.include(taskLoc);
             }
-            try {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 50));
-                mSuccesfullySetBounds = true;
-            } catch (Exception e) {
-                // map not ready retry in thread until successful;
-                setBoundsRetry(bounds);
-
-            }
+            setBoundsRetry(bounds);
         } catch (Exception e) {
-
+        	Log.e(TAG, "Warning, couldn't set map overlays:"+e.getMessage()+" :" +Log.getStackTraceString(e));
+        	
         }
     }
 
