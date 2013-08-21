@@ -13,7 +13,6 @@ import com.almende.eve.agent.Agent;
 import com.almende.eve.agent.AgentHost;
 import com.almende.eve.monitor.Poll;
 import com.almende.eve.monitor.Push;
-import com.almende.eve.monitor.ResultMonitor;
 import com.almende.eve.rpc.annotation.Access;
 import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;
@@ -107,7 +106,7 @@ public class TeamLeaderAgent extends Agent {
 			System.out.println("Monitor id:"
 					+ monitorId
 					+ " -> "
-					+ ResultMonitor.getMonitorById(getId(), monitorId)
+					+ getResultMonitorFactory().getMonitorById(monitorId)
 							.toString());
 		} else {
 			System.err.println("SubscribeMonitor: XMPP not yet initialized?");

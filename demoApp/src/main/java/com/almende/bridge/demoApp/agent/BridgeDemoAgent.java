@@ -20,7 +20,6 @@ import com.almende.bridge.types.TeamStatus;
 import com.almende.eve.agent.Agent;
 import com.almende.eve.monitor.Poll;
 import com.almende.eve.monitor.Push;
-import com.almende.eve.monitor.ResultMonitor;
 import com.almende.eve.rpc.annotation.Access;
 import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;
@@ -130,7 +129,7 @@ public class BridgeDemoAgent extends Agent {
 			System.out.println("Monitor id:"
 					+ monitorId
 					+ " -> "
-					+ ResultMonitor.getMonitorById(getId(), monitorId)
+					+ getResultMonitorFactory().getMonitorById(monitorId)
 							.toString());
 			
 		} else {
@@ -140,7 +139,7 @@ public class BridgeDemoAgent extends Agent {
 	
 	public void initTask() throws JSONRPCException, IOException {
 		getState().remove(TASK);
-		ResultMonitor.cancelAll(getId());
+		getResultMonitorFactory().cancelAll();
 		getScheduler().cancelAllTasks();
 	}
 	
