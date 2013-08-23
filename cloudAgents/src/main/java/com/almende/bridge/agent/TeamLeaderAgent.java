@@ -99,7 +99,7 @@ public class TeamLeaderAgent extends Agent {
 			URI mobileUri = URI.create(myUrl.getScheme() + username + "@" + host
 					+ "/" + MOBILE);
 			
-			String monitorId = getResultMonitorFactory().create(mobileUri,
+			String monitorId = getResultMonitorFactory().create("TeamStatusMonitor", mobileUri,
 					"getTeamStatus", JOM.createObjectNode(), "wrapTeamStatus",
 					new Poll(600000),
 					new Push().onInterval(10000).onEvent("taskUpdated"));

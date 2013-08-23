@@ -122,7 +122,7 @@ public class BridgeDemoAgent extends Agent {
 			URI cloudUri = URI.create(myUrl.getScheme() + username + "@" + host
 					+ "/" + CLOUD);
 			
-			String monitorId = getResultMonitorFactory().create(cloudUri,
+			String monitorId = getResultMonitorFactory().create("taskMonitor",cloudUri,
 					"getTask", JOM.createObjectNode(), "wrapTask",
 					new Poll(600000), new Push().onEvent("taskUpdated"));
 			
