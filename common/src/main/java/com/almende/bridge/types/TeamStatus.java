@@ -13,7 +13,7 @@ public class TeamStatus implements Serializable {
 
     private String teamId;
     private String teamLeaderName;
-    private String deploymentStatus;
+    private String deploymentStatus = "Unknown";
     private String lat;
     private String lon;
 

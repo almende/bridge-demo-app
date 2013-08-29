@@ -3,6 +3,7 @@ package com.almende.bridge.agent;
 import java.util.ArrayList;
 
 import com.almende.bridge.types.Task;
+import com.almende.bridge.types.TeamStatus;
 import com.almende.eve.agent.Agent;
 import com.almende.eve.agent.annotation.ThreadSafe;
 import com.almende.eve.rpc.annotation.Access;
@@ -22,6 +23,13 @@ public class Team extends Agent {
 	
 	public void setTask(@Name("task") Task task) {
 		getState().put("Task", task);
+	}
+	
+	public TeamStatus getTeamStatus(){
+		TeamStatus result = new TeamStatus();
+		//TODO: fill in status
+		
+		return result;
 	}
 	
 	public String getLeader() {

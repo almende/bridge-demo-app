@@ -19,6 +19,27 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @Access(AccessType.PUBLIC)
 public class DemoGenerator extends Agent {
 	
+	public ArrayNode getAllResources() throws JSONRPCException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException {
+		AgentHost host = getAgentHost();
+		ArrayNode result = JOM.createArrayNode();
+		GenList agentList = (GenList) host.getAgent("demolist");
+		ArrayNode list = agentList.getList();
+		
+		for (JsonNode item : list) {
+			try {
+				Agent agent = host.getAgent(item.textValue());
+				if (!agent.getType().equals("Team")){
+					ObjectNode elem = JOM.createObjectNode();
+					elem.put("url", agent.getUrls().get(0));
+					result.add(elem);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
 	public void clearDemo() throws JSONRPCException, ClassNotFoundException,
 			InstantiationException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException, IOException {
@@ -32,15 +53,34 @@ public class DemoGenerator extends Agent {
 		agentList.empty();
 	}
 	
-	public void loadDemo(@Name("data") String demo)
+	public void resetDemo() throws JSONRPCException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException{
+		String demoData = getState().get("demoData",String.class);
+		if (demoData != null){
+			clearDemo();
+			loadDemo(JOM.getInstance().readTree(demoData));
+		} else {
+			throw new JSONRPCException("DemoData was not set, please load new data through loadDemo()!");
+		}
+	}
+	public JsonNode getDemoData() throws JsonProcessingException, IOException{
+		String demoData = getState().get("demoData",String.class);
+		if (demoData != null){
+			return JOM.getInstance().readTree(demoData);
+		}
+		return null;
+	}
+	
+	public void loadDemo(@Name("data") JsonNode dom)
 			throws JsonProcessingException, IOException, JSONRPCException,
 			InstantiationException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException,
 			ClassNotFoundException {
+		
+		
 		AgentHost host = getAgentHost();
 		GenList agentList = (GenList) host.getAgent("demolist");
 		
-		ObjectNode dom = (ObjectNode) JOM.getInstance().readTree(demo);
+		
 		ArrayNode teams = (ArrayNode) dom.get("teams");
 		for (JsonNode team : teams) {
 			String teamId = team.get("id").textValue();
@@ -90,5 +130,7 @@ public class DemoGenerator extends Agent {
 				agentList.add(memberId);
 			}
 		}
+		getState().put("demoData", JOM.getInstance().writeValueAsString(dom));
+		
 	}
 }

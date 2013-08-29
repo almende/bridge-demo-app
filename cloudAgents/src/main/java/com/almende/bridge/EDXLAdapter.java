@@ -57,14 +57,6 @@ public interface EDXLAdapter extends AgentInterface {
 	public String RequisitionResource(
 			@Name("RequisitionResourceMessage") String message) throws Exception;
 
-	/*
-	 * (outbound) Optional
-	 * 
-	 * 3.10 OfferUnsolicitedResource Message The “OfferUnsolicitedResource”
-	 * message is used to offer available resources (that have not been
-	 * requested) to assist with an emergency response
-	 */
-
 	/**
 	 * (inbound)<br>
 	 * 
@@ -78,46 +70,5 @@ public interface EDXLAdapter extends AgentInterface {
 	 */
 	public String ReleaseResource(@Name("ReleaseResourceMessage") String message) throws Exception;
 	
-	/*
-	 * (outbound)
-	 * 
-	 * 9 3.12 RequestReturn Message The “RequestReturn” message is used to
-	 * request release (demobilization) of resource(s) back to its original
-	 * owning jurisdiction and location or to another location / assignment.
-	 * 
-	 * (inbound)
-	 * 
-	 * 3.13 ResponseToRequestReturn Message The “ResponseToRequestReturn”
-	 * message is used by Resource Consumers to respond to a RequestReturn
-	 * message from Resource Suppliers. The response identifies the resources in
-	 * the original request message and how the Resource Consumer has responded
-	 */
-
-	/**
-	 * (inbound)<br>
-	 * 
-	 * 3.16 RequestResourceDeploymentStatus Message The
-	 * “RequestResourceDeploymentStatus” message is used to request the current
-	 * status of one or more deployed resources. It can be sent by the Resource
-	 * Supplier to the Resource Consumer (e.g., to check the status of the
-	 * resource after a “ReleaseResource” message) or by the Resource Consumer
-	 * to the Resource Supplier (e.g., to track the progress of a resource after
-	 * a “RequisitionResource” message).<br>
-	 * <br>
-	 * (outbound)<br>
-	 * 
-	 * 3.17 ReportResourceDeploymentStatus Message The
-	 * “ReportResourceDeploymentStatus” message is used to report on the current
-	 * status of any deployed resource. The message can be sent from the
-	 * Resource Supplier to the Resource Consumer, or from the Resource Consumer
-	 * to the Resource Supplier.
-	 * 
-	 * @param message
-	 *            RequestResourceDeploymentStatusMessage (EDXL-RM 3.16)
-	 * @return ReportResourceDeploymentStatusMessage (EDXL-RM 3.17)
-	 * @throws Exception 
-	 */
-	public String RequestResourceDeploymentStatus(
-			@Name("RequestResourceDeploymentStatusMessage") String message) throws Exception;
 
 }

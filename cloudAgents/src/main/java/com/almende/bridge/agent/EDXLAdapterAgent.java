@@ -1,4 +1,4 @@
-package com.almende.bridge.agents_old;
+package com.almende.bridge.agent;
 
 import static com.almende.bridge.edxl.EDXLGenerator.setElementWithPath;
 import static com.almende.bridge.edxl.EDXLParser.getElementsByType;
@@ -13,6 +13,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 
 import com.almende.bridge.EDXLAdapter;
+import com.almende.bridge.agents_old.SimpleTaskAgent;
 import com.almende.bridge.edxl.EDXLGenerator;
 import com.almende.bridge.edxl.EDXLParser;
 import com.almende.bridge.edxl.EDXLParser.EDXLRet;
@@ -42,19 +43,18 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 		RequestResource(data);
 	}
 	
-	public ArrayNode getResources(){
+	public ArrayNode getResources() {
 		ArrayNode result = JOM.createArrayNode();
 		try {
-			ArrayNode allResources = send(URI.create("local://demo"), "getAllResources",ArrayNode.class);
+			ArrayNode allResources = send(URI.create("local://demo"),
+					"getAllResources", ArrayNode.class);
 			
 			Iterator<JsonNode> iter = allResources.elements();
-			ArrayNode subList = JOM.createArrayNode();
 			while (iter.hasNext()) {
+				ArrayNode subList = JOM.createArrayNode();
 				subList.add(iter.next());
 				String replyDoc = createReportResourceDeploymentStatus(subList);
 				result.add(replyDoc);
-					
-				subList = JOM.createArrayNode();
 			}
 		} catch (Exception e) {
 			System.err
@@ -67,7 +67,8 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 	public void sendReportResourceDeploymentStatus(
 			@Required(false) @Name("interval") Integer interval) {
 		try {
-			ArrayNode allResources = send(URI.create("local://demo"), "getAllResources",ArrayNode.class);
+			ArrayNode allResources = send(URI.create("local://demo"),
+					"getAllResources", ArrayNode.class);
 			
 			Iterator<JsonNode> iter = allResources.elements();
 			ArrayNode subList = JOM.createArrayNode();
@@ -173,8 +174,9 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 		
 		// Create Task agent:
 		AgentHost factory = AgentHost.getInstance();
-		if (factory.hasAgent("Task_"+messageID)){
-			throw new Exception("Task has already been posted before, please use a new messageID!");
+		if (factory.hasAgent("Task_" + messageID)) {
+			throw new Exception(
+					"Task has already been posted before, please use a new messageID!");
 		}
 		SimpleTaskAgent agent = (SimpleTaskAgent) factory
 				.createAgent("com.almende.bridge.agent.SimpleTaskAgent",
@@ -279,8 +281,9 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 		
 		// Create Task agent:
 		AgentHost factory = AgentHost.getInstance();
-		if (factory.hasAgent("Task_"+messageID)){
-			throw new Exception("Task has already been posted before, please use a new messageID!");
+		if (factory.hasAgent("Task_" + messageID)) {
+			throw new Exception(
+					"Task has already been posted before, please use a new messageID!");
 		}
 		SimpleTaskAgent agent = (SimpleTaskAgent) factory
 				.createAgent("com.almende.bridge.agent.SimpleTaskAgent",
@@ -314,35 +317,13 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 		return "OK";
 	}
 	
-	@Override
-	public String RequestResourceDeploymentStatus(
-			@Name("RequestResourceDeploymentStatusMessage") String message)
-			throws Exception {
-		EDXLRet inDoc = EDXLParser.parseXML(message);
-		if (inDoc == null) throw new Exception("Failed to parse XML message.");
-		if (!"RequestResourceDeploymentStatus".equalsIgnoreCase(inDoc
-				.getMsgType())) throw new Exception(
-				"Incorrect XML message type!");
-		
-		String originatingMessageID = getStringByPath(inDoc.getRoot(),
-				new String[] { "OriginatingMessageID" });
-		
-		// TODO: this is incorrect Currently there is no getTeam/getMembers
-		// method!
-		String teamUrl = send(URI.create("local://Task_" + originatingMessageID),
-				"getTeam",String.class);
-		
-		ArrayNode members = send(URI.create(teamUrl), "getMembers",ArrayNode.class);
-		
-		return createReportResourceDeploymentStatus(members);
-	}
-	
+
 	public String createReportResourceDeploymentStatus(
 			@Name("members") ArrayNode members) {
 		Document replyDoc = EDXLGenerator
 				.genDoc("ReportResourceDeploymentStatus");
 		Element root = replyDoc.getRootElement();
-		boolean sendTasks =true;
+		boolean sendTasks = true;
 		
 		if (members != null) {
 			int count = 1;
@@ -350,7 +331,7 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 				ObjectNode member = (ObjectNode) res;
 				String resourceUrl = member.get("url").textValue();
 				try {
-					ObjectNode status = send(JOM.createObjectNode(),URI.create(resourceUrl), "requestStatus");
+					ObjectNode status = send(URI.create(resourceUrl), "requestStatus",null,ObjectNode.class);
 					if (status == null) {
 						throw new Exception("Status null!" + resourceUrl);
 					} else {
@@ -387,13 +368,17 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 						setElementWithPath(schedule,
 								new String[] { "ScheduleType" }, "Current");
 						setElementWithPath(schedule, new String[] { "Location",
-								"rm:TargetArea", "gml:Point", "gml:pos" }, loc
-								.get("lat").textValue()
-								+ " "
-								+ loc.get("lon").textValue());
-						setElementWithPath(schedule,
-								new String[] { "DateTime" }, loc.get("time")
-										.textValue());
+								"rm:TargetArea", "gml:Point", "gml:pos" },
+								loc.get("latitude").textValue() + " "
+										+ loc.get("longitude").textValue());
+						if (loc.has("time")) {
+							String time = loc.get("time").textValue();
+							if (time != null && !time.isEmpty()) {
+								setElementWithPath(schedule,
+										new String[] { "DateTime" },
+										loc.get("time").textValue());
+							}
+						}
 						sub.addContent(schedule);
 					}
 					if (sendTasks && status.has("goal")) {
@@ -403,15 +388,17 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 								new String[] { "ScheduleType" },
 								"RequestedArrival");
 						setElementWithPath(schedule, new String[] { "Location",
-								"rm:TargetArea", "gml:Point", "gml:pos" }, loc
-								.get("lat").textValue()
-								+ " "
-								+ loc.get("lon").textValue());
-						String time = loc.get("time").textValue();
-						if (!time.isEmpty()) {
-							setElementWithPath(schedule,
-									new String[] { "DateTime" }, loc
-											.get("time").textValue());
+								"rm:TargetArea", "gml:Point", "gml:pos" },
+								loc.get("latitude").textValue() + " "
+										+ loc.get("longitude").textValue());
+						if (loc.has("time")) {
+							String time = loc.get("time").textValue();
+							
+							if (time != null && !time.isEmpty()) {
+								setElementWithPath(schedule,
+										new String[] { "DateTime" },
+										loc.get("time").textValue());
+							}
 						}
 						sub.addContent(schedule);
 					}
