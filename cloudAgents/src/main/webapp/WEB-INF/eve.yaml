@@ -18,11 +18,5 @@ transport_services:
 
 bootstrap:
   agents:
-    edxl: com.almende.bridge.agent.EDXLAdapterAgent
-    demo: com.almende.bridge.agent.DemoGenerator
-    list: com.almende.bridge.agent.GenList
-    agent_list: com.almende.bridge.agent.GenList
-    rate: com.almende.bridge.agent.RateMeasurement
-    teamLeader1: com.almende.bridge.agent.TeamLeaderAgent
-
-    
+     demolist: com.almende.bridge.agent.GenList
+     demo: com.almende.bridge.agent.DemoGenerator

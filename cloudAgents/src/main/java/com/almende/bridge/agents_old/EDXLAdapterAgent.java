@@ -1,4 +1,4 @@
-package com.almende.bridge.agent;
+package com.almende.bridge.agents_old;
 
 import static com.almende.bridge.edxl.EDXLGenerator.setElementWithPath;
 import static com.almende.bridge.edxl.EDXLParser.getElementsByType;

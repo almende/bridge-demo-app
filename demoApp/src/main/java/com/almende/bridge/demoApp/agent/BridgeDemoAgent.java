@@ -158,13 +158,13 @@ public class BridgeDemoAgent extends Agent {
 	
 	public SitRep getSitRep() throws JsonProcessingException, IOException {
 		System.err.println("Calling getsitRep();");
-		ObjectReader taskReader = JOM.getInstance().reader(SitRep.class);
+		ObjectReader sitRepReader = JOM.getInstance().reader(SitRep.class);
 		
 		if (getState().containsKey(SITREP)) {
-			String siteRep = getState().get(SITREP, String.class);
-			System.err.println("Found sitrep:" + siteRep);
+			String sitRep = getState().get(SITREP, String.class);
+			System.err.println("Found sitrep:" + sitRep);
 			
-			return taskReader.readValue(siteRep);
+			return sitRepReader.readValue(sitRep);
 		} else {
 			return null;
 		}
@@ -236,9 +236,9 @@ public class BridgeDemoAgent extends Agent {
 			if (oldTask.eq(task)) {
 				getState()
 						.put(TASK, JOM.getInstance().writeValueAsString(task));
-				getEventsFactory().trigger("taskUpdated");
 				EventBus.getDefault().post(
 						new StateEvent(getId(), "taskUpdated"));
+				getEventsFactory().trigger("taskUpdated");
 			} else {
 				System.out
 						.println("Warning: Not updating task status, because another task is found!");
@@ -253,8 +253,6 @@ public class BridgeDemoAgent extends Agent {
 			throws IOException {
 		if (team != null) {
 			getState().put(STATUS, JOM.getInstance().writeValueAsString(team));
-			// TODO: use real data
-			// DummyData.getInstance().setTeamStatus(team);
 			getEventsFactory().trigger("teamStatusUpdated");
 			EventBus.getDefault().post(
 					new StateEvent(getId(), "teamStatusUpdated"));

@@ -24,6 +24,7 @@ import de.greenrobot.event.EventBus;
  */
 public class TaskFragment extends Fragment {
     private View view = null;
+    private Task task = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,7 +43,6 @@ public class TaskFragment extends Fragment {
         try {
             BridgeDemoAgent agent = (BridgeDemoAgent) AgentHost.getInstance().getAgent(
                     EveService.DEMO_AGENT);
-            Task task = null;
             if (agent != null) {
                 task = agent.getTask();
             }
@@ -88,7 +88,6 @@ public class TaskFragment extends Fragment {
                             try {
                                 agent = (BridgeDemoAgent) AgentHost.getInstance().getAgent(
                                         EveService.DEMO_AGENT);
-                                Task task = agent.getTask();
                                 task.setStatus(Task.CONFIRMED);
                                 agent.updateTaskStatus(task);
                             } catch (Exception e) {
@@ -112,7 +111,6 @@ public class TaskFragment extends Fragment {
                             try {
                                 agent = (BridgeDemoAgent) AgentHost.getInstance().getAgent(
                                         EveService.DEMO_AGENT);
-                                Task task = agent.getTask();
                                 task.setStatus(Task.COMPLETE);
                                 agent.updateTaskStatus(task);
                             } catch (Exception e) {

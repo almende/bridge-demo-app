@@ -1,10 +1,11 @@
-package com.almende.bridge.agent;
+package com.almende.bridge.agents_old;
 
 import java.net.URI;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.almende.bridge.agent.GenList;
 import com.almende.eve.agent.Agent;
 import com.almende.eve.agent.AgentHost;
 import com.almende.eve.rpc.annotation.Access;

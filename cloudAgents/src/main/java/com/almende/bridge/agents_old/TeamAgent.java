@@ -1,4 +1,4 @@
-package com.almende.bridge.agent;
+package com.almende.bridge.agents_old;
 
 import java.util.Iterator;
 
