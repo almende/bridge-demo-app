@@ -2,6 +2,7 @@ package com.almende.bridge.agent;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.UUID;
 
 import com.almende.bridge.types.Location;
 import com.almende.eve.agent.Agent;
@@ -92,7 +93,7 @@ public class DemoGenerator extends Agent {
 			}
 			agentList.add(teamId);
 			
-			JsonNode leader = team.get("leader");
+			ObjectNode leader = (ObjectNode) team.get("leader");
 			String leaderId = leader.get("id").textValue();
 			TeamLeader leaderAgent = null;
 			if (!host.hasAgent(leaderId)) {
@@ -101,11 +102,21 @@ public class DemoGenerator extends Agent {
 				leaderAgent = (TeamLeader) host.getAgent(leaderId);
 			}
 			leaderAgent.setTeam(teamAgent.getFirstUrl().toString());
+			leaderAgent.setResType(leader.get("type").textValue());
 			leaderAgent.setXmppAccount(leader.get("xmppAccount").textValue());
 			leaderAgent.setXmppPassword(leader.get("xmppPassword").textValue());
 			leaderAgent.setLocation((Location) JOM.getInstance()
 					.readerForUpdating(new Location("", ""))
 					.readValue(leader.get("location")));
+			
+			if (leader.has("guid")){
+				leaderAgent.setGuid(leader.get("guid").textValue());
+			} else {
+				String guid = UUID.randomUUID().toString();
+				leaderAgent.setGuid(guid);
+				leader.put("guid", guid);
+			}
+			
 			teamAgent.setLeader(leaderAgent.getFirstUrl().toString());
 			agentList.add(leaderId);
 			
@@ -119,6 +130,7 @@ public class DemoGenerator extends Agent {
 					memberAgent = (TeamMember) host.getAgent(memberId);
 				}
 				memberAgent.setTeam(teamAgent.getFirstUrl().toString());
+				memberAgent.setResType(member.get("type").textValue());
 				memberAgent.setXmppAccount(member.get("xmppAccount")
 						.textValue());
 				memberAgent.setXmppPassword(member.get("xmppPassword")
@@ -126,6 +138,14 @@ public class DemoGenerator extends Agent {
 				memberAgent.setLocation((Location) JOM.getInstance()
 						.readerForUpdating(new Location("", ""))
 						.readValue(member.get("location")));
+				if (member.has("guid")){
+					memberAgent.setGuid(member.get("guid").textValue());
+				} else {
+					String guid = UUID.randomUUID().toString();
+					memberAgent.setGuid(guid);
+					((ObjectNode)member).put("guid", guid);
+				}
+				
 				teamAgent.addMember(memberAgent.getFirstUrl().toString());
 				agentList.add(memberId);
 			}

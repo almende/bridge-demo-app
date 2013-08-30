@@ -2,11 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/striped_background">
-
-<FrameLayout 
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:background="@drawable/striped_background" >
 
     <!-- Task fragment layout -->
 
@@ -19,6 +15,22 @@
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:background="@color/alarm_ecru_white"
         android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/task_remoteTitle_title"
+            style="@style/Alarm.TextView.AlarmInfoBox.Header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:text="@string/task_remoteTitle_title" />
+
+        <TextView
+            android:id="@+id/task_remoteTitle"
+            style="@style/Alarm.TextView.AlarmInfoBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:text="@string/task_remoteTitle" />
 
         <TextView
             android:id="@+id/task_title"
@@ -112,5 +124,5 @@
                 android:text="@string/Complete" />
         </LinearLayout>
     </LinearLayout>
-</FrameLayout>
+
 </ScrollView>

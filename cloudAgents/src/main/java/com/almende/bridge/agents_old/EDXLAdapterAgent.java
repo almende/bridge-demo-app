@@ -1,4 +1,4 @@
-package com.almende.bridge.agent;
+package com.almende.bridge.agents_old;
 
 import static com.almende.bridge.edxl.EDXLGenerator.setElementWithPath;
 import static com.almende.bridge.edxl.EDXLParser.getElementsByType;
@@ -13,11 +13,9 @@ import org.jdom.Document;
 import org.jdom.Element;
 
 import com.almende.bridge.EDXLAdapter;
-import com.almende.bridge.agents_old.SimpleTaskAgent;
 import com.almende.bridge.edxl.EDXLGenerator;
 import com.almende.bridge.edxl.EDXLParser;
 import com.almende.bridge.edxl.EDXLParser.EDXLRet;
-import com.almende.bridge.types.Task;
 import com.almende.eve.agent.Agent;
 import com.almende.eve.agent.AgentHost;
 import com.almende.eve.rpc.annotation.Access;
@@ -32,7 +30,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Access(AccessType.PUBLIC)
 public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
-	private static final URI DIRECTORY = URI.create("local:yellow");
 	static String		lastTaskId	= "";
 	static final int	RESPERMES	= 1;
 	
@@ -115,10 +112,7 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 	@Override
 	public String RequestResource(@Name("RequestResourceMessage") String message)
 			throws Exception {
-		
-		Task task = new Task();
-		task.setStatus(Task.NOTCONFIRMED);
-		
+		ObjectNode task = JOM.createObjectNode();
 		ArrayNode resources = JOM.createArrayNode();
 		
 		EDXLRet inDoc = parseXML(message);
@@ -127,13 +121,14 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 				"Incorrect XML message type!");
 		
 		String messageID = getStringByPath(inDoc.getRoot(), "MessageID");
-		task.setMessageId(messageID);
-		task.setIncidentDescription(getStringByPath(inDoc.getRoot(),
-				new String[] { "IncidentInformation", "IncidentDescription" }));
+		task.put("messageID", messageID);
+		task.put(
+				"IncidentDescription",
+				getStringByPath(inDoc.getRoot(), new String[] {
+						"IncidentInformation", "IncidentDescription" }));
 		
 		List<Element> resList = getElementsByType(inDoc.getRoot(),
 				"ResourceInformation");
-		Boolean first_resource=true;
 		for (Element res : resList) {
 			ObjectNode node = JOM.createObjectNode();
 			node.put(
@@ -149,44 +144,44 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 					getStringByPath(res, new String[] {
 							"AssignmentInformation", "Quantity",
 							"MeasuredQuantity", "Amount" }));
+			node.put(
+					"anticipatedFunction",
+					getStringByPath(res, new String[] {
+							"AssignmentInformation", "AnticipatedFunction" }));
+			node.put(
+					"assignmentInstructions",
+					getStringByPath(res, new String[] {
+							"AssignmentInformation", "AssignmentInstructions" }));
+			node.put(
+					"scheduleType",
+					getStringByPath(res, new String[] { "ScheduleInformation",
+							"ScheduleType" }));
+			node.put(
+					"scheduleDate",
+					getStringByPath(res, new String[] { "ScheduleInformation",
+							"DateTime" }));
+			// TODO: handle other notations for GeoData, depending on namespace
+			// definition? Currently only GML is supported.
+			node.put(
+					"scheduleLocation",
+					getStringByPath(res, new String[] { "ScheduleInformation",
+							"location", "TargetArea", "Point", "pos" }));
+			
 			resources.add(node);
-			
-			if (first_resource) {
-				task.setTitle(getStringByPath(res, new String[] {
-						"AssignmentInformation", "AnticipatedFunction" }));
-				task.setText(getStringByPath(res, new String[] {
-						"AssignmentInformation", "AssignmentInstructions" }));
-				task.setAssignmentDate(getStringByPath(res, new String[] {
-						"ScheduleInformation", "DateTime" }));
-				// TODO: handle other notations for GeoData, depending on
-				// namespace
-				// definition? Currently only GML is supported.
-				String location = getStringByPath(res, new String[] {
-						"ScheduleInformation", "location", "TargetArea",
-						"Point", "pos" });
-				if (location != null) {
-					String[] loc = location.split(" ");
-					task.setLat(loc[0]);
-					task.setLon(loc[1]);
-				}
-			}
-			first_resource=false;
 		}
-		// TODO: how to get Assigner from EDXL-RM?
+		task.put("resources", resources);
 		
-		for (JsonNode resource : resources){
-			//Inefficient, as multiple resources per team...
-			
-			ObjectNode params = JOM.createObjectNode();
-			params.put("key", resource.get("resourceID").textValue());
-			String agentUrl = send(DIRECTORY,"get",params,String.class);
-			
-			String teamUrl = send(URI.create(agentUrl),"getTeam",null,String.class);
-
-			ObjectNode parms = JOM.createObjectNode();
-			parms.put("task", JOM.getInstance().valueToTree(task));
-			send(URI.create(teamUrl),"setTask",parms);
+		// Create Task agent:
+		AgentHost factory = AgentHost.getInstance();
+		if (factory.hasAgent("Task_" + messageID)) {
+			throw new Exception(
+					"Task has already been posted before, please use a new messageID!");
 		}
+		SimpleTaskAgent agent = (SimpleTaskAgent) factory
+				.createAgent("com.almende.bridge.agent.SimpleTaskAgent",
+						"Task_" + messageID);
+		agent.prepare(task);
+		
 		// Prepare response message:
 		Document replyDoc = EDXLGenerator.genDoc("ResponseToRequestResource");
 		Element root = replyDoc.getRootElement();
@@ -194,9 +189,9 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 				messageID);
 		setElementWithPath(root, new String[] { "PrecedingMessageID" },
 				messageID);
-		// // Report task agent ID in messageDescription:
-		// setElementWithPath(root, new String[] { "MessageDescription" },
-		// agent.getId());
+		// Report agent ID in messageDescription:
+		setElementWithPath(root, new String[] { "MessageDescription" },
+				agent.getId());
 		int count = 1;
 		for (Element res : resList) {
 			Element sub = new Element("ResourceInformation");
@@ -321,6 +316,7 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 		return "OK";
 	}
 	
+
 	public String createReportResourceDeploymentStatus(
 			@Name("members") ArrayNode members) {
 		Document replyDoc = EDXLGenerator
@@ -334,8 +330,7 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 				ObjectNode member = (ObjectNode) res;
 				String resourceUrl = member.get("url").textValue();
 				try {
-					ObjectNode status = send(URI.create(resourceUrl),
-							"requestStatus", null, ObjectNode.class);
+					ObjectNode status = send(URI.create(resourceUrl), "requestStatus",null,ObjectNode.class);
 					if (status == null) {
 						throw new Exception("Status null!" + resourceUrl);
 					} else {

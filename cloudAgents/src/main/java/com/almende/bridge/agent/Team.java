@@ -1,5 +1,7 @@
 package com.almende.bridge.agent;
 
+import java.net.ProtocolException;
+import java.net.URI;
 import java.util.ArrayList;
 
 import com.almende.bridge.types.Task;
@@ -9,6 +11,7 @@ import com.almende.eve.agent.annotation.ThreadSafe;
 import com.almende.eve.rpc.annotation.Access;
 import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;
+import com.almende.eve.rpc.jsonrpc.JSONRPCException;
 
 @ThreadSafe(true)
 @Access(AccessType.PUBLIC)
@@ -21,15 +24,30 @@ public class Team extends Agent {
 		return null;
 	}
 	
-	public void setTask(@Name("task") Task task) {
+	public void setTask(@Name("task") Task task) throws ProtocolException, JSONRPCException {
 		getState().put("Task", task);
+		send(URI.create(getLeader()),"triggerTask");
+		for (String member : getMembers()){
+			send(URI.create(member),"triggerTask");	
+		}
 	}
 	
-	public TeamStatus getTeamStatus(){
-		TeamStatus result = new TeamStatus();
-		//TODO: fill in status
+	public void setTeamStatus(@Name("status") TeamStatus status){
+		getState().put("Status", status);
+	}
+	public TeamStatus getTeamStatus() throws ProtocolException, JSONRPCException{
+		if (getState().containsKey("Status")){
+			return getState().get("Status",TeamStatus.class);	
+		}
+		TeamStatus newStatus = new TeamStatus();
+		newStatus.setTeamId(getId());
+		newStatus.setDeploymentStatus(TeamStatus.UNASSIGNED);
 		
-		return result;
+		if (!getLeader().isEmpty()){
+			newStatus.setTeamLeaderName(send(URI.create(getLeader()),"getId",null,String.class));
+		}
+		
+		return newStatus;
 	}
 	
 	public String getLeader() {

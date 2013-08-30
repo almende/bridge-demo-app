@@ -18,6 +18,7 @@ transport_services:
 
 bootstrap:
   agents:
+     yellow: com.almende.bridge.agent.Directory
      demolist: com.almende.bridge.agent.GenList
      demo: com.almende.bridge.agent.DemoGenerator
      edxl: com.almende.bridge.agent.EDXLAdapterAgent

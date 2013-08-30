@@ -12,8 +12,10 @@
     <string name="Confirm">Confirm</string>
     <string name="Complete">Complete</string>
     <string name="eve_service">EveAgents</string>
-    <string name="task_title">Task Request</string>
-    <string name="task_text">!No task available!</string>
+    <string name="task_remoteTitle_title">Task Request</string>
+    <string name="task_remoteTitle">!No task available!</string>
+    <string name="task_title">Description</string>
+    <string name="task_text">---</string>
     <string name="task_title_assigner">Assigner</string>
     <string name="task_assigner">---</string>
     <string name="task_title_assignment_date">Assignment Date/Time</string>

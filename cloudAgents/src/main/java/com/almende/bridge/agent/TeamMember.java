@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Access(AccessType.PUBLIC)
 public class TeamMember extends Agent {
+	private static final URI DIRECTORY = URI.create("local:yellow");
 	
 	public ObjectNode requestStatus() throws ProtocolException,
 			JSONRPCException {
@@ -44,8 +45,16 @@ public class TeamMember extends Agent {
 		// TODO: what to do with task state?
 	}
 	
+
+	public void triggerTask() throws IOException{
+		getEventsFactory().trigger("taskUpdated");
+	}
+	
+	public Task getTask() throws ProtocolException, JSONRPCException{
+		return send(URI.create(getTeam()), "getTask", null, Task.class);
+	}
 	public Location getGoal() throws ProtocolException, JSONRPCException {
-		Task task = send(URI.create(getTeam()), "getTask", null, Task.class);
+		Task task = getTask();
 		if (task != null) {
 			return new Location(task.getLat(), task.getLon(),
 					task.getAssignmentDate());
@@ -53,12 +62,11 @@ public class TeamMember extends Agent {
 			return null;
 		}
 	}
-	
 	public String getTaskDescription() throws ProtocolException,
 			JSONRPCException {
-		Task task = send(URI.create(getTeam()), "getTask", null, Task.class);
+		Task task = getTask();
 		if (task != null) {
-			return task.getText();
+			return task.getTitle();
 		} else {
 			return null;
 		}
@@ -95,6 +103,15 @@ public class TeamMember extends Agent {
 	
 	public void setGuid(@Name("guid") String guid) {
 		getState().put("Guid", guid);
+		ObjectNode params = JOM.createObjectNode();
+		params.put("key", guid);
+		params.put("value", getFirstUrl().toString());
+		try {
+			send(DIRECTORY,"set",params);
+		} catch (Exception e) {
+			System.err.println("Couldn't register agent to directory!");
+			e.printStackTrace();
+		}
 	}
 	
 	public String getTeam() {

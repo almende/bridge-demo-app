@@ -11,11 +11,11 @@ public class TeamStatus implements Serializable {
     public static final String WITHDRAWN = "Withdrawn";
     public static final String POST = "Post";
 
-    private String teamId;
-    private String teamLeaderName;
+    private String teamId = "";
+    private String teamLeaderName = "";
     private String deploymentStatus = "Unknown";
-    private String lat;
-    private String lon;
+    private String lat = "";
+    private String lon = "";
 
     public TeamStatus() {
     }

@@ -48,9 +48,12 @@ public class TaskFragment extends Fragment {
             }
 
             if (task == null || task.getStatus().equals(Task.COMPLETE)) {
-                TextView tv = (TextView) view.findViewById(R.id.task_text);
-                tv.setText(R.string.task_text);
+                TextView tv = (TextView) view.findViewById(R.id.task_remoteTitle);
+                tv.setText(R.string.task_remoteTitle);
 
+                tv = (TextView) view.findViewById(R.id.task_text);
+                tv.setText(R.string.task_text);
+                
                 tv = (TextView) view.findViewById(R.id.task_assigner);
                 tv.setText(R.string.task_assigner);
 
@@ -66,9 +69,12 @@ public class TaskFragment extends Fragment {
                 btn.setVisibility(Button.GONE);
             } else {
 
-                TextView tv = (TextView) view.findViewById(R.id.task_text);
-                tv.setText(task.getText());
+                TextView tv = (TextView) view.findViewById(R.id.task_remoteTitle);
+                tv.setText(task.getTitle());
 
+                tv = (TextView) view.findViewById(R.id.task_text);
+                tv.setText(task.getText());
+                
                 tv = (TextView) view.findViewById(R.id.task_assigner);
                 tv.setText(task.getAssigner());
 
