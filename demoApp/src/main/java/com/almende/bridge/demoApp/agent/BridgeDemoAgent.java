@@ -102,6 +102,21 @@ public class BridgeDemoAgent extends Agent {
 		}
 	}
 	
+	public com.almende.bridge.types.Location getLocation(){
+		if (EveService.mLocationClient != null
+				&& EveService.mLocationClient.isConnected()) {
+			Location mCurrentLocation = EveService.mLocationClient
+					.getLastLocation();
+			if (mCurrentLocation != null) {
+				com.almende.bridge.types.Location result = new com.almende.bridge.types.Location(Double.valueOf(
+						mCurrentLocation.getLatitude()).toString(),Double.valueOf(
+								mCurrentLocation.getLongitude()).toString());
+				return result;
+			}
+		}
+		return null;
+	}
+	
 	public void subscribeMonitor() throws MalformedURLException {
 		System.err.println("Calling subscribeMonitor()");
 		List<String> urls = getUrls();
@@ -169,7 +184,6 @@ public class BridgeDemoAgent extends Agent {
 	}
 	
 	public void initTask() throws JSONRPCException, IOException {
-		getState().remove(TASK);
 		getResultMonitorFactory().cancelAll();
 		getScheduler().cancelAllTasks();
 	}

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -351,7 +352,10 @@ public class MyMapFragment extends MapFragment implements LocationListener,
 					};
 					synchronized (runnable) {
 						try {
-							getActivity().runOnUiThread(runnable);
+							Activity act = getActivity();
+							if (act != null){
+								act.runOnUiThread(runnable);
+							}
 							// try again in 3 seconds
 							runnable.wait(3000);
 						} catch (InterruptedException e) {

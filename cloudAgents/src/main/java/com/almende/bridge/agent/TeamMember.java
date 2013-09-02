@@ -3,6 +3,8 @@ package com.almende.bridge.agent;
 import java.io.IOException;
 import java.net.ProtocolException;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 
 import com.almende.bridge.types.Location;
 import com.almende.bridge.types.SitRep;
@@ -10,18 +12,21 @@ import com.almende.bridge.types.Task;
 import com.almende.bridge.types.TeamStatus;
 import com.almende.eve.agent.Agent;
 import com.almende.eve.agent.AgentHost;
+import com.almende.eve.monitor.Poll;
 import com.almende.eve.rpc.annotation.Access;
 import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;
 import com.almende.eve.rpc.jsonrpc.JSONRPCException;
 import com.almende.eve.rpc.jsonrpc.jackson.JOM;
 import com.almende.eve.transport.xmpp.XmppService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Access(AccessType.PUBLIC)
 public class TeamMember extends Agent {
-	private static final URI DIRECTORY = URI.create("local:yellow");
-	private static final URI SITREP = URI.create("local:sitRep");
+	private static final String	MOBILE		= "Smack";
+	private static final URI	DIRECTORY	= URI.create("local:yellow");
+	private static final URI	SITREP		= URI.create("local:sitRep");
 	
 	public ObjectNode requestStatus() throws ProtocolException,
 			JSONRPCException {
@@ -47,22 +52,24 @@ public class TeamMember extends Agent {
 		// TODO: what to do with task state?
 	}
 	
-
-	public void triggerTask() throws IOException{
+	public void triggerTask() throws IOException {
 		getEventsFactory().trigger("taskUpdated");
 	}
 	
-	public Task getTask() throws ProtocolException, JSONRPCException{
+	public Task getTask() throws ProtocolException, JSONRPCException {
 		return send(URI.create(getTeam()), "getTask", null, Task.class);
 	}
 	
-	public void triggerTeamStatus() throws IOException{
+	public void triggerTeamStatus() throws IOException {
 		getEventsFactory().trigger("teamStatusUpdated");
 	}
 	
-	public TeamStatus getTeamStatus() throws ProtocolException, JSONRPCException {
-		return send(URI.create(getTeam()), "getTeamStatus", null, TeamStatus.class);
+	public TeamStatus getTeamStatus() throws ProtocolException,
+			JSONRPCException {
+		return send(URI.create(getTeam()), "getTeamStatus", null,
+				TeamStatus.class);
 	}
+	
 	public Location getGoal() throws ProtocolException, JSONRPCException {
 		Task task = getTask();
 		if (task != null) {
@@ -72,6 +79,7 @@ public class TeamMember extends Agent {
 			return null;
 		}
 	}
+	
 	public String getTaskDescription() throws ProtocolException,
 			JSONRPCException {
 		Task task = getTask();
@@ -117,7 +125,7 @@ public class TeamMember extends Agent {
 		params.put("key", guid);
 		params.put("value", getFirstUrl().toString());
 		try {
-			send(DIRECTORY,"set",params);
+			send(DIRECTORY, "set", params);
 		} catch (Exception e) {
 			System.err.println("Couldn't register agent to directory!");
 			e.printStackTrace();
@@ -157,10 +165,10 @@ public class TeamMember extends Agent {
 		getState().put("XMPPPassword", xmpp_password);
 	}
 	
-	public SitRep getSitRep() throws ProtocolException, JSONRPCException{
+	public SitRep getSitRep() throws ProtocolException, JSONRPCException {
 		ObjectNode params = JOM.createObjectNode();
 		params.put("team", getTeam());
-		return send(SITREP,"getSitRep",params,SitRep.class);
+		return send(SITREP, "getSitRep", params, SitRep.class);
 	}
 	
 	public Location getLocation() {
@@ -207,6 +215,50 @@ public class TeamMember extends Agent {
 			service.connect(getId(), username, password, "Cloud");
 		} else {
 			throw new Exception("No XMPP service registered");
+		}
+	}
+	
+	public void setupMonitoring() {
+		
+		System.err.println("Calling subscribeMonitor()");
+		List<String> urls = getUrls();
+		URI myUrl = getFirstUrl();
+		for (String item : urls) {
+			try {
+				System.out.println("Url:" + item);
+				if (item.startsWith("xmpp")) {
+					myUrl = new URI(item);
+					break;
+				}
+			} catch (URISyntaxException e) {
+			}
+		}
+		if (myUrl.getScheme().startsWith("xmpp")) {
+			String username = myUrl.toString().split("@")[0].substring(4);
+			String host = myUrl.toString().split("@")[1].replaceAll("[:/].*",
+					"");
+			
+			URI mobileUri = URI.create(myUrl.getScheme() + username + "@"
+					+ host + "/" + MOBILE);
+			
+			String monitorId = getResultMonitorFactory().create(
+					"locationMonitor", mobileUri, "getLocation",
+					JOM.createObjectNode(), "wrapLocation", new Poll(15000));
+			
+			System.out.println("Monitor id:"
+					+ monitorId
+					+ " -> "
+					+ getResultMonitorFactory().getMonitorById(monitorId)
+							.toString());
+		}
+	}
+	
+	public void wrapLocation(@Name("result") String location)
+			throws JSONRPCException, JsonProcessingException, IOException {
+//		LOG.warning("Received location:" + location);
+		Location loc =JOM.getInstance().readValue(location, Location.class);
+		if (loc != null){
+			setLocation(loc);
 		}
 	}
 	

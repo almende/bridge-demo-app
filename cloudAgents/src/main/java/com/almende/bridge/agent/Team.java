@@ -34,10 +34,13 @@ public class Team extends Agent {
 	}
 	
 	public void setTeamStatus(@Name("status") TeamStatus status) throws ProtocolException, JSONRPCException{
+		TeamStatus oldStatus = getState().get("Status",TeamStatus.class);
 		getState().put("Status", status);
-		send(URI.create(getLeader()),"triggerTeamStatus");
-		for (String member : getMembers()){
-			send(URI.create(member),"triggerTeamStatus");
+		if (oldStatus == null || !oldStatus.eq(status)){
+			send(URI.create(getLeader()),"triggerTeamStatus");
+			for (String member : getMembers()){
+				send(URI.create(member),"triggerTeamStatus");
+			}
 		}
 	}
 	public TeamStatus getTeamStatus() throws ProtocolException, JSONRPCException{
