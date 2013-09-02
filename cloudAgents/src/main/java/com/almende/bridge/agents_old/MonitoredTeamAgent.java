@@ -1,6 +1,5 @@
 package com.almende.bridge.agents_old;
 
-import com.almende.bridge.MonitoredTeam;
 import com.almende.eve.rpc.annotation.Access;
 import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;

@@ -116,6 +116,7 @@ public class Task implements Serializable {
 	
 	public boolean eq(Task other) {
 		return (compareField(text, other.text)
+				&& compareField(title, other.title)
 				&& compareField(assigner, other.assigner)
 				&& compareField(assignmentDate, other.assignmentDate)
 				&& compareField(lat, other.lat) && compareField(lon, other.lon));

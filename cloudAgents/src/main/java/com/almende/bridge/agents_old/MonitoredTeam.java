@@ -1,4 +1,4 @@
-package com.almende.bridge;
+package com.almende.bridge.agents_old;
 
 import com.almende.eve.rpc.annotation.Name;
 

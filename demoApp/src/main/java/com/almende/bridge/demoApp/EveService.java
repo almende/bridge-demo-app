@@ -182,7 +182,9 @@ public class EveService extends Service implements GooglePlayServicesClient.Conn
         }
         if (event.getValue().equals("settingsUpdated")) {
             try {
-                ((BridgeDemoAgent) host.getAgent(DEMO_AGENT)).reconnect();
+            	BridgeDemoAgent agent =(BridgeDemoAgent) host.getAgent(DEMO_AGENT); 
+                agent.reconnect();
+                agent.subscribeMonitor();
             } catch (Exception e) {
                 System.err.println("Failed to get Agent to handler settingsUpdated event");
                 e.printStackTrace();
@@ -203,7 +205,6 @@ public class EveService extends Service implements GooglePlayServicesClient.Conn
             PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
             // Build notification
-            // Actions are just fake
             Notification noti = new Notification.Builder(this)
                     .setContentTitle("New task received!").setContentText(task_text)
                     .setSmallIcon(R.drawable.icon).setDefaults(Notification.DEFAULT_ALL)

@@ -5,6 +5,7 @@ import java.net.ProtocolException;
 import java.net.URI;
 
 import com.almende.bridge.types.Location;
+import com.almende.bridge.types.SitRep;
 import com.almende.bridge.types.Task;
 import com.almende.bridge.types.TeamStatus;
 import com.almende.eve.agent.Agent;
@@ -20,6 +21,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @Access(AccessType.PUBLIC)
 public class TeamMember extends Agent {
 	private static final URI DIRECTORY = URI.create("local:yellow");
+	private static final URI SITREP = URI.create("local:sitRep");
 	
 	public ObjectNode requestStatus() throws ProtocolException,
 			JSONRPCException {
@@ -52,6 +54,14 @@ public class TeamMember extends Agent {
 	
 	public Task getTask() throws ProtocolException, JSONRPCException{
 		return send(URI.create(getTeam()), "getTask", null, Task.class);
+	}
+	
+	public void triggerTeamStatus() throws IOException{
+		getEventsFactory().trigger("teamStatusUpdated");
+	}
+	
+	public TeamStatus getTeamStatus() throws ProtocolException, JSONRPCException {
+		return send(URI.create(getTeam()), "getTeamStatus", null, TeamStatus.class);
 	}
 	public Location getGoal() throws ProtocolException, JSONRPCException {
 		Task task = getTask();
@@ -145,6 +155,12 @@ public class TeamMember extends Agent {
 	
 	public void setXmppPassword(@Name("XMPPPassword") String xmpp_password) {
 		getState().put("XMPPPassword", xmpp_password);
+	}
+	
+	public SitRep getSitRep() throws ProtocolException, JSONRPCException{
+		ObjectNode params = JOM.createObjectNode();
+		params.put("team", getTeam());
+		return send(SITREP,"getSitRep",params,SitRep.class);
 	}
 	
 	public Location getLocation() {

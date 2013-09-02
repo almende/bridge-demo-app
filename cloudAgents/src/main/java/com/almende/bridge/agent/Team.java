@@ -4,6 +4,7 @@ import java.net.ProtocolException;
 import java.net.URI;
 import java.util.ArrayList;
 
+import com.almende.bridge.types.Location;
 import com.almende.bridge.types.Task;
 import com.almende.bridge.types.TeamStatus;
 import com.almende.eve.agent.Agent;
@@ -32,8 +33,12 @@ public class Team extends Agent {
 		}
 	}
 	
-	public void setTeamStatus(@Name("status") TeamStatus status){
+	public void setTeamStatus(@Name("status") TeamStatus status) throws ProtocolException, JSONRPCException{
 		getState().put("Status", status);
+		send(URI.create(getLeader()),"triggerTeamStatus");
+		for (String member : getMembers()){
+			send(URI.create(member),"triggerTeamStatus");
+		}
 	}
 	public TeamStatus getTeamStatus() throws ProtocolException, JSONRPCException{
 		if (getState().containsKey("Status")){
@@ -48,6 +53,10 @@ public class Team extends Agent {
 		}
 		
 		return newStatus;
+	}
+	
+	public Location getLocation() throws ProtocolException, JSONRPCException{
+		return send(URI.create(getLeader()),"getLocation",null,Location.class);
 	}
 	
 	public String getLeader() {

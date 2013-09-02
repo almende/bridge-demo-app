@@ -18,18 +18,20 @@ import com.almende.eve.agent.AgentHost;
 import de.greenrobot.event.EventBus;
 
 public class TeamFragment extends Fragment {
-
+	private View view = null;
     private final String TAG = "TeamFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         super.onCreateView(inflater, container, savedInstanceState);
-
+        view = inflater.inflate(R.layout.fragment_team, container, false);
+        
         EventBus.getDefault().unregister(this);
         EventBus.getDefault().register(this);
 
-        return inflater.inflate(R.layout.fragment_team, container, false);
+        
+        return view;
     }
 
     @Override
@@ -54,7 +56,7 @@ public class TeamFragment extends Fragment {
     }
 
     public void renderTeam() {
-        View view = getView();
+        
         try {
             BridgeDemoAgent agent = (BridgeDemoAgent) AgentHost.getInstance().getAgent(
                     EveService.DEMO_AGENT);
@@ -114,7 +116,7 @@ public class TeamFragment extends Fragment {
 
             }
         } catch (Exception e) {
-            Log.e(TAG, "Something went wrong in renderTask()!");
+            Log.e(TAG, "Something went wrong in renderTeam()!");
             e.printStackTrace();
         }
     }

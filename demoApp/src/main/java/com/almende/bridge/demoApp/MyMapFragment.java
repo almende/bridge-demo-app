@@ -80,9 +80,9 @@ public class MyMapFragment extends MapFragment implements LocationListener,
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		setUpMapIfNeeded();
 		setUpLocationClientIfNeeded();
 		mLocationClient.connect();
+		setUpMapIfNeeded();
 	}
 	
 	@Override
@@ -336,8 +336,8 @@ public class MyMapFragment extends MapFragment implements LocationListener,
 						@Override
 						public void run() {
 							try {
-								if (getMap() != null) {
-									getMap().animateCamera(
+								if (mMap != null) {
+									mMap.animateCamera(
 											CameraUpdateFactory
 													.newLatLngBounds(
 															bounds.build(), 50));

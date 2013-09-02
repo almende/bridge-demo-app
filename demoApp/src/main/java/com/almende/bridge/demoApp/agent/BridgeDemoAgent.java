@@ -18,6 +18,7 @@ import com.almende.bridge.types.SitRep;
 import com.almende.bridge.types.Task;
 import com.almende.bridge.types.TeamStatus;
 import com.almende.eve.agent.Agent;
+import com.almende.eve.agent.annotation.ThreadSafe;
 import com.almende.eve.monitor.Poll;
 import com.almende.eve.monitor.Push;
 import com.almende.eve.rpc.annotation.Access;
@@ -35,6 +36,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.greenrobot.event.EventBus;
 
 @Access(AccessType.PUBLIC)
+@ThreadSafe(true)
 public class BridgeDemoAgent extends Agent {
 	private static final String	VERSION	= "5";
 	private static final String	TASK	= "CurrentTask";
@@ -132,9 +134,38 @@ public class BridgeDemoAgent extends Agent {
 					+ getResultMonitorFactory().getMonitorById(monitorId)
 							.toString());
 			
+			monitorId = getResultMonitorFactory().create("teamStatusMonitor",cloudUri,
+					"getTeamStatus", JOM.createObjectNode(), "wrapTeamStatus",
+					new Poll(600000), new Push().onEvent("teamStatusUpdated"));
+			
+			System.out.println("Monitor id:"
+					+ monitorId
+					+ " -> "
+					+ getResultMonitorFactory().getMonitorById(monitorId)
+							.toString());
+			
+			monitorId = getResultMonitorFactory().create("sitRepMonitor",cloudUri,
+					"getSitRep", JOM.createObjectNode(), "wrapSitRep",
+					new Poll(15000));
+			
+			System.out.println("Monitor id:"
+					+ monitorId
+					+ " -> "
+					+ getResultMonitorFactory().getMonitorById(monitorId)
+							.toString());
+			
 		} else {
 			System.err.println("SubscribeMonitor: XMPP not yet initialized?");
 		}
+	}
+	public void wrapTask(@Name("result") String task) throws IOException {
+		setTask(TypeUtil.inject(Task.class, JOM.getInstance().readTree(task)));
+	}
+	public void wrapTeamStatus(@Name("result") String teamStatus) throws IOException {
+		setTeamStatus(TypeUtil.inject(TeamStatus.class, JOM.getInstance().readTree(teamStatus)));
+	}
+	public void wrapSitRep(@Name("result") String sitRep) throws IOException {
+		setSitrep(TypeUtil.inject(SitRep.class, JOM.getInstance().readTree(sitRep)));
 	}
 	
 	public void initTask() throws JSONRPCException, IOException {
@@ -170,9 +201,7 @@ public class BridgeDemoAgent extends Agent {
 		}
 	}
 	
-	public void wrapTask(@Name("result") String task) throws IOException {
-		setTask(TypeUtil.inject(Task.class, JOM.getInstance().readTree(task)));
-	}
+
 	
 	public void setTask(@Name("task") Task task) throws IOException {
 		if (task != null) {
@@ -234,11 +263,15 @@ public class BridgeDemoAgent extends Agent {
 				oldTask = task;
 			}
 			if (oldTask.eq(task)) {
+				System.out.println("1:"+System.currentTimeMillis());
 				getState()
 						.put(TASK, JOM.getInstance().writeValueAsString(task));
+				System.out.println("2:"+System.currentTimeMillis());
 				EventBus.getDefault().post(
 						new StateEvent(getId(), "taskUpdated"));
+				System.out.println("3:"+System.currentTimeMillis());
 				getEventsFactory().trigger("taskUpdated");
+				System.out.println("4:"+System.currentTimeMillis());
 			} else {
 				System.out
 						.println("Warning: Not updating task status, because another task is found!");

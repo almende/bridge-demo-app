@@ -2,7 +2,6 @@ package com.almende.bridge.agents_old;
 
 import java.util.Iterator;
 
-import com.almende.bridge.Team;
 import com.almende.eve.agent.Agent;
 import com.almende.eve.rpc.annotation.Access;
 import com.almende.eve.rpc.annotation.AccessType;

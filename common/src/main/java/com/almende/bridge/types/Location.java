@@ -5,6 +5,8 @@ public class Location {
 	private String	longitude	= null;
 	private String	time		= null;
 	
+	public Location(){}
+	
 	public Location(String latitude, String longitude) {
 		this.latitude = latitude;
 		this.longitude = longitude;
