@@ -36,14 +36,18 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 	static String		lastTaskId	= "";
 	static final int	RESPERMES	= 1;
 	
-	public void notify(@Name("data") String data,
-			@Required(false) @Name("producerId") String producer,
-			@Required(false) @Name("itemId") String itemId,
-			@Name("meta") JsonNode meta) throws Exception {
-		System.err.println("Received notify:" + data + " : " + producer + " : "
-				+ itemId + " : " + meta.toString());
+	private void _notify(String data,
+			JsonNode meta) throws Exception {
+		System.err.println("Received notify:" + data + " : " + meta.toString());
 		RequestResource(data);
 	}
+	
+	public void notify(@Name("items") ArrayNode items) throws Exception{
+		for (JsonNode item: items){
+			_notify(item.get("data").textValue(),item.get("meta"));
+		}
+	}
+	
 	
 	public ArrayNode getResources() {
 		ArrayNode result = JOM.createArrayNode();

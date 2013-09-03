@@ -75,6 +75,63 @@
           "guid": "3c6dc9a5-e972-4b66-bbd0-68f0d1ee4260"
         }
       ]
+    },
+    {
+      "id": "team3",
+      "leader": {
+        "id": "teamLeader3",
+        "type": "Medic Personnel",
+        "xmppAccount": "team3",
+        "xmppPassword": "team3",
+        "location": {
+          "latitude": "58.9354931",
+          "longitude": "5.5179776"
+        },
+        "guid": "f0b37ab1-46cf-4547-8098-833ad6b7850b"
+      },
+      "members": []
+    },
+    {
+      "id": "team4",
+      "leader": {
+        "id": "teamLeader4",
+        "type": "Fire Personnel",
+        "xmppAccount": "team4",
+        "xmppPassword": "team4",
+        "location": {
+          "latitude": "58.9144931",
+          "longitude": "5.5919776"
+        },
+        "guid": "a68a508f-4330-49e2-8032-e2f4604a58bb"
+      },
+      "members": []
+    },
+    {
+      "id": "team5",
+      "leader": {
+        "id": "teamLeader5",
+        "type": "Police Personnel",
+        "xmppAccount": "team5",
+        "xmppPassword": "team5",
+        "location": {
+          "latitude": "58.9253931",
+          "longitude": "5.5975776"
+        },
+        "guid": "9f04787b-b081-403b-8923-d3430676e625"
+      },
+      "members": [
+        {
+          "id": "teamMember5-1",
+          "type": "Fire Personnel",
+          "xmppAccount": "teammember51",
+          "xmppPassword": "teammember51",
+          "location": {
+            "latitude": "58.9161000",
+            "longitude": "5.5973000"
+          },
+          "guid": "dfe796cc-9973-41b3-ae8e-8ba523899882"
+        }
+      ]
     }
   ]
 }
