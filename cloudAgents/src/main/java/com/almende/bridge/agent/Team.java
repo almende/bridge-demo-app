@@ -19,66 +19,75 @@ import com.almende.eve.rpc.jsonrpc.JSONRPCException;
 public class Team extends Agent {
 	
 	public Task getTask() {
-		if (getState().containsKey("Task")){
-			return getState().get("Task",Task.class);
+		if (getState().containsKey("Task")) {
+			return getState().get("Task", Task.class);
 		}
 		return null;
 	}
 	
-	public void setTask(@Name("task") Task task) throws ProtocolException, JSONRPCException {
+	public void setTask(@Name("task") Task task) throws ProtocolException,
+			JSONRPCException {
+		Task oldTask = getState().get("Task", Task.class);
 		getState().put("Task", task);
-		send(URI.create(getLeader()),"triggerTask");
-		for (String member : getMembers()){
-			send(URI.create(member),"triggerTask");	
-		}
-	}
-	
-	public void setTeamStatus(@Name("status") TeamStatus status) throws ProtocolException, JSONRPCException{
-		TeamStatus oldStatus = getState().get("Status",TeamStatus.class);
-		getState().put("Status", status);
-		if (oldStatus == null || !oldStatus.eq(status)){
-			send(URI.create(getLeader()),"triggerTeamStatus");
-			for (String member : getMembers()){
-				send(URI.create(member),"triggerTeamStatus");
+		if (oldTask == null || !oldTask.eq(task)) {
+			send(URI.create(getLeader()), "triggerTask");
+			for (String member : getMembers()) {
+				send(URI.create(member), "triggerTask");
 			}
 		}
 	}
-	public TeamStatus getTeamStatus() throws ProtocolException, JSONRPCException{
-		if (getState().containsKey("Status")){
-			return getState().get("Status",TeamStatus.class);	
+	
+	public void setTeamStatus(@Name("status") TeamStatus status)
+			throws ProtocolException, JSONRPCException {
+		TeamStatus oldStatus = getState().get("Status", TeamStatus.class);
+		getState().put("Status", status);
+		if (oldStatus == null || !oldStatus.eq(status)) {
+			send(URI.create(getLeader()), "triggerTeamStatus");
+			for (String member : getMembers()) {
+				send(URI.create(member), "triggerTeamStatus");
+			}
+		}
+	}
+	
+	public TeamStatus getTeamStatus() throws ProtocolException,
+			JSONRPCException {
+		if (getState().containsKey("Status")) {
+			return getState().get("Status", TeamStatus.class);
 		}
 		TeamStatus newStatus = new TeamStatus();
 		newStatus.setTeamId(getId());
 		newStatus.setDeploymentStatus(TeamStatus.UNASSIGNED);
 		
-		if (!getLeader().isEmpty()){
-			newStatus.setTeamLeaderName(send(URI.create(getLeader()),"getId",null,String.class));
+		if (!getLeader().isEmpty()) {
+			newStatus.setTeamLeaderName(send(URI.create(getLeader()), "getId",
+					null, String.class));
 		}
 		
 		return newStatus;
 	}
 	
-	public Location getLocation() throws ProtocolException, JSONRPCException{
-		return send(URI.create(getLeader()),"getLocation",null,Location.class);
+	public Location getLocation() throws ProtocolException, JSONRPCException {
+		return send(URI.create(getLeader()), "getLocation", null,
+				Location.class);
 	}
 	
 	public String getLeader() {
-		if (getState().containsKey("Leader")){
-			return getState().get("Leader",String.class);	
+		if (getState().containsKey("Leader")) {
+			return getState().get("Leader", String.class);
 		}
 		return "";
 	}
 	
 	public void setLeader(@Name("leader") String leader) {
-		getState().put("Leader",leader);
+		getState().put("Leader", leader);
 	}
 	
 	public ArrayList<String> getMembers() {
 		ArrayList<String> result = new ArrayList<String>(0);
-		if (getState().containsKey("Members")){
-			result = getState().get(result,"Members");
+		if (getState().containsKey("Members")) {
+			result = getState().get(result, "Members");
 		}
-		return result; 
+		return result;
 	}
 	
 	public void setMembers(@Name("members") ArrayList<String> members) {
@@ -87,10 +96,10 @@ public class Team extends Agent {
 	
 	public void addMember(@Name("member") String member) {
 		ArrayList<String> members = new ArrayList<String>(0);
-		if (getState().containsKey("Members")){
-			members = getState().get(members,"members");
+		if (getState().containsKey("Members")) {
+			members = getState().get(members, "members");
 		}
-		if (members == null){
+		if (members == null) {
 			members = new ArrayList<String>();
 		}
 		members.add(member);
