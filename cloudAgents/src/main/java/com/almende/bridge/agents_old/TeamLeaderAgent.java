@@ -115,8 +115,7 @@ public class TeamLeaderAgent extends Agent {
 	
 	public void wrapTeamStatus(@Name("result") String teamStatus)
 			throws IOException {
-		setStatus(TypeUtil.inject(TeamStatus.class,
-				JOM.getInstance().readTree(teamStatus)));
+		setStatus(TypeUtil.inject(JOM.getInstance().readTree(teamStatus),TeamStatus.class));
 	}
 	
 	public String callOtherAgent(@Name("url") String url,

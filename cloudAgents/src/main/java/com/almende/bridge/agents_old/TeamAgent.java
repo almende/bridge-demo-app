@@ -29,8 +29,8 @@ public class TeamAgent extends Agent implements Team {
 	
 	public void addMember(@Name("resource") String url,
 			@Name("type") String type) throws Exception {
-		ArrayNode resources = (ArrayNode) om.readTree((String) myState
-				.get(type));
+		ArrayNode resources = (ArrayNode) om.readTree(myState
+				.get(type, String.class));
 		if (resources != null) {
 			ArrayNode newResources = resources.deepCopy();
 			newResources.add(url);
@@ -49,8 +49,8 @@ public class TeamAgent extends Agent implements Team {
 	
 	public void delMember(@Name("resource") String url,
 			@Name("type") String type) throws Exception {
-		ArrayNode resources = (ArrayNode) om.readTree((String) myState
-				.get(type));
+		ArrayNode resources = (ArrayNode) om.readTree(myState
+				.get(type, String.class));
 		if (resources != null) {
 			ArrayNode newResources = resources.deepCopy();
 			Iterator<JsonNode> iter = newResources.iterator();
@@ -90,8 +90,8 @@ public class TeamAgent extends Agent implements Team {
 		try {
 			for (String type : TYPES) {
 				if (type.equals(skipType)) continue;
-				for (JsonNode elem : (ArrayNode) om.readTree((String) myState
-						.get(type))) {
+				for (JsonNode elem : (ArrayNode) om.readTree(myState
+						.get(type, String.class))) {
 					if (elem.textValue().equals(url)) return type;
 				}
 			}
@@ -107,7 +107,7 @@ public class TeamAgent extends Agent implements Team {
 		ObjectNode res = JOM.createObjectNode();
 		for (String type : TYPES) {
 			try {
-				res.put(type, JOM.getInstance().readTree((String)myState.get(type)));
+				res.put(type, JOM.getInstance().readTree(myState.get(type, String.class)));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -117,7 +117,7 @@ public class TeamAgent extends Agent implements Team {
 	
 	public ArrayNode getter(@Name("type") String type) {
 		try {
-			return (ArrayNode) om.readTree((String) getState().get(type));
+			return (ArrayNode) om.readTree(getState().get(type, String.class));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -12,12 +12,14 @@ import com.almende.bridge.types.Task;
 import com.almende.bridge.types.TeamStatus;
 import com.almende.eve.agent.Agent;
 import com.almende.eve.agent.AgentHost;
+import com.almende.eve.agent.AgentSignal;
 import com.almende.eve.monitor.Poll;
 import com.almende.eve.rpc.annotation.Access;
 import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;
 import com.almende.eve.rpc.jsonrpc.JSONRPCException;
 import com.almende.eve.rpc.jsonrpc.jackson.JOM;
+import com.almende.eve.transport.TransportService;
 import com.almende.eve.transport.xmpp.XmppService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -27,6 +29,18 @@ public class TeamMember extends Agent {
 	private static final String	MOBILE		= "Smack";
 	private static final URI	DIRECTORY	= URI.create("local:yellow");
 	private static final URI	SITREP		= URI.create("local:sitRep");
+	
+	
+	@Override
+	public void signalAgent(AgentSignal<?> event) throws JSONRPCException, IOException{
+		super.signalAgent(event);
+		if ("addTransportService".equals(event.getEvent())) {
+			TransportService service = (TransportService) event.getService();
+			if (service.getProtocols().get(0).startsWith("xmpp")){
+				pokePhone();
+			}
+		}
+	}
 	
 	public ObjectNode requestStatus() throws ProtocolException,
 			JSONRPCException {
@@ -48,8 +62,6 @@ public class TeamMember extends Agent {
 		String taskDescription = getTaskDescription();
 		if (taskDescription != null) status.put("task", taskDescription);
 		return status;
-		
-		// TODO: what to do with task state?
 	}
 	
 	public void triggerTask() throws IOException {
@@ -213,19 +225,19 @@ public class TeamMember extends Agent {
 		XmppService service = (XmppService) factory.getTransportService("xmpp");
 		if (service != null) {
 			service.connect(getId(), username, password, "Cloud");
+			service.disconnect(getId());
+			service.connect(getId(), username, password, "Cloud");
+
 		} else {
 			throw new Exception("No XMPP service registered");
 		}
 	}
 	
-	public void setupMonitoring() {
-		
-		System.err.println("Calling subscribeMonitor()");
+	protected URI getPhoneUri() {
 		List<String> urls = getUrls();
 		URI myUrl = getFirstUrl();
 		for (String item : urls) {
 			try {
-				System.out.println("Url:" + item);
 				if (item.startsWith("xmpp")) {
 					myUrl = new URI(item);
 					break;
@@ -240,24 +252,40 @@ public class TeamMember extends Agent {
 			
 			URI mobileUri = URI.create(myUrl.getScheme() + username + "@"
 					+ host + "/" + MOBILE);
-			
-			String monitorId = getResultMonitorFactory().create(
-					"locationMonitor", mobileUri, "getLocation",
-					JOM.createObjectNode(), "wrapLocation", new Poll(15000));
-			
-			System.out.println("Monitor id:"
-					+ monitorId
-					+ " -> "
-					+ getResultMonitorFactory().getMonitorById(monitorId)
-							.toString());
+			return mobileUri;
 		}
+		return null;
+	}
+	
+	public void pokePhone() {
+		try {
+			sendAsync(getPhoneUri(), "poke", JOM.createObjectNode(),null,Void.class);
+		} catch (Exception e) {
+			System.out.println("Couldn't poke phone, not online? "
+					+ e.getLocalizedMessage());
+		}
+	}
+	
+	public void setupMonitoring() {
+		
+		System.err.println("Calling subscribeMonitor()");
+		
+		String monitorId = getResultMonitorFactory().create("locationMonitor",
+				getPhoneUri(), "getLocation", JOM.createObjectNode(),
+				"wrapLocation", new Poll(15000));
+		
+		System.out.println("Monitor id:"
+				+ monitorId
+				+ " -> "
+				+ getResultMonitorFactory().getMonitorById(monitorId)
+						.toString());
 	}
 	
 	public void wrapLocation(@Name("result") String location)
 			throws JSONRPCException, JsonProcessingException, IOException {
-//		LOG.warning("Received location:" + location);
-		Location loc =JOM.getInstance().readValue(location, Location.class);
-		if (loc != null){
+		// LOG.warning("Received location:" + location);
+		Location loc = JOM.getInstance().readValue(location, Location.class);
+		if (loc != null) {
 			setLocation(loc);
 		}
 	}

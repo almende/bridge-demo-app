@@ -2,8 +2,6 @@ package com.almende.bridge.agent;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
 
 import com.almende.eve.monitor.Poll;
 import com.almende.eve.monitor.Push;
@@ -16,32 +14,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Access(AccessType.PUBLIC)
 public class TeamLeader extends TeamMember {
-	private static final String	MOBILE	= "Smack";
 
 	public void setupMonitoring() {
 		super.setupMonitoring();
-		List<String> urls = getUrls();
-		URI myUrl = getFirstUrl();
-		for (String item : urls) {
-			try {
-				System.out.println("Url:" + item);
-				if (item.startsWith("xmpp")) {
-					myUrl = new URI(item);
-					break;
-				}
-			} catch (URISyntaxException e) {
-			}
-		}
-		if (myUrl.getScheme().startsWith("xmpp")) {
-			String username = myUrl.toString().split("@")[0].substring(4);
-			String host = myUrl.toString().split("@")[1].replaceAll("[:/].*",
-					"");
-			
-			URI mobileUri = URI.create(myUrl.getScheme() + username + "@" + host + "/"
-					+ MOBILE);
-			
+					
 			String monitorId = getResultMonitorFactory().create("teamStatusMonitor",
-					mobileUri, "getTeamStatus", JOM.createObjectNode(), "wrapTeamStatus",
+					getPhoneUri(), "getTeamStatus", JOM.createObjectNode(), "wrapTeamStatus",
 					new Poll(600000), new Push().onEvent("taskUpdated"));
 			
 			System.out.println("Monitor id:"
@@ -51,7 +29,7 @@ public class TeamLeader extends TeamMember {
 							.toString());
 			
 			monitorId = getResultMonitorFactory().create("taskMonitor",
-					mobileUri, "getTask", JOM.createObjectNode(), "wrapTask",
+					getPhoneUri(), "getTask", JOM.createObjectNode(), "wrapTask",
 					new Poll(600000), new Push().onEvent("taskUpdated"));
 			
 			System.out.println("Monitor id:"
@@ -59,7 +37,7 @@ public class TeamLeader extends TeamMember {
 					+ " -> "
 					+ getResultMonitorFactory().getMonitorById(monitorId)
 							.toString());
-		}
+
 	}
 	
 	public void wrapTeamStatus(@Name("result") String teamStatus) throws JSONRPCException, IOException{

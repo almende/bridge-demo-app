@@ -157,7 +157,7 @@ public class DemoGenerator extends Agent {
 			@Required(false) @Name("location") String location)
 			throws Exception {
 		AgentHost factory = AgentHost.getInstance();
-		URI parentUrl = URI.create(myState.get(resType).toString());
+		URI parentUrl = URI.create(myState.get(resType,String.class));
 		GenList parent = factory.createAgentProxy(this, parentUrl, GenList.class);
 		int count = 0;
 		for (String agentId : parent.getAll()) {
@@ -202,7 +202,7 @@ public class DemoGenerator extends Agent {
 	public void incInvalid() {
 		Integer invalidCount = 0;
 		if (myState.containsKey("invalidCount")) {
-			invalidCount = (Integer) myState.get("invalidCount");
+			invalidCount = myState.get("invalidCount",Integer.class);
 		}
 		invalidCount += 1;
 		myState.put("invalidCount", invalidCount);
@@ -211,7 +211,7 @@ public class DemoGenerator extends Agent {
 	public Integer getInvalid() {
 		Integer invalidCount = 0;
 		if (myState.containsKey("invalidCount")) {
-			invalidCount = (Integer) myState.get("invalidCount");
+			invalidCount = myState.get("invalidCount",Integer.class);
 		}
 		return invalidCount;
 	}

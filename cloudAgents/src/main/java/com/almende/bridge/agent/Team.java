@@ -13,11 +13,12 @@ import com.almende.eve.rpc.annotation.Access;
 import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;
 import com.almende.eve.rpc.jsonrpc.JSONRPCException;
+import com.almende.eve.state.TypedKey;
 
 @ThreadSafe(true)
 @Access(AccessType.PUBLIC)
 public class Team extends Agent {
-	
+	private static final TypedKey<ArrayList<String>> MEMBERS = new TypedKey<ArrayList<String>>("Members"){};
 	public Task getTask() {
 		if (getState().containsKey("Task")) {
 			return getState().get("Task", Task.class);
@@ -84,8 +85,8 @@ public class Team extends Agent {
 	
 	public ArrayList<String> getMembers() {
 		ArrayList<String> result = new ArrayList<String>(0);
-		if (getState().containsKey("Members")) {
-			result = getState().get(result, "Members");
+		if (getState().containsKey(MEMBERS.getKey())) {
+			result = getState().get(MEMBERS);
 		}
 		return result;
 	}
@@ -96,8 +97,8 @@ public class Team extends Agent {
 	
 	public void addMember(@Name("member") String member) {
 		ArrayList<String> members = new ArrayList<String>(0);
-		if (getState().containsKey("Members")) {
-			members = getState().get(members, "members");
+		if (getState().containsKey(MEMBERS.getKey())) {
+			members = getState().get(MEMBERS);
 		}
 		if (members == null) {
 			members = new ArrayList<String>();

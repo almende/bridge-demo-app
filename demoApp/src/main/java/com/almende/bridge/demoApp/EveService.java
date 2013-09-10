@@ -61,6 +61,7 @@ public class EveService extends Service implements GooglePlayServicesClient.Conn
                 try {
                     Map<String, Object> params = new HashMap<String, Object>();
                     params.put("path", ctx.getFilesDir().getAbsolutePath() + "/.eveagents");
+                    params.put("json", true);
                     host.setStateFactory(new FileStateFactory(params));
 
                 } catch (Exception e) {

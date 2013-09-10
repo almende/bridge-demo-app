@@ -166,14 +166,14 @@ public class SimpleTaskAgent extends Agent {
 	}
 	
 	public String getTeam(@Name("resourceType") String type) {
-		return "local://" + ((String) myState.get("team_" + type));
+		return "local://" + (myState.get("team_" + type, String.class));
 	}
 	
 	public ArrayNode getTeams() {
 		ArrayNode result = JOM.createArrayNode();
 		for (String type : TYPES) {
 			if (myState.containsKey("team_" + type)) {
-				result.add((String) myState.get("team_" + type));
+				result.add(myState.get("team_" + type, String.class));
 			}
 		}
 		return result;
@@ -181,10 +181,10 @@ public class SimpleTaskAgent extends Agent {
 	
 	public ObjectNode getLocation() {
 		ObjectNode location = JOM.createObjectNode();
-		String[] loc = ((String) myState.get("taskLocation")).split(" ");
+		String[] loc = (myState.get("taskLocation",String.class)).split(" ");
 		location.put("lat", loc[0]);
 		location.put("lon", loc[1]);
-		location.put("time", (String) myState.get("taskDueDate"));
+		location.put("time", myState.get("taskDueDate", String.class));
 		return location;
 	}
 	
@@ -215,12 +215,12 @@ public class SimpleTaskAgent extends Agent {
 	}
 	
 	public String getTaskDescription() {
-		return (String) myState.get("taskDescription");
+		return myState.get("taskDescription", String.class);
 	}
 	
 	@Override
 	public String getDescription() {
-		return "Bridge task:" + myState.get("data").toString();
+		return "Bridge task:" + myState.get("data", String.class);
 	}
 	
 	@Override

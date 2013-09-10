@@ -65,10 +65,7 @@ public class DemoGenerator extends Agent {
 		agentList.empty();
 	}
 	
-	public void resetDemo() throws JSONRPCException, ClassNotFoundException,
-			InstantiationException, IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException, IOException,
-			NoSuchAlgorithmException {
+	public void resetDemo() throws Exception {
 		String demoData = getState().get("demoData", String.class);
 		if (demoData != null) {
 			clearDemo();
@@ -87,15 +84,11 @@ public class DemoGenerator extends Agent {
 		return null;
 	}
 	
-	public void loadDemo(@Name("data") JsonNode dom)
-			throws JsonProcessingException, IOException, JSONRPCException,
-			InstantiationException, IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException,
-			ClassNotFoundException, NoSuchAlgorithmException {
+	public void loadDemo(@Name("data") JsonNode dom) throws Exception {
 		
-		MessageDigest md = MessageDigest.getInstance("MD5");
 		AgentHost host = getAgentHost();
 		GenList agentList = (GenList) host.getAgent("demolist");
+		
 		
 		ArrayNode teams = (ArrayNode) dom.get("teams");
 		for (JsonNode team : teams) {
@@ -109,108 +102,77 @@ public class DemoGenerator extends Agent {
 			agentList.add(teamId);
 			
 			ObjectNode leader = (ObjectNode) team.get("leader");
-			String leaderId = leader.get("id").textValue();
-			TeamLeader leaderAgent = null;
-			if (!host.hasAgent(leaderId)) {
-				leaderAgent = host.createAgent(TeamLeader.class, leaderId);
-			} else {
-				leaderAgent = (TeamLeader) host.getAgent(leaderId);
-			}
-			leaderAgent.setTeam(teamAgent.getFirstUrl().toString());
-			leaderAgent.setResType(leader.get("type").textValue());
-			leaderAgent.setXmppAccount(leader.get("xmppAccount").textValue());
-			leaderAgent.setXmppPassword(leader.get("xmppPassword").textValue());
-			leaderAgent.setLocation((Location) JOM.getInstance()
-					.readerForUpdating(new Location("", ""))
-					.readValue(leader.get("location")));
 			
-			if (leader.has("guid")) {
-				leaderAgent.setGuid(leader.get("guid").textValue());
-			} else {
-				String guid = UUID.randomUUID().toString();
-				leaderAgent.setGuid(guid);
-				leader.put("guid", guid);
-			}
-			
+			TeamMember leaderAgent = setupAgent(TeamLeader.class, leader, teamAgent);
 			teamAgent.setLeader(leaderAgent.getFirstUrl().toString());
-			agentList.add(leaderId);
-			
-			// check & add to XMPP server
-			try {
-				ObjectNode params = JOM.createObjectNode();
-				params.put("username", leaderAgent.getXmppAccount());
-				params.put("domain", XMPPDOMAIN);
-
-				md.reset();
-				md.update(leaderAgent.getXmppPassword().getBytes("UTF-8"));
-				byte[] digest = md.digest();
-				String md5Password = Base64.encodeBase64String(digest);
-				
-				System.err.println("registering password:"+leaderAgent.getXmppPassword()+":"+md5Password);
-				params.put(
-						"password", "{MD5}"+md5Password);				
-				params.put("givenname", leaderAgent.getId());
-				params.put("surname", leaderAgent.getGuid());
-				send(URI.create(MANAGEMENT), "registerAgent", params);
-			} catch (Exception e) {
-				System.err
-						.println("Warning: agent already registered for XMPP?"
-								+ leaderAgent.getId());
-			}
+			leaderAgent.xmppConnect();
+			leaderAgent.pokePhone();
 			
 			ArrayNode members = (ArrayNode) team.get("members");
 			for (JsonNode member : members) {
-				String memberId = member.get("id").textValue();
-				TeamMember memberAgent = null;
-				if (!host.hasAgent(memberId)) {
-					memberAgent = host.createAgent(TeamMember.class, memberId);
-				} else {
-					memberAgent = (TeamMember) host.getAgent(memberId);
-				}
-				memberAgent.setTeam(teamAgent.getFirstUrl().toString());
-				memberAgent.setResType(member.get("type").textValue());
-				memberAgent.setXmppAccount(member.get("xmppAccount")
-						.textValue());
-				memberAgent.setXmppPassword(member.get("xmppPassword")
-						.textValue());
-				memberAgent.setLocation((Location) JOM.getInstance()
-						.readerForUpdating(new Location("", ""))
-						.readValue(member.get("location")));
-				if (member.has("guid")) {
-					memberAgent.setGuid(member.get("guid").textValue());
-				} else {
-					String guid = UUID.randomUUID().toString();
-					memberAgent.setGuid(guid);
-					((ObjectNode) member).put("guid", guid);
-				}
-				
+				TeamMember memberAgent = setupAgent(TeamMember.class, (ObjectNode) member, teamAgent);
 				teamAgent.addMember(memberAgent.getFirstUrl().toString());
-				agentList.add(memberId);
-				
-				try {
-					ObjectNode params = JOM.createObjectNode();
-					params.put("username", memberAgent.getXmppAccount());
-					params.put("domain", XMPPDOMAIN);
-					md.reset();
-					md.update(memberAgent.getXmppPassword().getBytes("UTF-8"));
-					byte[] digest = md.digest();
-					
-					String md5Password = Base64.encodeBase64String(digest);
-					
-					System.err.println("registering password:"+memberAgent.getXmppPassword()+":"+md5Password);
-					params.put(
-							"password", "{MD5}"+md5Password);
-					params.put("givenname", memberAgent.getId());
-					params.put("surname", memberAgent.getGuid());
-					send(URI.create(MANAGEMENT), "registerAgent", params);
-				} catch (Exception e) {
-					System.err
-							.println("Warning: agent already registered for XMPP?"
-									+ memberAgent.getId());
-				}
+				memberAgent.xmppConnect();
+				memberAgent.pokePhone();
 			}
 		}
 		getState().put("demoData", JOM.getInstance().writeValueAsString(dom));
 		
 	}
+	
+	private TeamMember setupAgent(Class<? extends TeamMember> type, ObjectNode member,Team teamAgent) throws NoSuchAlgorithmException, JSONRPCException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException, ClassNotFoundException{
+		MessageDigest md = MessageDigest.getInstance("MD5");
+		AgentHost host = getAgentHost();
+		GenList agentList = (GenList) host.getAgent("demolist");
+		
+		String memberId = member.get("id").textValue();
+		TeamMember memberAgent = null;
+		if (!host.hasAgent(memberId)) {
+			memberAgent = host.createAgent(type, memberId);
+		} else {
+			memberAgent = (TeamMember) host.getAgent(memberId);
+		}
+		memberAgent.setTeam(teamAgent.getFirstUrl().toString());
+		memberAgent.setResType(member.get("type").textValue());
+		memberAgent.setXmppAccount(member.get("xmppAccount")
+				.textValue());
+		memberAgent.setXmppPassword(member.get("xmppPassword")
+				.textValue());
+		memberAgent.setLocation((Location) JOM.getInstance()
+				.readerForUpdating(new Location("", ""))
+				.readValue(member.get("location")));
+		if (member.has("guid")) {
+			memberAgent.setGuid(member.get("guid").textValue());
+		} else {
+			String guid = UUID.randomUUID().toString();
+			memberAgent.setGuid(guid);
+			((ObjectNode) member).put("guid", guid);
+		}
+		
+		agentList.add(memberId);
+		
+		try {
+			ObjectNode params = JOM.createObjectNode();
+			params.put("username", memberAgent.getXmppAccount());
+			params.put("domain", XMPPDOMAIN);
+			md.reset();
+			md.update(memberAgent.getXmppPassword().getBytes("UTF-8"));
+			byte[] digest = md.digest();
+			
+			String md5Password = Base64.encodeBase64String(digest);
+			
+			System.err.println("registering password:"+memberAgent.getXmppPassword()+":"+md5Password);
+			params.put(
+					"password", "{MD5}"+md5Password);
+			params.put("givenname", memberAgent.getId());
+			params.put("surname", memberAgent.getGuid());
+			send(URI.create(MANAGEMENT), "registerAgent", params);
+		} catch (Exception e) {
+			System.err
+					.println("Warning: agent already registered for XMPP?"
+							+ memberAgent.getId());
+		}
+		return memberAgent;
+	}
+	
 }

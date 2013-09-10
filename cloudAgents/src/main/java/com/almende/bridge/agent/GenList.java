@@ -90,7 +90,7 @@ public class GenList extends Agent {
 	public ArrayNode getList(){
 		if (myState.containsKey("items")) {
 			try {
-				return (ArrayNode) JOM.getInstance().readTree((String)myState.get("items"));
+				return (ArrayNode) JOM.getInstance().readTree(myState.get("items",String.class));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

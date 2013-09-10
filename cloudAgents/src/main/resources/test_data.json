@@ -1,0 +1,42 @@
+{
+  "teams": [
+    {
+      "id": "testteam1",
+      "leader": {
+        "id": "testteamLeader1",
+        "type": "Police Personnel",
+        "xmppAccount": "testteam1",
+        "xmppPassword": "testteam1",
+        "location": {
+          "latitude": "58.9168404",
+          "longitude": "5.6011841"
+        },
+        "guid": "30ea2645-fb2c-4b40-ba8f-b5b6485f34d8"
+      },
+      "members": [
+        {
+          "id": "testteamMember1-1",
+          "type": "Police Personnel",
+          "xmppAccount": "testteammember11",
+          "xmppPassword": "testteammember11",
+          "location": {
+            "latitude": "58.9268404",
+            "longitude": "5.6012000"
+          },
+          "guid": "30ca41c3-3850-454e-9c10-b795fd550e66"
+        },
+        {
+          "id": "testteamMember1-2",
+          "type": "Police Vehicle",
+          "xmppAccount": "testteammember12",
+          "xmppPassword": "testteammember12",
+          "location": {
+            "latitude": "58.9180000",
+            "longitude": "5.6011000"
+          },
+          "guid": "17a61fa3-0024-42e4-a25d-0e8e7c8c12af"
+        }
+      ]
+    }
+  ]
+}

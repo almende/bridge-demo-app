@@ -1,7 +1,7 @@
 package com.almende.bridge.demoApp.agent;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -25,6 +25,7 @@ import com.almende.eve.rpc.annotation.Access;
 import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;
 import com.almende.eve.rpc.jsonrpc.JSONRPCException;
+import com.almende.eve.rpc.jsonrpc.JSONRequest;
 import com.almende.eve.rpc.jsonrpc.jackson.JOM;
 import com.almende.eve.transport.AsyncCallback;
 import com.almende.eve.transport.xmpp.XmppService;
@@ -56,6 +57,12 @@ public class BridgeDemoAgent extends Agent {
 	@Override
 	public String getVersion() {
 		return VERSION;
+	}
+	
+	public void poke() throws ProtocolException, JSONRPCException{
+		System.err.println("I'm being poked by my cloud agent! Reloading monitoring!");
+		getScheduler().createTask(new JSONRequest("subscribeMonitor",JOM.createObjectNode()), 0);
+		sendAsync(getCloudUri(),"setupMonitoring",JOM.createObjectNode(),null,Void.class);
 	}
 	
 	public TeamStatus getTeamStatus() throws IOException {
@@ -117,8 +124,7 @@ public class BridgeDemoAgent extends Agent {
 		return null;
 	}
 	
-	public void subscribeMonitor() throws MalformedURLException {
-		System.err.println("Calling subscribeMonitor()");
+	private URI getCloudUri(){
 		List<String> urls = getUrls();
 		URI myUrl = getFirstUrl();
 		for (String item : urls) {
@@ -138,8 +144,17 @@ public class BridgeDemoAgent extends Agent {
 			
 			URI cloudUri = URI.create(myUrl.getScheme() + username + "@" + host
 					+ "/" + CLOUD);
-			
-			String monitorId = getResultMonitorFactory().create("taskMonitor",cloudUri,
+			return cloudUri;
+		}  else {
+			System.err.println("SubscribeMonitor: XMPP not yet initialized?");
+		}
+		return null;
+	}
+	
+	public void subscribeMonitor() {
+		System.err.println("Calling subscribeMonitor()");
+		
+			String monitorId = getResultMonitorFactory().create("taskMonitor",getCloudUri(),
 					"getTask", JOM.createObjectNode(), "wrapTask",
 					new Poll(600000), new Push().onEvent("taskUpdated"));
 			
@@ -149,7 +164,7 @@ public class BridgeDemoAgent extends Agent {
 					+ getResultMonitorFactory().getMonitorById(monitorId)
 							.toString());
 			
-			monitorId = getResultMonitorFactory().create("teamStatusMonitor",cloudUri,
+			monitorId = getResultMonitorFactory().create("teamStatusMonitor",getCloudUri(),
 					"getTeamStatus", JOM.createObjectNode(), "wrapTeamStatus",
 					new Poll(600000), new Push().onEvent("teamStatusUpdated"));
 			
@@ -159,7 +174,7 @@ public class BridgeDemoAgent extends Agent {
 					+ getResultMonitorFactory().getMonitorById(monitorId)
 							.toString());
 			
-			monitorId = getResultMonitorFactory().create("sitRepMonitor",cloudUri,
+			monitorId = getResultMonitorFactory().create("sitRepMonitor",getCloudUri(),
 					"getSitRep", JOM.createObjectNode(), "wrapSitRep",
 					new Poll(15000));
 			
@@ -168,19 +183,16 @@ public class BridgeDemoAgent extends Agent {
 					+ " -> "
 					+ getResultMonitorFactory().getMonitorById(monitorId)
 							.toString());
-			
-		} else {
-			System.err.println("SubscribeMonitor: XMPP not yet initialized?");
-		}
+
 	}
 	public void wrapTask(@Name("result") String task) throws IOException {
-		setTask(TypeUtil.inject(Task.class, JOM.getInstance().readTree(task)));
+		setTask(TypeUtil.inject(JOM.getInstance().readTree(task),Task.class));
 	}
 	public void wrapTeamStatus(@Name("result") String teamStatus) throws IOException {
-		setTeamStatus(TypeUtil.inject(TeamStatus.class, JOM.getInstance().readTree(teamStatus)));
+		setTeamStatus(TypeUtil.inject(JOM.getInstance().readTree(teamStatus),TeamStatus.class));
 	}
 	public void wrapSitRep(@Name("result") String sitRep) throws IOException {
-		setSitrep(TypeUtil.inject(SitRep.class, JOM.getInstance().readTree(sitRep)));
+		setSitrep(TypeUtil.inject(JOM.getInstance().readTree(sitRep),SitRep.class));
 	}
 	
 	public void initTask() throws JSONRPCException, IOException {
@@ -190,13 +202,25 @@ public class BridgeDemoAgent extends Agent {
 	
 	public Task getTask() throws JsonProcessingException, IOException {
 		System.err.println("Calling getTask();");
+		
+		System.err.println("st:"+System.currentTimeMillis());
 		ObjectReader taskReader = JOM.getInstance().reader(Task.class);
+		System.err.println("reader init:"+System.currentTimeMillis());
 		
 		if (getState().containsKey(TASK)) {
+			System.err.println("containsKey:"+System.currentTimeMillis());
+			
 			String task = getState().get(TASK, String.class);
 			System.err.println("Found task:" + task);
-			return taskReader.readValue(task);
+			System.err.println("found:"+System.currentTimeMillis());
+			
+			Task ret =taskReader.readValue(task);
+			
+			System.err.println("Converted:"+System.currentTimeMillis());
+			
+			return ret;
 		} else {
+			System.err.println("Doesn't containKey:"+System.currentTimeMillis());
 			return null;
 		}
 	}

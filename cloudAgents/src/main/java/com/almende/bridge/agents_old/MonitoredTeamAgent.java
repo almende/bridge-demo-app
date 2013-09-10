@@ -13,7 +13,7 @@ public class MonitoredTeamAgent extends TeamAgent implements MonitoredTeam {
 	
 	@Override
 	public Integer getAmount(){
-		return (Integer) myState.get("amount");
+		return myState.get("amount",Integer.class);
 	}
 
 	@Override

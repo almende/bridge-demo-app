@@ -172,15 +172,21 @@ public class MyMapFragment extends MapFragment implements LocationListener,
 	public void setMapOverlays() {
 		
 		try {
+			double start = System.currentTimeMillis();
+			System.err.println("start:"+System.currentTimeMillis());
 			AgentHost host = AgentHost.getInstance();
 			BridgeDemoAgent agent = (BridgeDemoAgent) host
 					.getAgent(EveService.DEMO_AGENT);
+//			System.err.println("agent:"+System.currentTimeMillis());
+			
 			Task task = null;
 			SitRep sitRep = null;
 			LatLng taskLoc = null;
 			if (agent != null) {
 				task = agent.getTask();
+//				System.err.println("task:"+System.currentTimeMillis());
 				sitRep = agent.getSitRep();
+//				System.err.println("sitrep:"+System.currentTimeMillis());
 			}
 			
 			LatLngBounds.Builder bounds = new LatLngBounds.Builder();
@@ -189,6 +195,7 @@ public class MyMapFragment extends MapFragment implements LocationListener,
 			if (mLocation != null) {
 				bounds.include(new LatLng(mLocation.getLatitude(), mLocation
 						.getLongitude()));
+//				System.err.println("location:"+System.currentTimeMillis());
 			}
 			
 			if (sitRep != null) {
@@ -197,6 +204,7 @@ public class MyMapFragment extends MapFragment implements LocationListener,
 				bounds = addPointsToMap(sitRep.getOthers(), bounds);
 				bounds = addPointsToMap(sitRep.getTeams(), bounds);
 			}
+			
 			if (mTask != null) {
 				mTask.remove();
 			}
@@ -225,7 +233,11 @@ public class MyMapFragment extends MapFragment implements LocationListener,
 				
 				bounds.include(taskLoc);
 			}
+//			System.err.println("SetBoundsRetry:"+System.currentTimeMillis());
+			
 			setBoundsRetry(bounds);
+			
+			System.err.println("End:"+System.currentTimeMillis()+" ("+(System.currentTimeMillis()-start)+"ms)");
 		} catch (Exception e) {
 			Log.e(TAG, "Warning, couldn't set map overlays:" + e.getMessage()
 					+ " :" + Log.getStackTraceString(e));
@@ -323,9 +335,9 @@ public class MyMapFragment extends MapFragment implements LocationListener,
 				mSuccesfullySetBounds = false;
 				int count = 0;
 				
-				// wait 1 second once;
+				// wait 1/10th second once;
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(100);
 				} catch (InterruptedException e) {
 				}
 				
@@ -343,6 +355,9 @@ public class MyMapFragment extends MapFragment implements LocationListener,
 													.newLatLngBounds(
 															bounds.build(), 50));
 									mSuccesfullySetBounds = true;
+									synchronized (this){
+										this.notifyAll();
+									}
 								}
 							} catch (Exception e) {
 								e.printStackTrace();

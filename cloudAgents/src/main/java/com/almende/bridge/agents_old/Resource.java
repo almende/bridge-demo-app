@@ -25,7 +25,8 @@ public class Resource extends Agent {
 	public ArrayNode getBridgeTasks() {
 		if (myState.containsKey("tasks")) {
 			try {
-				return (ArrayNode) JOM.getInstance().readTree((String)myState.get("tasks"));
+				return (ArrayNode) JOM.getInstance().readTree(
+						myState.get("tasks", String.class));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -125,7 +126,7 @@ public class Resource extends Agent {
 		if (myState.containsKey("location")) {
 			try {
 				return (ObjectNode) JOM.getInstance().readTree(
-						(String) myState.get("location"));
+						myState.get("location", String.class));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -137,7 +138,8 @@ public class Resource extends Agent {
 		if (myState.containsKey("currentTask")) {
 			try {
 				String url = getCurrentTask();
-				return send(URI.create(url), "getLocation", null, JOM.getSimpleType(ObjectNode.class));
+				return send(URI.create(url), "getLocation", null,
+						JOM.getSimpleType(ObjectNode.class));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -149,7 +151,9 @@ public class Resource extends Agent {
 		if (myState.containsKey("currentTask")) {
 			try {
 				String url = getCurrentTask();
-				if (!url.isEmpty()) return send(URI.create(url), "getTaskDescription", null, JOM.getSimpleType(String.class));
+				if (!url.isEmpty()) return send(URI.create(url),
+						"getTaskDescription", null,
+						JOM.getSimpleType(String.class));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -165,11 +169,12 @@ public class Resource extends Agent {
 		ObjectNode params = JOM.createObjectNode();
 		params.put("resourceType", getResType());
 		try {
-			String teamUrl = send(URI.create(url),"getTeam",params,JOM.getSimpleType(String.class));
+			String teamUrl = send(URI.create(url), "getTeam", params,
+					JOM.getSimpleType(String.class));
 			params = JOM.createObjectNode();
 			params.put("resource", getUrls().get(0));
 			params.put("type", "available");
-			send(URI.create(teamUrl),"chgMember",params);
+			send(URI.create(teamUrl), "chgMember", params);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -177,7 +182,7 @@ public class Resource extends Agent {
 	}
 	
 	public String getCurrentTask() {
-		return (String) myState.get("currentTask");
+		return myState.get("currentTask", String.class);
 	}
 	
 	public ObjectNode requestStatus() {
@@ -208,14 +213,14 @@ public class Resource extends Agent {
 		
 		try {
 			params.put("val", JOM.getInstance().writeValueAsString(item));
-			send(URI.create("local://agent_list"),"add",params);
+			send(URI.create("local://agent_list"), "add", params);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public String getGuid() {
-		return (String) getState().get("guid");
+		return getState().get("guid", String.class);
 	}
 	
 	public void setResType(@Name("resType") String resType) {
@@ -223,7 +228,7 @@ public class Resource extends Agent {
 	}
 	
 	public String getResType() {
-		return (String) getState().get("resType");
+		return getState().get("resType", String.class);
 	}
 	
 	@Override
