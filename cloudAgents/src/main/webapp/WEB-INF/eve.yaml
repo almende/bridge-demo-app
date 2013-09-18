@@ -3,7 +3,8 @@
 # context settings (for persistency)
 state:
   class: FileStateFactory
-  path: .eveagents
+  path: .eveagents_bridge
+  json: true
 
 # scheduler settings (for tasks)
 scheduler:

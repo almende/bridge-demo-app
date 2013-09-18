@@ -58,7 +58,17 @@ public class EDXLParser {
 
 	public static EDXLRet parseXML(String xml) {
 		try {
-		    Document document = builder.build(new InputSource(new StringReader(xml)));
+			StringReader reader = new StringReader(xml);
+			char[] cbuf = new char[1];
+			if (reader.read(cbuf, 0, 1) == 1){
+				if (cbuf[0] != '\uFEFF'){
+					reader.reset();
+				} else {
+					System.err.println("Skipped BOM.");
+				}
+			};
+			
+		    Document document = builder.build(new InputSource(reader));
 		    Element rootElement = document.getRootElement();
 		    String msgType = rootElement.getName();
 		    if ("EDXLDistribution".equalsIgnoreCase(msgType)){

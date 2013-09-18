@@ -37,6 +37,20 @@
           "guid": "17a61fa3-0024-42e4-a25d-0e8e7c8c12af"
         }
       ]
-    }
+    },
+	{
+		"id": "Team 2 (A10)",
+		"leader": {
+			"id": "testteamLeader2",
+			"type" : "Fire Personnel",
+			"xmppAccount": "testteam2",
+			"xmppPassword": "testteam2",
+			"location": {
+				"latitude": "58.9178404",
+				"longitude": "5.6021841"
+			}
+		},
+		"members": []
+	}
   ]
 }

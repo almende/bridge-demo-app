@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.almende.bridge</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.4-SNAPSHOT</version>
 		<relativePath>../parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>demoApp</artifactId>
@@ -31,9 +31,6 @@
 			<artifactId>eve-android</artifactId>
 			<version>${eve.version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>com.almende.cape</groupId> <artifactId>cape-client</artifactId> 
-			<version>${project.parent.version}</version> <exclusions> <exclusion> <artifactId>smackx</artifactId> 
-			<groupId>jivesoftware</groupId> </exclusion> </exclusions> </dependency> -->
 		<dependency>
 			<groupId>com.almende.eve</groupId>
 			<artifactId>eve-core</artifactId>
@@ -50,13 +47,6 @@
 			<artifactId>eventbus</artifactId>
 			<version>2.0.2</version>
 		</dependency>
-
-		<!-- <dependency> -->
-		<!-- <groupId>com.google.android</groupId> -->
-		<!-- <artifactId>android</artifactId> -->
-		<!-- <version>${android.version}</version> -->
-		<!-- <scope>provided</scope> -->
-		<!-- </dependency> -->
 
 		<dependency>
 			<groupId>android</groupId>
@@ -105,7 +95,7 @@
 		<dependency>
 			<groupId>com.almende.bridge</groupId>
 			<artifactId>common</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.4-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>

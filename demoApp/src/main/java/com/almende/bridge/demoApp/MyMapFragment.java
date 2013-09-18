@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,12 +17,6 @@ import com.almende.bridge.types.PointOfInterest;
 import com.almende.bridge.types.SitRep;
 import com.almende.bridge.types.Task;
 import com.almende.eve.agent.AgentHost;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
-import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
@@ -42,12 +35,9 @@ import de.greenrobot.event.EventBus;
  * The map view of the Bridge app.
  * 
  */
-public class MyMapFragment extends MapFragment implements LocationListener,
-		OnConnectionFailedListener, ConnectionCallbacks {
+public class MyMapFragment extends MapFragment  {
 	private final String		TAG		= "MyMapFragment";
 	Marker						mTask	= null;
-	private volatile Location	mLocation;
-	private LocationClient		mLocationClient;
 	private GoogleMap			mMap;
 	private boolean				mSuccesfullySetBounds;
 	
@@ -81,8 +71,6 @@ public class MyMapFragment extends MapFragment implements LocationListener,
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		setUpLocationClientIfNeeded();
-		mLocationClient.connect();
 		setUpMapIfNeeded();
 	}
 	
@@ -90,9 +78,6 @@ public class MyMapFragment extends MapFragment implements LocationListener,
 	public void onPause() {
 		super.onPause();
 		
-		if (mLocationClient != null) {
-			mLocationClient.disconnect();
-		}
 		if (mMap != null) {
 			mMap.setMyLocationEnabled(false);
 		}
@@ -172,30 +157,24 @@ public class MyMapFragment extends MapFragment implements LocationListener,
 	public void setMapOverlays() {
 		
 		try {
-			double start = System.currentTimeMillis();
-			System.err.println("start:"+System.currentTimeMillis());
 			AgentHost host = AgentHost.getInstance();
 			BridgeDemoAgent agent = (BridgeDemoAgent) host
 					.getAgent(EveService.DEMO_AGENT);
-//			System.err.println("agent:"+System.currentTimeMillis());
 			
 			Task task = null;
 			SitRep sitRep = null;
 			LatLng taskLoc = null;
 			if (agent != null) {
 				task = agent.getTask();
-//				System.err.println("task:"+System.currentTimeMillis());
 				sitRep = agent.getSitRep();
-//				System.err.println("sitrep:"+System.currentTimeMillis());
 			}
 			
 			LatLngBounds.Builder bounds = new LatLngBounds.Builder();
 			if (getMap() != null) getMap().clear();
 			
-			if (mLocation != null) {
-				bounds.include(new LatLng(mLocation.getLatitude(), mLocation
+			if (EveService.mLocation != null) {
+				bounds.include(new LatLng(EveService.mLocation.getLatitude(), EveService.mLocation
 						.getLongitude()));
-//				System.err.println("location:"+System.currentTimeMillis());
 			}
 			
 			if (sitRep != null) {
@@ -232,12 +211,8 @@ public class MyMapFragment extends MapFragment implements LocationListener,
 				});
 				
 				bounds.include(taskLoc);
-			}
-//			System.err.println("SetBoundsRetry:"+System.currentTimeMillis());
-			
+			}			
 			setBoundsRetry(bounds);
-			
-			System.err.println("End:"+System.currentTimeMillis()+" ("+(System.currentTimeMillis()-start)+"ms)");
 		} catch (Exception e) {
 			Log.e(TAG, "Warning, couldn't set map overlays:" + e.getMessage()
 					+ " :" + Log.getStackTraceString(e));
@@ -272,52 +247,6 @@ public class MyMapFragment extends MapFragment implements LocationListener,
 				setMapOverlays();
 			}
 		}
-		
-	}
-	
-	@Override
-	public void onLocationChanged(Location location) {
-		Location previousLocation = mLocation;
-		mLocation = location;
-		if (previousLocation == null) {
-			setMapOverlays();
-		}
-	}
-	
-	private void setUpLocationClientIfNeeded() {
-		if (mLocationClient == null) {
-			mLocationClient = new LocationClient(getActivity()
-					.getApplicationContext(), this, // ConnectionCallbacks
-					this); // OnConnectionFailedListener
-			
-		}
-	}
-	
-	@Override
-	public void onConnected(Bundle arg0) {
-		LocationRequest request = LocationRequest
-				.create()
-				.setInterval(30000)
-				// 30
-				// seconds
-				.setFastestInterval(10000)
-				.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
-				.setSmallestDisplacement(50); // trigger onLocationChange every
-												// 50
-												// meters
-		mLocationClient.requestLocationUpdates(request, this);
-		
-	}
-	
-	@Override
-	public void onDisconnected() {
-		// Do nothing
-		
-	}
-	
-	@Override
-	public void onConnectionFailed(ConnectionResult arg0) {
-		// Don nothing
 		
 	}
 	

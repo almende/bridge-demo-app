@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.almende.bridge</groupId>
 	<artifactId>parent</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<properties>
@@ -17,7 +17,7 @@
 		<maven-surefire-plugin.version>2.12</maven-surefire-plugin.version>
 		<maven-source-plugin.version>2.1.2</maven-source-plugin.version>
 		<junit.version>4.11</junit.version>
-		<eve.version>1.2.0-SNAPSHOT</eve.version>
+		<eve.version>2.1.0-SNAPSHOT</eve.version>
 	</properties>
 
 	<modules>

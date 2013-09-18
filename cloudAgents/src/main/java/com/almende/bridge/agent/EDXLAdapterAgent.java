@@ -24,6 +24,7 @@ import com.almende.eve.rpc.annotation.Access;
 import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;
 import com.almende.eve.rpc.annotation.Required;
+import com.almende.eve.rpc.jsonrpc.JSONRPCException;
 import com.almende.eve.rpc.jsonrpc.JSONRequest;
 import com.almende.eve.rpc.jsonrpc.jackson.JOM;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -42,9 +43,14 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 		RequestResource(data);
 	}
 	
-	public void notify(@Name("items") ArrayNode items) throws Exception{
-		for (JsonNode item: items){
-			_notify(item.get("data").textValue(),item.get("meta"));
+	public void notify(@Required(false) @Name("items") ArrayNode items,@Required(false) @Name("data") String data, @Required(false) @Name("meta") JsonNode meta) throws Exception{
+		if (items != null){
+			for (JsonNode item: items){
+				_notify(item.get("data").textValue(),item.get("meta"));
+			}
+		}
+		if (data != null){
+			_notify(data,meta);
 		}
 	}
 	
@@ -104,11 +110,11 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 			e.printStackTrace();
 		}
 		if (interval != null) {
+			stop();
 			ObjectNode params = JOM.createObjectNode();
-			params.put("interval", interval.toString());
 			lastTaskId = getScheduler().createTask(
 					new JSONRequest("sendReportResourceDeploymentStatus",
-							params), interval * 1000);
+							params), interval * 1000,true,true);
 		}
 	}
 	
@@ -117,7 +123,7 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 	}
 	
 	@Override
-	public String RequestResource(@Name("RequestResourceMessage") String message)
+	public synchronized String RequestResource(@Name("RequestResourceMessage") String message)
 			throws Exception {
 		
 		Task task = new Task();
@@ -185,6 +191,10 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 			params.put("key", resource.get("resourceID").textValue());
 			String agentUrl = send(DIRECTORY,"get",params,String.class);
 			
+			if (agentUrl == null){
+				System.err.println("Unknown ResourceID given!");
+				throw new JSONRPCException("Unknown ResourceID given.");
+			}
 			String teamUrl = send(URI.create(agentUrl),"getTeam",null,String.class);
 
 			ObjectNode parms = JOM.createObjectNode();
@@ -227,7 +237,7 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 	}
 	
 	@Override
-	public String RequisitionResource(
+	public  synchronized  String RequisitionResource(
 			@Name("RequisitionResourceMessage") String message)
 			throws Exception {
 		EDXLRet inDoc = EDXLParser.parseXML(message);
@@ -303,7 +313,7 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 	}
 	
 	@Override
-	public String ReleaseResource(@Name("ReleaseResourceMessage") String message)
+	public  synchronized String ReleaseResource(@Name("ReleaseResourceMessage") String message)
 			throws Exception {
 		EDXLRet inDoc = EDXLParser.parseXML(message);
 		if (inDoc == null) throw new Exception("Failed to parse XML message.");
@@ -342,9 +352,8 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 							"requestStatus", null, ObjectNode.class);
 					if (status == null) {
 						throw new Exception("Status null!" + resourceUrl);
-					} else {
-						System.err.println("Status:" + status);
 					}
+					System.err.print(".");
 					Element sub = new Element("ResourceInformation");
 					setElementWithPath(sub,
 							new String[] { "ResourceInfoElementID" },
@@ -422,7 +431,7 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 				}
 			}
 		}
-		
+		System.err.println("|");
 		return EDXLGenerator.printDoc(replyDoc);
 	}
 	
