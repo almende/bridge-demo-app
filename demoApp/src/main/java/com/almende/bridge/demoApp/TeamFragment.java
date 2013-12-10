@@ -39,19 +39,19 @@ public class TeamFragment extends Fragment {
 
         renderTeam();
 
-        Button button = (Button) view.findViewById(R.id.call_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                System.err.println("CallButton clicked!");
-                AgentHost host = AgentHost.getInstance();
-                try {
-                    BridgeDemoAgent agent = (BridgeDemoAgent) host.getAgent(EveService.DEMO_AGENT);
-                    agent.callRedirect();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+//        Button button = (Button) view.findViewById(R.id.call_button);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                System.err.println("CallButton clicked!");
+//                AgentHost host = AgentHost.getInstance();
+//                try {
+//                    BridgeDemoAgent agent = (BridgeDemoAgent) host.getAgent(EveService.DEMO_AGENT);
+//                    agent.callRedirect();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
 
     }
 

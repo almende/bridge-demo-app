@@ -27,8 +27,8 @@
     <string name="team_unfilled_field">---</string>
     <string name="team_leader">Team leader</string>
     <string name="team_status">Team status</string>
-    <string name="button_active">Active</string>
-    <string name="button_withdrawn">Withdrawn</string>
+    <string name="button_active">Rejoin</string>
+    <string name="button_withdrawn">Withdraw</string>
     <string name="pref_xmpp_title">CAPE settings</string>
     <string name="pref_cloud_title">Cloud settings</string>
     <string name="xmppUsername_key">xmppUsername</string>

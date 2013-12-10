@@ -356,6 +356,10 @@ public class BridgeDemoAgent extends Agent {
 			String resource = prefs.getString(
 					context.getString(R.string.xmppResource_key), null);
 			xmppService.connect(getId(), username, password, resource);
+			
+			getScheduler().createTask(new JSONRequest("subscribeMonitor",JOM.createObjectNode()), 0);
+			sendAsync(getCloudUri(),"setupMonitoring",JOM.createObjectNode(),null,Void.class);
+			
 		} catch (Exception e) {
 			System.err.println("Failed to (re-)connection XMPP connection");
 			e.printStackTrace();

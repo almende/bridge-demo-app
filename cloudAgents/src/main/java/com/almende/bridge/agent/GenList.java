@@ -56,9 +56,8 @@ public class GenList extends Agent {
 	}
 	
 	public void add(@Name("val") String value){
-		ArrayNode list = getList();
+		ArrayNode list = myState.get("items",ArrayNode.class);
 		ArrayNode oldList = null;
-		ObjectMapper om = JOM.getInstance();
 		if (list == null) {
 			list = JOM.createArrayNode();
 		} else {
@@ -67,10 +66,10 @@ public class GenList extends Agent {
 		list.add(value);
 		
 		try {
-			if (!myState.putIfUnchanged("items", om.writeValueAsString(list),
-					om.writeValueAsString(oldList))) {
+			if (!myState.putIfUnchanged("items", list,	oldList)) {
+				
 				System.err
-						.println("Have to recursively retry adding an item");
+						.println("Have to recursively retry adding an item:"+list+" : "+oldList);
 				add(value); // recursive retry
 			}
 		} catch (Exception e) {
@@ -90,7 +89,7 @@ public class GenList extends Agent {
 	public ArrayNode getList(){
 		if (myState.containsKey("items")) {
 			try {
-				return (ArrayNode) JOM.getInstance().readTree(myState.get("items",String.class));
+				return myState.get("items",ArrayNode.class);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

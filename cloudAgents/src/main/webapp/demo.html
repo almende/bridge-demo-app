@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style type="text/css">
+html {
+	height: 100%
+}
+
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0
+}
+
+.container {
+	display:block;
+	position:relative;
+	top:10px;
+	left:300px;
+}
+
+.map {
+	height: 600px;
+	width: 600px;
+}
+
+.labels {
+	color: red;
+	background-color: white;
+	font-family: "Lucida Grande", "Arial", sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	text-align: center;
+	width: 80px;
+	border: 2px solid black;
+	white-space: nowrap;
+}
+</style>
+<title>BRIDGE simulator</title>
+<script type="text/javascript"
+	src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBAI8vyV2UkwGag1r7lJHn6hlzDTDAOads&sensor=false">
+	
+</script>
+<script src="components/jquery/jquery.min.js"></script>
+<script src="components/json2/json2.js"></script>
+<script src="js/markerwithlabel.js"></script>
+<script src="js/locationSimulator.js"></script>
+<script>
+if (!Date.prototype.toISOString) {
+    Date.prototype.toISOString = function() {
+        function pad(n) { return n < 10 ? '0' + n : n }
+        return this.getUTCFullYear() + '-'
+            + pad(this.getUTCMonth() + 1) + '-'
+            + pad(this.getUTCDate()) + 'T'
+            + pad(this.getUTCHours()) + ':'
+            + pad(this.getUTCMinutes()) + ':'
+            + pad(this.getUTCSeconds()) + 'Z';
+    };
+}
+
+	function runAgentSimulator(options){
+		var opts = {
+				startTime: (new Date().getTime()+5000),
+				mode: google.maps.TravelMode.WALKING
+		};
+		$.extend(opts, options);
+		var simulator = $(".container").locationSimulator(opts);
+		setTimeout(wrap(simulator.methods.showDirections,null),5000);
+		
+		setInterval(function(){
+			var now = new Date().getTime();
+			if (simulator != null){
+				simulator.methods.showCurrentPos(now+offset);
+			}
+		},500);
+	}
+
+	var timeWarp = 1;
+	var offset = 0;
+	var wrap = function(func,parmVal){
+		return function(){
+			offset = 0;
+			if (!func(parmVal)){
+				setTimeout(1000,wrap(func,parmVal));
+			}
+		}
+	}
+	var close = function (a,b){
+		return Math.abs(a.lat - b.lat)<0.0001 && Math.abs(a.lon - b.lon)<0.0001;
+	}
+
+	var last = new Date().getTime();
+	var now = new Date().getTime();
+	$(document).ready(function() {
+		var mapOptions = {
+				center: new google.maps.LatLng(51.56, 4.28),
+				disableDefaultUI: true,
+				zoom: 14,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+		};
+		$(".container").append("<div class='map'></div>");
+		Mymap = new google.maps.Map($(".container").find(".map").get(0),
+				mapOptions);
+
+		var mOptions = {
+				position:  new google.maps.LatLng(51.9216667, 4.4719000),
+				map: Mymap,
+				labelContent: "Meeting",
+			    labelAnchor: new google.maps.Point(22, 0),
+			    labelClass: "labels", // the CSS class for the label
+			    labelStyle: {opacity: 0.75},
+			    icon: {
+			    	url:"Map-Marker-Ball-Azure-icon.png",
+			    	scaledSize: new google.maps.Size(40,40)
+			    }
+			}
+		new MarkerWithLabel(mOptions);
+		
+		
+		var options = {
+			startAddress: "51° 55.554', 4° 29.179'",
+			endAddress: "51° 55.300', 4° 28.314'",
+			label: "Stefan",
+			mode : google.maps.TravelMode.BICYCLING,
+			showNav: false,
+			map: Mymap
+		}
+		runAgentSimulator(options)
+		
+		options.startAddress = "51° 55.154', 4° 28.479'";
+		options.label = "Iris";
+		options.mode = google.maps.TravelMode.WALKING;
+		//options.showNav = false;
+		runAgentSimulator(options)
+
+		options.startAddress = "51° 54.520', 4° 26.889'";
+		options.label = "Hans";
+		options.mode = google.maps.TravelMode.DRIVING;
+		options.showNav = true;
+		runAgentSimulator(options)
+
+		
+		setInterval(function(){
+			now = new Date().getTime();
+			if (timeWarp != 1) offset += (now-last)*timeWarp;
+			last = now;
+		},500);
+
+	});
+</script>
+</head>
+<body>
+	<h2>BRIDGE simulator</h2>
+	Timewarp:<input value="1" class="timeWarp" onChange="timeWarp = $(this).val()"><br>
+	<div class="container"></div>
+	
+</body>
+</html>

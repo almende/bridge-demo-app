@@ -139,7 +139,7 @@ public class Resource extends Agent {
 			try {
 				String url = getCurrentTask();
 				return send(URI.create(url), "getLocation", null,
-						JOM.getSimpleType(ObjectNode.class));
+						ObjectNode.class);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -153,7 +153,7 @@ public class Resource extends Agent {
 				String url = getCurrentTask();
 				if (!url.isEmpty()) return send(URI.create(url),
 						"getTaskDescription", null,
-						JOM.getSimpleType(String.class));
+						String.class);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -170,7 +170,7 @@ public class Resource extends Agent {
 		params.put("resourceType", getResType());
 		try {
 			String teamUrl = send(URI.create(url), "getTeam", params,
-					JOM.getSimpleType(String.class));
+					String.class);
 			params = JOM.createObjectNode();
 			params.put("resource", getUrls().get(0));
 			params.put("type", "available");

@@ -47,7 +47,9 @@ var nofNavigations=0;
 			setTimeout(function(){ doNavigation(agent);},2500);
 			return;
 		}
-		agent.directionsDisplay.setMap(agent.settings.map);
+		if (agent.settings.showNav){
+			agent.directionsDisplay.setMap(agent.settings.map);
+		}
 		nofNavigations++;
 		if (nofNavigations > MAX_NAVIGATIONS){
 //			console.log("Delaying navigation!"+nofNavigations);
@@ -60,7 +62,7 @@ var nofNavigations=0;
 		var request = {
 			origin : agent.dyn.startPos,
 			destination : agent.dyn.endPos,
-			travelMode : google.maps.TravelMode.DRIVING
+			travelMode : agent.settings.mode
 		};
 		agent.directionsService.route(request, function(result, status) {
 			nofNavigations--;
@@ -87,6 +89,9 @@ var nofNavigations=0;
 				startTime : 0,
 				startAddress : "",
 				endAddress : "",
+				label: "",
+				mode: google.maps.TravelMode.DRIVING,
+				showNav: true,
 				map: null
 			};
 			agent.dyn = {
@@ -156,7 +161,7 @@ var nofNavigations=0;
 						var mOptions = {
 							position : currentPos,
 							map : agent.settings.map,
-							labelContent: agent.myDomObj.find("h2").html(),
+							labelContent: agent.settings.label,
 						    labelAnchor: new google.maps.Point(22, 0),
 						    labelClass: "labels", // the CSS class for the label
 						    labelStyle: {opacity: 0.75}

@@ -4,7 +4,15 @@ import java.io.IOException;
 import java.net.ProtocolException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import com.almende.bridge.types.Location;
 import com.almende.bridge.types.SitRep;
@@ -18,27 +26,23 @@ import com.almende.eve.rpc.annotation.Access;
 import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;
 import com.almende.eve.rpc.jsonrpc.JSONRPCException;
+import com.almende.eve.rpc.jsonrpc.JSONRequest;
 import com.almende.eve.rpc.jsonrpc.jackson.JOM;
-import com.almende.eve.transport.TransportService;
 import com.almende.eve.transport.xmpp.XmppService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Access(AccessType.PUBLIC)
 public class TeamMember extends Agent {
-	private static final String	MOBILE		= "Smack";
-	private static final URI	DIRECTORY	= URI.create("local:yellow");
-	private static final URI	SITREP		= URI.create("local:sitRep");
-	
+	private static final String	MOBILE			= "Smack";
+	private static final URI	DIRECTORY		= URI.create("local:yellow");
+	private static final URI	SITREP			= URI.create("local:sitRep");
 	
 	@Override
 	public void signalAgent(AgentSignal<?> event) throws JSONRPCException, IOException{
 		super.signalAgent(event);
-		if ("addTransportService".equals(event.getEvent())) {
-			TransportService service = (TransportService) event.getService();
-			if (service.getProtocols().get(0).startsWith("xmpp")){
-				pokePhone();
-			}
+		if (AgentSignal.SETSCHEDULERFACTORY.equals(event.getEvent())){
+			getScheduler().createTask(new JSONRequest("pokePhone",JOM.createObjectNode()), 10000);
 		}
 	}
 	
@@ -197,7 +201,7 @@ public class TeamMember extends Agent {
 			@Name("method") String method, @Name("params") ObjectNode params)
 			throws IOException, JSONRPCException, Exception {
 		Object resp = send(URI.create(url), method, params,
-				JOM.getSimpleType(Object.class));
+				Object.class);
 		System.out.println("callOtherAgent url=" + url + " method=" + method
 				+ ", params=" + params.toString() + ", resp=" + resp);
 		if (resp != null) {
@@ -217,7 +221,11 @@ public class TeamMember extends Agent {
 		}
 	}
 	
-	public void xmppConnect() throws Exception {
+	public void xmppConnect() throws IllegalStateException,
+			InvalidKeyException, InvalidAlgorithmParameterException,
+			NoSuchAlgorithmException, InvalidKeySpecException,
+			NoSuchPaddingException, IllegalBlockSizeException,
+			BadPaddingException, JSONRPCException, IOException {
 		AgentHost factory = getAgentHost();
 		String username = getXmppAccount();
 		String password = getXmppPassword();
@@ -227,9 +235,9 @@ public class TeamMember extends Agent {
 			service.connect(getId(), username, password, "Cloud");
 			service.disconnect(getId());
 			service.connect(getId(), username, password, "Cloud");
-
+			
 		} else {
-			throw new Exception("No XMPP service registered");
+			throw new IllegalStateException("No XMPP service registered");
 		}
 	}
 	
@@ -259,7 +267,11 @@ public class TeamMember extends Agent {
 	
 	public void pokePhone() {
 		try {
-			sendAsync(getPhoneUri(), "poke", JOM.createObjectNode(),null,Void.class);
+			System.out.println("Poking my phone:"+getId());
+			xmppConnect();
+			Thread.sleep(100);
+			sendAsync(getPhoneUri(), "poke", JOM.createObjectNode(), null,
+					Void.class);
 		} catch (Exception e) {
 			System.out.println("Couldn't poke phone, not online? "
 					+ e.getLocalizedMessage());

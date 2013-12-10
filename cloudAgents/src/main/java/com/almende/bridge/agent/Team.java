@@ -18,7 +18,10 @@ import com.almende.eve.state.TypedKey;
 @ThreadSafe(true)
 @Access(AccessType.PUBLIC)
 public class Team extends Agent {
-	private static final TypedKey<ArrayList<String>> MEMBERS = new TypedKey<ArrayList<String>>("Members"){};
+	private static final TypedKey<ArrayList<String>>	MEMBERS	= new TypedKey<ArrayList<String>>(
+																		"Members") {
+																};
+	
 	public Task getTask() {
 		if (getState().containsKey("Task")) {
 			return getState().get("Task", Task.class);
@@ -41,11 +44,13 @@ public class Team extends Agent {
 	public void setTeamStatus(@Name("status") TeamStatus status)
 			throws ProtocolException, JSONRPCException {
 		TeamStatus oldStatus = getState().get("Status", TeamStatus.class);
-		getState().put("Status", status);
-		if (oldStatus == null || !oldStatus.eq(status)) {
-			send(URI.create(getLeader()), "triggerTeamStatus");
-			for (String member : getMembers()) {
-				send(URI.create(member), "triggerTeamStatus");
+		if (status != null) {
+			getState().put("Status", status);
+			if (oldStatus == null || !oldStatus.eq(status)) {
+				send(URI.create(getLeader()), "triggerTeamStatus");
+				for (String member : getMembers()) {
+					send(URI.create(member), "triggerTeamStatus");
+				}
 			}
 		}
 	}
@@ -53,7 +58,10 @@ public class Team extends Agent {
 	public TeamStatus getTeamStatus() throws ProtocolException,
 			JSONRPCException {
 		if (getState().containsKey("Status")) {
-			return getState().get("Status", TeamStatus.class);
+			TeamStatus status = getState().get("Status", TeamStatus.class);
+			if (status != null) {
+				return status;
+			}
 		}
 		TeamStatus newStatus = new TeamStatus();
 		newStatus.setTeamId(getId());

@@ -11,7 +11,7 @@ import com.almende.eve.agent.AgentHost;
 import com.almende.eve.rpc.annotation.Access;
 import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;
-import com.almende.eve.rpc.annotation.Required;
+import com.almende.eve.rpc.annotation.Optional;
 import com.almende.eve.rpc.jsonrpc.jackson.JOM;
 import com.almende.eve.state.State;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -42,7 +42,7 @@ public class DemoGenerator extends Agent {
 			"Police Personnel 6", "Police Personnel 7", "Police Personnel 8",
 			"Police Personnel 9", "Police Personnel 10" };
 	
-	public void reset(@Required(false) @Name("lat") String lat,@Required(false) @Name("lon") String lon) {
+	public void reset(@Optional @Name("lat") String lat,@Optional @Name("lon") String lon) {
 		// Removes all teams, tasks, resources
 		// Recreates resources
 		myState.remove("invalidCount");
@@ -154,7 +154,7 @@ public class DemoGenerator extends Agent {
 	public void populateTeam(@Name("teamUrl") String url,
 			@Name("resourceType") String resType,
 			@Name("amount") Integer amount,
-			@Required(false) @Name("location") String location)
+			@Optional @Name("location") String location)
 			throws Exception {
 		AgentHost factory = AgentHost.getInstance();
 		URI parentUrl = URI.create(myState.get(resType,String.class));

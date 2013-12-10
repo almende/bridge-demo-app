@@ -84,8 +84,8 @@
         "xmppAccount": "team3",
         "xmppPassword": "team3",
         "location": {
-          "latitude": "58.9354931",
-          "longitude": "5.5179776"
+          "latitude": "58.9254931",
+          "longitude": "5.5879776"
         },
         "guid": "f0b37ab1-46cf-4547-8098-833ad6b7850b"
       },
@@ -130,6 +130,587 @@
             "longitude": "5.5973000"
           },
           "guid": "dfe796cc-9973-41b3-ae8e-8ba523899882"
+        },
+        {
+          "id": "teamMember5-2",
+          "type": "Police Vehicle",
+          "xmppAccount": "teammember52",
+          "xmppPassword": "teammember52",
+          "location": {
+            "latitude": "58.9180000",
+            "longitude": "5.6011000"
+          },
+          "guid": "135d4a38-835c-47b4-bbb0-d6f97591e709"
+        }
+      ]
+    },
+    {
+      "id": "team6",
+      "leader": {
+        "id": "teamLeader6",
+        "type": "Police Personnel",
+        "xmppAccount": "team6",
+        "xmppPassword": "team6",
+        "location": {
+          "latitude": "58.9254931",
+          "longitude": "5.5975776"
+        },
+        "guid": "c271dc94-3eff-4979-8232-2db824ea5f26"
+      },
+      "members": [
+        {
+          "id": "teamMember6-1",
+          "type": "Fire Personnel",
+          "xmppAccount": "teammember61",
+          "xmppPassword": "teammember61",
+          "location": {
+            "latitude": "58.9161500",
+            "longitude": "5.5973400"
+          },
+          "guid": "4e49b913-95ba-4f3d-b033-cc7f4235939b"
+        },
+        {
+          "id": "teamMember6-2",
+          "type": "Police Vehicle",
+          "xmppAccount": "teammember62",
+          "xmppPassword": "teammember62",
+          "location": {
+            "latitude": "58.9184100",
+            "longitude": "5.6011500"
+          },
+          "guid": "7767ce49-aa7a-4a84-8c8c-90147c118f70"
+        }
+      ]
+    },
+    {
+      "id": "team7",
+      "leader": {
+        "id": "teamLeader7",
+        "type": "Police Personnel",
+        "xmppAccount": "team7",
+        "xmppPassword": "team7",
+        "location": {
+          "latitude": "58.92533431",
+          "longitude": "5.5974576"
+        },
+        "guid": "627d04a4-b2f0-4c74-a143-c8f7679653c6"
+      },
+      "members": [
+        {
+          "id": "teamMember7-1",
+          "type": "Fire Personnel",
+          "xmppAccount": "teammember71",
+          "xmppPassword": "teammember71",
+          "location": {
+            "latitude": "58.9161340",
+            "longitude": "5.5973600"
+          },
+          "guid": "0b9ece57-d6d9-4e29-80b7-5f1377edbebe"
+        },
+        {
+          "id": "teamMember7-2",
+          "type": "Police Vehicle",
+          "xmppAccount": "teammember72",
+          "xmppPassword": "teammember72",
+          "location": {
+            "latitude": "58.9185000",
+            "longitude": "5.6031000"
+          },
+          "guid": "6578619d-9caf-46f5-b95c-cd8f46b7cc06"
+        }
+      ]
+    },
+    {
+      "id": "team8",
+      "leader": {
+        "id": "teamLeader8",
+        "type": "Police Personnel",
+        "xmppAccount": "team8",
+        "xmppPassword": "team8",
+        "location": {
+          "latitude": "58.9255924",
+          "longitude": "5.59757676"
+        },
+        "guid": "1421b992-92a1-4b75-a0ce-8f884fc5258d"
+      },
+      "members": [
+        {
+          "id": "teamMember8-1",
+          "type": "Fire Personnel",
+          "xmppAccount": "teammember81",
+          "xmppPassword": "teammember81",
+          "location": {
+            "latitude": "58.9161200",
+            "longitude": "5.5974500"
+          },
+          "guid": "743ddcba-dce9-4f80-badc-1c77ec82ac78"
+        },
+        {
+          "id": "teamMember8-2",
+          "type": "Police Vehicle",
+          "xmppAccount": "teammember82",
+          "xmppPassword": "teammember82",
+          "location": {
+            "latitude": "58.91805200",
+            "longitude": "5.6011400"
+          },
+          "guid": "d6cea5e4-2870-44e7-a1d1-b0bd73d60cfb"
+        }
+      ]
+    },
+    {
+      "id": "team9",
+      "leader": {
+        "id": "teamLeader9",
+        "type": "Police Personnel",
+        "xmppAccount": "team9",
+        "xmppPassword": "team9",
+        "location": {
+          "latitude": "58.92529521",
+          "longitude": "5.5975756"
+        },
+        "guid": "97290a5c-b6b4-4826-ada9-067877950701"
+      },
+      "members": [
+        {
+          "id": "teamMember9-1",
+          "type": "Fire Personnel",
+          "xmppAccount": "teammember91",
+          "xmppPassword": "teammember91",
+          "location": {
+            "latitude": "58.9161500",
+            "longitude": "5.5973200"
+          },
+          "guid": "3cc7e7d6-ab01-430f-bfa3-0ab5dc020cb3"
+        },
+        {
+          "id": "teamMember9-2",
+          "type": "Police Vehicle",
+          "xmppAccount": "teammember92",
+          "xmppPassword": "teammember92",
+          "location": {
+            "latitude": "58.9182000",
+            "longitude": "5.6011400"
+          },
+          "guid": "39275cf8-c06d-47e7-a0da-94069e1a1e02"
+        }
+      ]
+    },
+    {
+      "id": "team10",
+      "leader": {
+        "id": "teamLeader10",
+        "type": "Police Personnel",
+        "xmppAccount": "team10",
+        "xmppPassword": "team10",
+        "location": {
+          "latitude": "58.9253531",
+          "longitude": "5.59755276"
+        },
+        "guid": "e2159858-159d-49a6-8df8-411273a97c59"
+      },
+      "members": [
+        {
+          "id": "teamMember10-1",
+          "type": "Fire Personnel",
+          "xmppAccount": "teammember101",
+          "xmppPassword": "teammember101",
+          "location": {
+            "latitude": "58.9161700",
+            "longitude": "5.5973800"
+          },
+          "guid": "341acfde-b3e4-4c4a-a402-8f362ccf4055"
+        },
+        {
+          "id": "teamMember10-2",
+          "type": "Police Vehicle",
+          "xmppAccount": "teammember102",
+          "xmppPassword": "teammember102",
+          "location": {
+            "latitude": "58.9182000",
+            "longitude": "5.6011700"
+          },
+          "guid": "b62a0789-f02d-41e6-8d60-e382065cce2e"
+        }
+      ]
+    },
+    {
+      "id": "team11",
+      "leader": {
+        "id": "teamLeader11",
+        "type": "Police Personnel",
+        "xmppAccount": "team11",
+        "xmppPassword": "team11",
+        "location": {
+          "latitude": "58.9253631",
+          "longitude": "5.5975276"
+        },
+        "guid": "e9526cd7-42c7-4ef6-b9ee-9e5a7d810d7c"
+      },
+      "members": [
+        {
+          "id": "teamMember11-1",
+          "type": "Fire Personnel",
+          "xmppAccount": "teammember111",
+          "xmppPassword": "teammember111",
+          "location": {
+            "latitude": "58.9161500",
+            "longitude": "5.5973800"
+          },
+          "guid": "70677439-ea19-4d8a-89a1-949364d3628b"
+        },
+        {
+          "id": "teamMember11-2",
+          "type": "Police Vehicle",
+          "xmppAccount": "teammember112",
+          "xmppPassword": "teammember112",
+          "location": {
+            "latitude": "58.9180700",
+            "longitude": "5.6011600"
+          },
+          "guid": "7563b9fe-75ec-4983-a748-a50098f07890"
+        }
+      ]
+    },
+    {
+      "id": "team12",
+      "leader": {
+        "id": "teamLeader12",
+        "type": "Police Personnel",
+        "xmppAccount": "team12",
+        "xmppPassword": "team12",
+        "location": {
+          "latitude": "58.9253931",
+          "longitude": "5.5975776"
+        },
+        "guid": "a30caefe-f3d2-4678-9815-9579d313b00d"
+      },
+      "members": [
+        {
+          "id": "teamMember12-1",
+          "type": "Fire Personnel",
+          "xmppAccount": "teammember121",
+          "xmppPassword": "teammember121",
+          "location": {
+            "latitude": "58.9161000",
+            "longitude": "5.5973000"
+          },
+          "guid": "6c4b90e9-aeb5-4510-9e61-aec148b7ae76"
+        },
+        {
+          "id": "teamMember12-2",
+          "type": "Police Vehicle",
+          "xmppAccount": "teammember122",
+          "xmppPassword": "teammember122",
+          "location": {
+            "latitude": "58.9181000",
+            "longitude": "5.6011100"
+          },
+          "guid": "da96430d-d006-4a36-be98-c10763e7b7ab"
+        }
+      ]
+    },
+    {
+      "id": "team13",
+      "leader": {
+        "id": "teamLeader13",
+        "type": "Police Personnel",
+        "xmppAccount": "team13",
+        "xmppPassword": "team13",
+        "location": {
+          "latitude": "58.9253331",
+          "longitude": "5.5976776"
+        },
+        "guid": "a296f271-d83a-4e5b-ae5a-e67b1e05cc02"
+      },
+      "members": [
+        {
+          "id": "teamMember13-1",
+          "type": "Fire Personnel",
+          "xmppAccount": "teammember131",
+          "xmppPassword": "teammember131",
+          "location": {
+            "latitude": "58.9161300",
+            "longitude": "5.5973500"
+          },
+          "guid": "c60cd673-0620-47d8-853c-7207f0cd6f19"
+        },
+        {
+          "id": "teamMember13-2",
+          "type": "Police Vehicle",
+          "xmppAccount": "teammember132",
+          "xmppPassword": "teammember132",
+          "location": {
+            "latitude": "58.9184000",
+            "longitude": "5.6011500"
+          },
+          "guid": "27da8f62-2940-405a-9c89-ddffde905605"
+        }
+      ]
+    },
+    {
+      "id": "team14",
+      "leader": {
+        "id": "teamLeader14",
+        "type": "Police Personnel",
+        "xmppAccount": "team14",
+        "xmppPassword": "team14",
+        "location": {
+          "latitude": "58.9254331",
+          "longitude": "5.59751276"
+        },
+        "guid": "9d9993a7-0d7e-43a5-9966-930152ab0b38"
+      },
+      "members": [
+        {
+          "id": "teamMember14-1",
+          "type": "Fire Personnel",
+          "xmppAccount": "teammember141",
+          "xmppPassword": "teammember141",
+          "location": {
+            "latitude": "58.91634500",
+            "longitude": "5.5975200"
+          },
+          "guid": "df709bbc-f9c0-4381-bdeb-6e54205bfb2a"
+        },
+        {
+          "id": "teamMember14-2",
+          "type": "Police Vehicle",
+          "xmppAccount": "teammember142",
+          "xmppPassword": "teammember142",
+          "location": {
+            "latitude": "58.9183100",
+            "longitude": "5.60141500"
+          },
+          "guid": "5caed113-e773-4295-83de-570bff97a858"
+        }
+      ]
+    },
+    {
+      "id": "team15",
+      "leader": {
+        "id": "teamLeader15",
+        "type": "Police Personnel",
+        "xmppAccount": "team15",
+        "xmppPassword": "team15",
+        "location": {
+          "latitude": "58.925313431",
+          "longitude": "5.59744176"
+        },
+        "guid": "bcfb008e-5560-4ea5-9cd3-41fa5019d43e"
+      },
+      "members": [
+        {
+          "id": "teamMember15-1",
+          "type": "Fire Personnel",
+          "xmppAccount": "teammember151",
+          "xmppPassword": "teammember151",
+          "location": {
+            "latitude": "58.91141340",
+            "longitude": "5.59735400"
+          },
+          "guid": "03297074-9bf8-404e-a021-97283fb8568e"
+        },
+        {
+          "id": "teamMember15-2",
+          "type": "Police Vehicle",
+          "xmppAccount": "teammember152",
+          "xmppPassword": "teammember152",
+          "location": {
+            "latitude": "58.91831400",
+            "longitude": "5.603154100"
+          },
+          "guid": "ee092e41-df10-447a-b62e-c6ec4c23e1a6"
+        }
+      ]
+    },
+    {
+      "id": "team16",
+      "leader": {
+        "id": "teamLeader16",
+        "type": "Police Personnel",
+        "xmppAccount": "team16",
+        "xmppPassword": "team16",
+        "location": {
+          "latitude": "58.9255351324",
+          "longitude": "5.5975745276"
+        },
+        "guid": "a2466111-8a5a-4532-a910-964dcb237252"
+      },
+      "members": [
+        {
+          "id": "teamMember16-1",
+          "type": "Fire Personnel",
+          "xmppAccount": "teammember161",
+          "xmppPassword": "teammember161",
+          "location": {
+            "latitude": "58.9114340",
+            "longitude": "5.5971400"
+          },
+          "guid": "bcc3afb7-a345-4b3c-93fe-0ed4173fe737"
+        },
+        {
+          "id": "teamMember16-2",
+          "type": "Police Vehicle",
+          "xmppAccount": "teammember162",
+          "xmppPassword": "teammember162",
+          "location": {
+            "latitude": "58.91803200",
+            "longitude": "5.6011350"
+          },
+          "guid": "e505c323-814b-4f22-91cc-04ac232a02cb"
+        }
+      ]
+    },
+    {
+      "id": "team17",
+      "leader": {
+        "id": "teamLeader17",
+        "type": "Police Personnel",
+        "xmppAccount": "team17",
+        "xmppPassword": "team17",
+        "location": {
+          "latitude": "58.92534521",
+          "longitude": "5.59754656"
+        },
+        "guid": "cb111cb7-0175-4773-a0da-f49b4038aaed"
+      },
+      "members": [
+        {
+          "id": "teamMember17-1",
+          "type": "Fire Personnel",
+          "xmppAccount": "teammember171",
+          "xmppPassword": "teammember171",
+          "location": {
+            "latitude": "58.91611500",
+            "longitude": "5.5973140"
+          },
+          "guid": "3e011bd4-821f-43ed-953d-4ed3e184a50a"
+        },
+        {
+          "id": "teamMember17-2",
+          "type": "Police Vehicle",
+          "xmppAccount": "teammember172",
+          "xmppPassword": "teammember172",
+          "location": {
+            "latitude": "58.91834100",
+            "longitude": "5.60131400"
+          },
+          "guid": "6147d9a1-0825-4aac-83a6-c5873142ee95"
+        }
+      ]
+    },
+    {
+      "id": "team18",
+      "leader": {
+        "id": "teamLeader18",
+        "type": "Police Personnel",
+        "xmppAccount": "team18",
+        "xmppPassword": "team18",
+        "location": {
+          "latitude": "58.9251331",
+          "longitude": "5.59714276"
+        },
+        "guid": "f1db47be-da54-44d8-b7c7-1fce3a881b6b"
+      },
+      "members": [
+        {
+          "id": "teamMember18-1",
+          "type": "Fire Personnel",
+          "xmppAccount": "teammember181",
+          "xmppPassword": "teammember181",
+          "location": {
+            "latitude": "58.911321700",
+            "longitude": "5.5971300"
+          },
+          "guid": "4ab8e810-cfa5-4436-a367-89dafd2e063a"
+        },
+        {
+          "id": "teamMember18-2",
+          "type": "Police Vehicle",
+          "xmppAccount": "teammember182",
+          "xmppPassword": "teammember182",
+          "location": {
+            "latitude": "58.918123400",
+            "longitude": "5.601123400"
+          },
+          "guid": "aec3a769-27ac-470a-8470-3aebfd3d04aa"
+        }
+      ]
+    },
+    {
+      "id": "team19",
+      "leader": {
+        "id": "teamLeader19",
+        "type": "Police Personnel",
+        "xmppAccount": "team19",
+        "xmppPassword": "team19",
+        "location": {
+          "latitude": "58.92134631",
+          "longitude": "5.59713476"
+        },
+        "guid": "a9fcac37-2c9d-4ae0-93c8-6f2775956407"
+      },
+      "members": [
+        {
+          "id": "teamMember19-1",
+          "type": "Fire Personnel",
+          "xmppAccount": "teammember191",
+          "xmppPassword": "teammember191",
+          "location": {
+            "latitude": "58.91612340",
+            "longitude": "5.59731340"
+          },
+          "guid": "edd3d61e-3bad-463e-821a-153bfc567535"
+        },
+        {
+          "id": "teamMember19-2",
+          "type": "Police Vehicle",
+          "xmppAccount": "teammember192",
+          "xmppPassword": "teammember192",
+          "location": {
+            "latitude": "58.9113400",
+            "longitude": "5.60113400"
+          },
+          "guid": "e0a9d470-4519-42f4-87dc-81369ba5014d"
+        }
+      ]
+    },
+    {
+      "id": "team20",
+      "leader": {
+        "id": "teamLeader20",
+        "type": "Police Personnel",
+        "xmppAccount": "team20",
+        "xmppPassword": "team20",
+        "location": {
+          "latitude": "58.925414131",
+          "longitude": "5.59751346"
+        },
+        "guid": "b7156c32-afa1-4a6a-86ee-b89facdf9208"
+      },
+      "members": [
+        {
+          "id": "teamMember20-1",
+          "type": "Fire Personnel",
+          "xmppAccount": "teammember201",
+          "xmppPassword": "teammember201",
+          "location": {
+            "latitude": "58.91663400",
+            "longitude": "5.59732450"
+          },
+          "guid": "5d073e43-c513-490f-b7a1-a71f81b43b57"
+        },
+        {
+          "id": "teamMember20-2",
+          "type": "Police Vehicle",
+          "xmppAccount": "teammember202",
+          "xmppPassword": "teammember202",
+          "location": {
+            "latitude": "58.918250",
+            "longitude": "5.60124500"
+          },
+          "guid": "5aaccecc-d5af-4edc-879b-ada3d8a49083"
         }
       ]
     }

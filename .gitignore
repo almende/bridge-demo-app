@@ -1,2 +1,9 @@
-/gen
-/bin
+gen
+bin
+pom.xml.versionsBackup
+.eveagents
+.eveagents_bridge
+.evecookies
+neoDB
+target
+

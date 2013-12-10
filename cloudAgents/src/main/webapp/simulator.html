@@ -125,7 +125,8 @@ if (!Date.prototype.toISOString) {
 									plan.simulator = $("#"+agent_data.id).locationSimulator({
 										startTime: (new Date().getTime()+5000),
 										startAddress: plan.startAddress,
-										endAddress: plan.endAddress
+										endAddress: plan.endAddress,
+										label: agent_data.name
 									});
 									setTimeout(wrap(plan.simulator.methods.showDirections,null),5000);
 								}

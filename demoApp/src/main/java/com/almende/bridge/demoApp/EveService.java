@@ -12,7 +12,11 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Criteria;
+import android.location.GpsStatus.Listener;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -40,7 +44,7 @@ import de.greenrobot.event.EventBus;
 public class EveService extends Service implements
 		GooglePlayServicesClient.ConnectionCallbacks,
 		GooglePlayServicesClient.OnConnectionFailedListener,
-		com.google.android.gms.location.LocationListener {
+		com.google.android.gms.location.LocationListener, Listener, LocationListener {
 	public static final HandlerThread	myThread		= new HandlerThread(
 																EveService.class
 																		.getCanonicalName());
@@ -50,19 +54,39 @@ public class EveService extends Service implements
 	private static AgentHost			host;
 	public static LocationClient		mLocationClient	= null;
 	public static Location				mLocation		= null;
+	public static LocationManager		mLocationManager = null;
 	
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
+
+	public void setupBaseNotification(){
+		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		Intent intent = new Intent(this, BaseActivity.class);
+		PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent,
+				0);
+		
+		// Build notification
+		Notification noti = new Notification.Builder(this)
+				.setContentTitle("BRIDGE App running!")
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setContentIntent(pIntent).build();
+		
+		noti.flags |= Notification.FLAG_FOREGROUND_SERVICE;
+		
+		notificationManager.notify(NEWTASKID, noti);
+	}
 	
-	public static void initHost(final Context ctx) {
+	public void initHost(final Context ctx) {
 		System.err.println("Init Host called!");
 		Handler myHandler = new Handler(myThread.getLooper());
 		myHandler.post(new Runnable() {
 			public void run() {
 				System.err.println("Eve Service ThreadId:"
 						+ Thread.currentThread().getId());
+				
+				setupBaseNotification();
 				BridgeDemoAgent.setContext(ctx);
 				host = AgentHost.getInstance();
 				try {
@@ -228,7 +252,7 @@ public class EveService extends Service implements
 			// Build notification
 			Notification noti = new Notification.Builder(this)
 					.setContentTitle("BRIDGE task received!")
-					.setContentText(task_text).setSmallIcon(R.drawable.ic_launcher)
+					.setContentText(task_text).setSmallIcon(R.drawable.marker_task)
 					.setDefaults(Notification.DEFAULT_ALL)
 					.setContentIntent(pIntent).build();
 			
@@ -255,8 +279,17 @@ public class EveService extends Service implements
 				EveService.mLocationClient = new LocationClient(
 						this.getApplicationContext(), this, this);
 			}
-			if (EveService.mLocationClient != null) EveService.mLocationClient
-					.connect();
+			if (EveService.mLocationClient != null){
+				EveService.mLocationClient.connect();
+			}
+			if (EveService.mLocationManager == null){
+				Criteria crit2 = new Criteria();
+				crit2.setAccuracy(Criteria.ACCURACY_FINE);
+				mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+				mLocationManager.getBestProvider(crit2, false);
+				mLocationManager.addGpsStatusListener(this);
+			}
+			
 		}
 	}
 	
@@ -287,20 +320,47 @@ public class EveService extends Service implements
 	public void onConnected(Bundle arg0) {
 		LocationRequest request = LocationRequest
 				.create()
-				.setInterval(30000)
+				.setInterval(5000)
 				// 30
 				// seconds
-				.setFastestInterval(10000)
-				.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
-				.setSmallestDisplacement(50); // trigger onLocationChange every
+				.setFastestInterval(1000)
+				.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+				.setSmallestDisplacement(5); // trigger onLocationChange every
 												// 50
 												// meters
+
+		
 		mLocationClient.requestLocationUpdates(request, this);
+		mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5, this);
 		
 	}
 	
 	@Override
 	public void onDisconnected() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onGpsStatusChanged(int event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
 		// TODO Auto-generated method stub
 		
 	}

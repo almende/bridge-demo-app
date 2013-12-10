@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.almende.bridge</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.0.4-SNAPSHOT</version>
+		<version>0.0.5-SNAPSHOT</version>
 		<relativePath>../parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>demoApp</artifactId>
@@ -95,9 +95,8 @@
 		<dependency>
 			<groupId>com.almende.bridge</groupId>
 			<artifactId>common</artifactId>
-			<version>0.0.4-SNAPSHOT</version>
+			<version>0.0.5-SNAPSHOT</version>
 		</dependency>
-
 	</dependencies>
 	<build>
 		<plugins>
@@ -120,7 +119,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.5</version>
+				<version>2.6</version>
 			</plugin>
 		</plugins>
 	</build>

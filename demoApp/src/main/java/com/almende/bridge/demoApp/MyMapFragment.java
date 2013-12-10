@@ -54,7 +54,7 @@ public class MyMapFragment extends MapFragment  {
 			mMap.setMyLocationEnabled(true);
 			settings.setAllGesturesEnabled(true);
 			settings.setMyLocationButtonEnabled(true);
-			setMapOverlays();
+			setMapOverlays(true);
 		}
 	}
 	
@@ -80,6 +80,15 @@ public class MyMapFragment extends MapFragment  {
 		
 		if (mMap != null) {
 			mMap.setMyLocationEnabled(false);
+		}
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		if (mMap != null) {
+			mMap.setMyLocationEnabled(true);
 		}
 	}
 	
@@ -154,7 +163,7 @@ public class MyMapFragment extends MapFragment  {
 		return marker;
 	}
 	
-	public void setMapOverlays() {
+	public void setMapOverlays(boolean doBounds) {
 		
 		try {
 			AgentHost host = AgentHost.getInstance();
@@ -211,8 +220,10 @@ public class MyMapFragment extends MapFragment  {
 				});
 				
 				bounds.include(taskLoc);
-			}			
-			setBoundsRetry(bounds);
+			}
+			if (doBounds){
+				setBoundsRetry(bounds);
+			}
 		} catch (Exception e) {
 			Log.e(TAG, "Warning, couldn't set map overlays:" + e.getMessage()
 					+ " :" + Log.getStackTraceString(e));
@@ -228,23 +239,23 @@ public class MyMapFragment extends MapFragment  {
 				"newTask"))
 				&& event.getAgentId().equals(EveService.DEMO_AGENT)) {
 			if (mMap != null) {
-				setMapOverlays();
+				setMapOverlays(true);
 			}
 		}
 		if (event.getValue().equals("agentsUp")) {
 			if (mMap != null) {
-				setMapOverlays();
+				setMapOverlays(true);
 			}
 		}
 		
 		if (event.getValue().equals("teamMoved")) {
 			if (mMap != null) {
-				setMapOverlays();
+				setMapOverlays(false);
 			}
 		}
 		if (event.getValue().equals("newSitRep")) {
 			if (mMap != null) {
-				setMapOverlays();
+				setMapOverlays(false);
 			}
 		}
 		

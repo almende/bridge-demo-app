@@ -52,6 +52,17 @@ public class DemoGenerator extends Agent {
 		return result;
 	}
 	
+	public void pokeAll() throws JSONRPCException, ClassNotFoundException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, IOException{
+		ArrayNode resources= getAllResources();
+		for (JsonNode resource : resources){
+			try {
+				send(URI.create(resource.get("url").textValue()),"pokePhone",JOM.createObjectNode());
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public void clearDemo() throws JSONRPCException, ClassNotFoundException,
 			InstantiationException, IllegalAccessException,
 			InvocationTargetException, NoSuchMethodException, IOException {

@@ -122,7 +122,7 @@ public class TeamLeaderAgent extends Agent {
 			@Name("method") String method, @Name("params") ObjectNode params)
 			throws IOException, JSONRPCException, Exception {
 		Object resp = send(URI.create(url), method, params,
-				JOM.getSimpleType(Object.class));
+				Object.class);
 		System.out.println("callOtherAgent url=" + url + " method=" + method
 				+ ", params=" + params.toString() + ", resp=" + resp);
 		if (resp != null){

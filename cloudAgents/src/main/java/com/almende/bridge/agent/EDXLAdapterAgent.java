@@ -23,7 +23,7 @@ import com.almende.eve.agent.AgentHost;
 import com.almende.eve.rpc.annotation.Access;
 import com.almende.eve.rpc.annotation.AccessType;
 import com.almende.eve.rpc.annotation.Name;
-import com.almende.eve.rpc.annotation.Required;
+import com.almende.eve.rpc.annotation.Optional;
 import com.almende.eve.rpc.jsonrpc.JSONRPCException;
 import com.almende.eve.rpc.jsonrpc.JSONRequest;
 import com.almende.eve.rpc.jsonrpc.jackson.JOM;
@@ -43,7 +43,7 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 		RequestResource(data);
 	}
 	
-	public void notify(@Required(false) @Name("items") ArrayNode items,@Required(false) @Name("data") String data, @Required(false) @Name("meta") JsonNode meta) throws Exception{
+	public void notify(@Optional @Name("items") ArrayNode items,@Optional @Name("data") String data, @Optional @Name("meta") JsonNode meta) throws Exception{
 		if (items != null){
 			for (JsonNode item: items){
 				_notify(item.get("data").textValue(),item.get("meta"));
@@ -77,7 +77,7 @@ public class EDXLAdapterAgent extends Agent implements EDXLAdapter {
 	}
 	
 	public void sendReportResourceDeploymentStatus(
-			@Required(false) @Name("interval") Integer interval) {
+			@Optional @Name("interval") Integer interval) {
 		try {
 			ArrayNode allResources = send(URI.create("local://demo"),
 					"getAllResources", ArrayNode.class);
